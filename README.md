@@ -39,7 +39,6 @@ My work sits at the intersection of intelligent systems and spatial computing â€
 
 </div>
 
-</br>
 
 ## ğŸš€ Current Focus
 
