@@ -2,7 +2,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=200&text=lejxz&reversal=true&fontAlign=50&fontAlignY=30&fontColor=B660EB&animation=fadeIn&stroke=7800BF&fontSize=40&strokeWidth=2&desc=AI%20|%20ML%20|%20AR%2FVR&descAlignY=50" />
 <br/>
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=700&lines=Exploring+AR%2FVR+%26+Real-Time+Computer+Vision;Python+%7C+C+%7C+C%2B%2B+%7C+Java;;Always+Learning.;Stay+Hungry%2C+Stay+Foolish.)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=700&lines=Building+at+the+Intersection+of+AI+%26+Vision;Exploring+AR%2FVR+%26+Real-Time+Computer+Vision;Python+%7C+C+%7C+C%2B%2B+%7C+Java;;Always+Learning.;Stay+Hungry%2C+Stay+Foolish.)](https://git.io/typing-svg)
 
 </div>
 
