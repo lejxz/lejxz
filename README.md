@@ -10,7 +10,7 @@
 
 ## About Me:
 
-> I am me.
+> I am an undergraduate Computer Science (CS) student.
 
 ## My Github Stats:
 
