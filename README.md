@@ -43,7 +43,7 @@
 
 ## Featured Projects:
 
-- [Place Holder]([http](https://www.placeholder.com/)) Place holder.
+- [Place Holder](https://www.placeholder.com/) Place holder.
 
 ## Connect with Me:
 
