@@ -32,6 +32,22 @@ body {
   overflow-x: hidden;
 }
 
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: #f6fbff;
+  color: #001522;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  z-index: 50;
+}
+
+.skip-link:focus {
+  left: 0.8rem;
+  top: 0.8rem;
+}
+
 .noise {
   position: fixed;
   inset: 0;
@@ -83,6 +99,12 @@ body {
 
 .nav a:hover {
   color: var(--accent);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #96ecff;
+  outline-offset: 2px;
 }
 
 .hero {
@@ -235,6 +257,35 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.filter-btn {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(4, 17, 30, 0.58);
+  color: #c9e9ff;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, transform 200ms ease;
+}
+
+.filter-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 210, 255, 0.6);
+}
+
+.filter-btn.active {
+  background: rgba(0, 210, 255, 0.22);
+  border-color: rgba(0, 210, 255, 0.9);
+  color: #e8fbff;
+}
+
 .panel-card {
   position: relative;
   border: 1px solid var(--line);
@@ -322,6 +373,11 @@ h1 {
   font-size: 0.87rem;
 }
 
+.noscript {
+  margin-top: 1rem;
+  color: #ffd6b7;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -377,5 +433,14 @@ h1 {
     flex-direction: column;
     align-items: start;
     gap: 0.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
   }
 }
