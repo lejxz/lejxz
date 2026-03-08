@@ -11,9 +11,9 @@
 I am a Computer Science student double-majoring in **Artificial Intelligence** and **Cybersecurity**. While my curriculum covers security, my passion and research are dedicated to **Spatial Computing** and **Computer Vision**.
 My work sits at the intersection of intelligent systems and spatial computing — building toward a career in **AR/VR**.
 
-- 🎓 **Focus:** AI Real-time object detection and AR/VR integration.
-- 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
-- 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences.
+> 🎓 **Focus:** AI Real-time object detection and AR/VR integration.
+> 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
+> 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences.
 
 
 ## 🛠️ Tools & Technologies
@@ -28,6 +28,7 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
+
 ## 📊 GitHub Stats
 
 <div align="center">
@@ -37,6 +38,7 @@ My work sits at the intersection of intelligent systems and spatial computing �
 [![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
 
 </div>
+
 
 ## 🚀 Current Focus
 
@@ -63,6 +65,7 @@ A system designed to identify and track physical objects in 3D space using **Ope
 ### [Lorem ipsum](https://github.com/lejxz/)
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 * **Key Tech:** HTML5/CSS, JavaScript, 3D Logic.
+
 
 ## 🔗 Connect with Me
 
