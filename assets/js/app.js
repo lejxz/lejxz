@@ -20,10 +20,11 @@ const state = {
 
 const els = getElements();
 
-init().catch(() => {
+init().catch((error) => {
+  console.error("Portfolio initialization failed:", error);
   document.body.insertAdjacentHTML(
     "beforeend",
-    '<p style="padding:1rem;color:#ff9f9f">Unable to load portfolio content.</p>'
+    '<p style="padding:1rem;color:#ff9f9f">Unable to load portfolio content. Please refresh or check GitHub Pages deployment status.</p>'
   );
 });
 
