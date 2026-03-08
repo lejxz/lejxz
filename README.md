@@ -8,12 +8,7 @@
 
 </div>
 
----
-
 ## `> whoami`
-
-
----
 
 ## `> tech_stack`
 
@@ -36,8 +31,6 @@
 [![GitHub](https://skillicons.dev/icons?i=github)](https://skillicons.dev)
 [![VSCode](https://skillicons.dev/icons?i=vscode)](https://skillicons.dev)
 
----
-
 ## `> current_focus`
 
 | Area | Topic |
@@ -45,7 +38,6 @@
 | 🧠 Machine Learning | Bayesian Networks, Adversarial ML, Federated Learning |
 | 👁️ Computer Vision | OpenCV, Real-time AR Object Detection |
 
----
 
 ## `> github_stats`
 
@@ -62,7 +54,6 @@
 
 </div>
 
----
 
 ## `> featured_projects`
 
@@ -70,7 +61,6 @@
 |---|---|---|
 | 🎯 **FAHHH** | FAHH | FAHH |
 
----
 
 ## `> connect`
 
