@@ -21,6 +21,11 @@ html {
   scroll-behavior: smooth;
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 body {
   margin: 0;
   font-family: "Space Grotesk", sans-serif;
@@ -44,6 +49,22 @@ h3 {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0.8rem;
+  z-index: 50;
+  background: #04151a;
+  color: #fff;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+}
+
+.skip-link:focus {
+  top: 0.8rem;
 }
 
 .bg-orb {
@@ -194,6 +215,26 @@ a {
   color: var(--accent-2);
 }
 
+.impact-strip {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.impact-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.impact-item strong {
+  display: block;
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+
 .section-head {
   margin-bottom: 1.4rem;
 }
@@ -301,6 +342,12 @@ a {
   flex-wrap: wrap;
 }
 
+.results-meta {
+  margin: 0.55rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 .chip {
   color: var(--text-muted);
   cursor: pointer;
@@ -367,6 +414,13 @@ a {
   padding: 1rem;
 }
 
+.empty-state {
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+}
+
 .project-modal::backdrop {
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(2px);
@@ -420,7 +474,8 @@ a {
   .focus-grid,
   .projects-grid,
   .skills-grid,
-  .modal-content-grid {
+  .modal-content-grid,
+  .impact-strip {
     grid-template-columns: 1fr;
   }
 
@@ -448,5 +503,21 @@ a {
     background: transparent;
     color: var(--text);
     padding: 0.35rem 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    animation: none !important;
+    transition-duration: 0ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

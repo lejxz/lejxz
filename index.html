@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="bg-orb orb-a" aria-hidden="true"></div>
   <div class="bg-orb orb-b" aria-hidden="true"></div>
 
@@ -26,7 +27,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="hero section reveal" id="about">
       <p class="eyebrow">AI | ML | AR/VR</p>
       <h1 id="hero-name">Loading...</h1>
@@ -34,6 +35,7 @@
       <p class="hero-bio" id="hero-bio"></p>
       <div class="hero-actions" id="hero-actions"></div>
       <ul class="hero-highlights" id="hero-highlights"></ul>
+      <div class="impact-strip" id="impact-strip" aria-label="Portfolio impact metrics"></div>
     </section>
 
     <section class="section reveal" id="focus">
@@ -50,7 +52,10 @@
           <p class="eyebrow">Featured Work</p>
           <h2>Project Portfolio</h2>
         </div>
-        <div class="chip-row" id="project-filters"></div>
+        <div>
+          <div class="chip-row" id="project-filters" role="tablist" aria-label="Project categories"></div>
+          <p class="results-meta" id="project-results-meta" aria-live="polite"></p>
+        </div>
       </div>
       <div class="projects-grid" id="projects-grid"></div>
     </section>
@@ -81,7 +86,7 @@
     </section>
   </main>
 
-  <dialog id="project-modal" class="project-modal" aria-label="Project details">
+  <dialog id="project-modal" class="project-modal" aria-label="Project details" aria-modal="true">
     <button class="modal-close" id="modal-close" aria-label="Close details">Close</button>
     <article id="modal-content"></article>
   </dialog>
