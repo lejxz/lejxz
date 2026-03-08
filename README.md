@@ -14,11 +14,11 @@ I am me.
 
 ## `> tech_stack`
 
+<div align="center">
 | **Languages** | **AI / ML** | **Tools** |
 |---|---|---|
 | [![Lanugaes](https://skillicons.dev/icons?i=python,c,cpp,java)](https://skillicons.dev) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow)](https://skillicons.dev) | [![Lanugaes](https://skillicons.dev/icons?i=git,github,vscode)](https://skillicons.dev) |
-
-
+</div>
 
 ## `> current_focus`
 
