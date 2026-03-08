@@ -43,13 +43,7 @@
 
 ## Featured Projects:
 
-<div align="center">
-
-| Project | Description | Stack |
-|:---:|:---|:---:|
-| 🎯 **FAHHH** | FAHH | FAHH |
-
-</div>
+- [Place Holder]([http](https://www.placeholder.com/)) Place holder.
 
 ## Connect with Me:
 
