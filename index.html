@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lejuene Delantar | AI x AR/VR Portfolio</title>
+  <meta
+    name="description"
+    content="3D portfolio focused on AI, computer vision, and AR/VR experiences."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="topbar container">
+    <a class="logo" href="#home">lejxz<span>.ai</span></a>
+    <nav class="nav">
+      <a href="#focus">Focus</a>
+      <a href="#projects">Projects</a>
+      <a href="#research">Research</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero container reveal">
+      <div class="hero-copy">
+        <p class="kicker">AI + Spatial Computing</p>
+        <h1 id="heroName">Lejuene Delantar</h1>
+        <p id="heroHeadline" class="headline">AI | ML | AR/VR</p>
+        <p id="heroBio" class="summary"></p>
+        <div class="hero-cta">
+          <a class="btn primary" id="githubLink" href="#" target="_blank" rel="noreferrer">GitHub</a>
+          <a class="btn ghost" id="linkedinLink" href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <canvas id="scene3d"></canvas>
+        <div class="hud">
+          <p>Realtime Vision Layer</p>
+          <p class="pulse">tracking objects in 3D space</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="focus" class="container panel reveal">
+      <div class="section-heading">
+        <p class="kicker">Current Focus</p>
+        <h2>Where AI Meets AR/VR</h2>
+      </div>
+      <div id="focusGrid" class="focus-grid"></div>
+    </section>
+
+    <section id="projects" class="container panel reveal">
+      <div class="section-heading">
+        <p class="kicker">Featured Work</p>
+        <h2>Vision-Driven Systems</h2>
+      </div>
+      <div id="projectGrid" class="card-grid"></div>
+    </section>
+
+    <section id="research" class="container panel reveal">
+      <div class="section-heading">
+        <p class="kicker">Research</p>
+        <h2>Applied Intelligence for Spatial Interfaces</h2>
+      </div>
+      <div id="researchGrid" class="card-grid"></div>
+    </section>
+
+    <section id="contact" class="container contact reveal">
+      <h2>Build the Next Intelligent Interface</h2>
+      <p>
+        Interested in AR/VR, computer vision, or secure AI systems? Let's collaborate.
+      </p>
+      <a id="emailLink" class="btn primary" href="#">Send an Email</a>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <p>Designed around AI, AR/VR, and real-time perception.</p>
+  </footer>
+
+  <script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
