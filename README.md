@@ -40,9 +40,8 @@ profile = {
 [![OpenCV](https://skillicons.dev/icons?i=opencv)](https://skillicons.dev)
 [![TensorFlow](https://skillicons.dev/icons?i=tensorflow)](https://skillicons.dev)
 
-**Security & Tools**
+**Tools**
 
-[![Linux](https://skillicons.dev/icons?i=linux)](https://skillicons.dev)
 [![Git](https://skillicons.dev/icons?i=git)](https://skillicons.dev)
 [![GitHub](https://skillicons.dev/icons?i=github)](https://skillicons.dev)
 [![VSCode](https://skillicons.dev/icons?i=vscode)](https://skillicons.dev)
@@ -53,10 +52,8 @@ profile = {
 
 | Area | Topic |
 |---|---|
-| 🔐 Cryptography | RSA attacks, Homomorphic Encryption, Differential Privacy |
 | 🧠 Machine Learning | Bayesian Networks, Adversarial ML, Federated Learning |
-| 👁️ Computer Vision | YOLOv8, OpenCV, Real-time AR Object Detection |
-| 🔬 Algorithms | Decrease & Conquer, DFS/BFS, Timsort |
+| 👁️ Computer Vision | OpenCV, Real-time AR Object Detection |
 
 ---
 
@@ -81,10 +78,7 @@ profile = {
 
 | Project | Description | Stack |
 |---|---|---|
-| 🎯 **AR Object Detector** | Real-time YOLOv8 detection with OpenCV AR overlay | Python, YOLOv8, OpenCV |
-| 🔐 **Crypto Write-ups** | RSA attacks, hash functions, and advanced crypto notes | LaTeX, Python |
-| 🧠 **Bayesian Network Classifier** | Probabilistic inference using pomegranate v1.0 | Python, PyTorch |
-| 📚 **Algo Notes (C)** | DFS, BFS, Timsort implementations with structured notes | C |
+| 🎯 **FAHHH** | FAHH | FAHH |
 
 ---
 
@@ -92,9 +86,9 @@ profile = {
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/YOUR_LINKEDIN)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:YOUR_EMAIL)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/YOUR_USERNAME)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/lejxz)
 
 </div>
 
