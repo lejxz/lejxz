@@ -12,6 +12,8 @@
 
 > I am an undergraduate Computer Science (CS) student.
 
+## Github Stats:
+
 <div align="center">
 
 [![GitHub Streak](https://streak-stats.demolab.com?user=lejxz&theme=tokyonight&hide_border=true&background=0D1117&stroke=B660EB&ring=B660EB&fire=7800BF&currStreakLabel=B660EB)](https://git.io/streak-stats)
