@@ -200,6 +200,10 @@ a {
   border-color: var(--accent);
 }
 
+.btn:focus-visible {
+  border-color: var(--accent);
+}
+
 .hero-highlights {
   list-style: none;
   margin: 1.4rem 0 0;
@@ -284,7 +288,6 @@ a {
   display: flex;
   flex-direction: column;
   padding: 0;
-  cursor: pointer;
 }
 
 .project-card img {

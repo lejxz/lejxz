@@ -14,7 +14,7 @@ export function renderHero(els, profile, projects, papers) {
   els.heroActions.innerHTML = links
     .map(
       (link) =>
-        `<a class="${link.className}" href="${link.href}" target="_blank" rel="noreferrer">${link.label}</a>`
+        `<a class="${link.className}" href="${link.href}" target="_blank" rel="noopener noreferrer">${link.label}</a>`
     )
     .join("");
 
@@ -57,7 +57,7 @@ export function renderProjectFilters(els, projects, activeCategory) {
   els.projectFilters.innerHTML = [...categories]
     .map((category) => {
       const isActive = category === activeCategory;
-      return `<button class="chip ${isActive ? "active" : ""}" data-category="${category}" role="tab" aria-selected="${String(isActive)}">${formatToken(category)}</button>`;
+      return `<button class="chip ${isActive ? "active" : ""}" type="button" data-category="${category}" aria-pressed="${String(isActive)}">${formatToken(category)}</button>`;
     })
     .join("");
 }
@@ -89,8 +89,8 @@ export function renderProjects(els, projects, activeCategory, onOpenDetails) {
           <p>${project.plainSummary}</p>
           <div class="tags">${project.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>
           <div class="hero-actions">
-            <a class="btn" href="${project.repo}" target="_blank" rel="noreferrer">Repository</a>
-            <a class="btn" href="${project.demo}" target="_blank" rel="noreferrer">Demo</a>
+            <a class="btn" href="${project.repo}" target="_blank" rel="noopener noreferrer">Repository</a>
+            <a class="btn" href="${project.demo}" target="_blank" rel="noopener noreferrer">Demo</a>
             <button class="btn" type="button" data-open-index="${index}">View details</button>
           </div>
         </div>
@@ -117,8 +117,8 @@ export function renderResearch(els, papers) {
         <p>${paper.abstract}</p>
         <div class="tags">${paper.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>
         <div class="hero-actions">
-          <a class="btn" href="${paper.paperUrl}" target="_blank" rel="noreferrer">Paper</a>
-          <a class="btn" href="${paper.demoUrl}" target="_blank" rel="noreferrer">Demo</a>
+          <a class="btn" href="${paper.paperUrl}" target="_blank" rel="noopener noreferrer">Paper</a>
+          <a class="btn" href="${paper.demoUrl}" target="_blank" rel="noopener noreferrer">Demo</a>
         </div>
       </details>
     `
@@ -157,7 +157,7 @@ export function renderContact(els, profile) {
   els.contactActions.innerHTML = actions
     .map(
       (item, index) =>
-        `<a class="btn ${index === 0 ? "primary" : ""}" href="${item.href}" target="_blank" rel="noreferrer">${item.label}</a>`
+        `<a class="btn ${index === 0 ? "primary" : ""}" href="${item.href}" target="_blank" rel="noopener noreferrer">${item.label}</a>`
     )
     .join("");
 }

@@ -37,7 +37,7 @@ async function init() {
   setupModal();
 
   els.footerName.textContent = state.data.profile.name;
-  els.footerYear.textContent = `- ${new Date().getFullYear()}`;
+  els.footerYear.textContent = `| ${new Date().getFullYear()}`;
 }
 
 function renderAll() {
@@ -135,5 +135,13 @@ function setupModal() {
 
 function openProjectModal(project) {
   renderProjectModal(els, project);
+  if (typeof els.projectModal.showModal !== "function") {
+    return;
+  }
+
+  if (els.projectModal.open) {
+    els.projectModal.close();
+  }
+
   els.projectModal.showModal();
 }
