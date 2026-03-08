@@ -6,8 +6,6 @@
 
 </div>
 
----
-
 ## 👤 About Me
 
 I am an undergraduate Computer Science student with a double major in **Artificial Intelligence** and **Machine Learning**.
@@ -18,7 +16,6 @@ My work sits at the intersection of intelligent systems and spatial computing �
 - 🌱 Exploring Bayesian reasoning, federated learning, and adversarial ML
 - 🎯 Goal: Contribute to the next generation of intelligent AR/VR experiences
 
----
 
 ## 📊 GitHub Stats
 
@@ -30,7 +27,6 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
----
 
 ## 🛠️ Tools & Technologies
 
@@ -42,7 +38,6 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
----
 
 ## 🚀 Current Focus
 
@@ -56,13 +51,11 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
----
 
 ## 📁 Featured Projects
 
-- [**Lorem ipsum**](https://www.placeholder.com/) — A website for Juswa.
+- [**Lorem ipsum**](https://www.placeholder.com/) — A website created for fun.
 
----
 
 ## 🔗 Connect with Me
 
