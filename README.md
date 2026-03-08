@@ -55,15 +55,13 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 ## 📁 Featured Projects
 
-- [**Lorem ipsum**](https://www.placeholder.com/) — A website created for fun.
-- 
 ### [Lorem ipsum](https://github.com/lejxz/)
-> A system designed to identify and track physical objects in 3D space using **OpenCV** and **Python**.
+A system designed to identify and track physical objects in 3D space using **OpenCV** and **Python**.
 * **Key Tech:** YOLOv8, NumPy, OpenCV.
 * **Status:** Active Research.
 
 ### [Lorem ipsum](https://github.com/lejxz/)
-> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 * **Key Tech:** HTML5/CSS, JavaScript, 3D Logic.
 
 
