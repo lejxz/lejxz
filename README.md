@@ -43,7 +43,7 @@
 
 ## Featured Projects:
 
-- [Place Holder](https://www.placeholder.com/) - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..
+- [Lorem ipsum](https://www.placeholder.com/) - A Website for Juswa.
 
 ## Connect with Me:
 
