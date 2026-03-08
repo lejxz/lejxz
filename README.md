@@ -12,17 +12,6 @@
 
 ## `> whoami`
 
-```python
-profile = {
-    "name"      : "Jun Jun",
-    "degree"    : "BS Computer Science",
-    "majors"    : ["Cybersecurity", "Machine Learning / AI"],
-    "goal"      : "Enter the AR/VR industry fusing AI & security",
-    "building"  : "Real-time object detection with YOLOv8 + OpenCV AR overlay",
-    "learning"  : ["Homomorphic Encryption", "Adversarial ML", "Computer Vision"],
-    "tools"     : "VS Code · Git · Linux",
-}
-```
 
 ---
 
