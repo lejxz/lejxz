@@ -41,7 +41,8 @@ async function init() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  renderer.toneMappingExposure = 0.96;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   setProgress(loaderFill, 55);
 
   setupLights(scene);
@@ -91,26 +92,36 @@ async function getSafeData() {
 }
 
 function setupLights(sceneRef) {
-  const ambient = new THREE.AmbientLight(0xc8ced8, 0.6);
+  const ambient = new THREE.AmbientLight(0xcad0d8, 0.52);
   sceneRef.add(ambient);
 
-  const key = new THREE.DirectionalLight(0xfff4e8, 1.05);
-  key.position.set(2.5, 3.8, 1.4);
+  const key = new THREE.DirectionalLight(0xfff0df, 1.2);
+  key.position.set(2.7, 3.9, 1.2);
   key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.mapSize.set(1536, 1536);
+  key.shadow.radius = 2.8;
   key.shadow.camera.left = -6;
   key.shadow.camera.right = 6;
   key.shadow.camera.top = 6;
   key.shadow.camera.bottom = -6;
   sceneRef.add(key);
 
-  const fill = new THREE.PointLight(0x7ea4c8, 0.65, 8, 2);
+  const fill = new THREE.PointLight(0x87adc8, 0.58, 8.5, 2);
   fill.position.set(-2.6, 2.4, 1.6);
   sceneRef.add(fill);
 
-  const back = new THREE.PointLight(0xf0bd8d, 0.55, 8, 2);
+  const back = new THREE.PointLight(0xf0c193, 0.62, 8.5, 2);
   back.position.set(2.4, 2, -2.5);
   sceneRef.add(back);
+
+  const deskLamp = new THREE.SpotLight(0xffdcb8, 0.75, 7, Math.PI / 7, 0.35, 1.3);
+  deskLamp.position.set(0.6, 2.5, 0.3);
+  deskLamp.target.position.set(1.35, 1.05, -1.2);
+  deskLamp.castShadow = true;
+  deskLamp.shadow.mapSize.set(1024, 1024);
+  deskLamp.shadow.radius = 3;
+  sceneRef.add(deskLamp);
+  sceneRef.add(deskLamp.target);
 }
 
 function bindUI(sections) {
