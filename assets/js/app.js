@@ -1,79 +1,86 @@
-import { DATA_URL } from "./modules/config.js";
+import { DATA_PATH, SELECTORS } from "./modules/config.js";
+import { loadPortfolioData } from "./modules/data.js";
 import {
-  normalizeFocusAreas,
-  normalizePapers,
-  normalizeProfile,
-  normalizeProjects
-} from "./modules/data.js";
-import {
-  renderFocusAreas,
-  renderProfile,
+  getProjectCategories,
+  renderContact,
+  renderFocus,
+  renderHero,
+  renderImpact,
+  renderModal,
   renderProjectFilters,
-  renderProjectGrid,
-  renderResearch
+  renderProjects,
+  renderResearch,
+  renderSkills
 } from "./modules/render.js";
-import { setupCardTilt, setupScrollReveal, setupThreeScene } from "./modules/scene.js";
-
-const el = {
-  heroName: document.getElementById("heroName"),
-  heroHeadline: document.getElementById("heroHeadline"),
-  heroBio: document.getElementById("heroBio"),
-  githubLink: document.getElementById("githubLink"),
-  linkedinLink: document.getElementById("linkedinLink"),
-  emailLink: document.getElementById("emailLink"),
-  focusGrid: document.getElementById("focusGrid"),
-  projectGrid: document.getElementById("projectGrid"),
-  projectFilters: document.getElementById("projectFilters"),
-  researchGrid: document.getElementById("researchGrid"),
-  canvas: document.getElementById("scene3d")
-};
+import {
+  setupModal,
+  setupNavigation,
+  setupProjectInteractions,
+  setupReveal
+} from "./modules/interactions.js";
+import { getByIdMap } from "./modules/utils.js";
 
 const state = {
-  projects: [],
-  selectedCategory: "all"
+  data: null,
+  activeCategory: "all",
+  filteredProjects: []
 };
 
+const elements = getByIdMap(SELECTORS);
+
+init().catch(() => {
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    '<p class="load-error">Unable to load portfolio content.</p>'
+  );
+});
+
 async function init() {
-  setupScrollReveal();
-  setupThreeScene(el.canvas);
+  state.data = await loadPortfolioData(DATA_PATH);
 
-  try {
-    const response = await fetch(DATA_URL);
-    const data = await response.json();
-    renderFromData(data);
-  } catch (error) {
-    console.error("Failed to load portfolio data", error);
-    el.heroBio.textContent = "Portfolio data is currently unavailable.";
-  }
-}
+  renderHero(state.data.profile, elements);
+  renderImpact(state.data, elements);
+  renderFocus(state.data.focusAreas, elements);
+  renderResearch(state.data.researchPapers, elements);
+  renderSkills(state.data.skills, elements);
+  renderContact(state.data.profile, elements);
 
-function renderFromData(data) {
-  if (!data || !data.profile) {
-    return;
-  }
+  const categories = getProjectCategories(state.data.projects);
+  renderProjectFilters(categories, state.activeCategory, elements);
+  state.filteredProjects = renderProjects(
+    state.data.projects,
+    state.activeCategory,
+    elements
+  );
 
-  const profile = normalizeProfile(data.profile);
-  const focusAreas = normalizeFocusAreas(data.focusAreas);
-  const projects = normalizeProjects(data.projects);
-  const researchPapers = normalizePapers(data.researchPapers);
-  state.projects = projects;
+  elements.footerName.textContent = state.data.profile.name;
+  elements.footerYear.textContent = ` | ${new Date().getFullYear()}`;
 
-  renderProfile(profile, el);
-  renderFocusAreas(focusAreas, el.focusGrid);
-  renderResearch(researchPapers, el.researchGrid);
+  const modalController = setupModal(elements);
 
-  renderProjectFilters(projects, state, el.projectFilters, (next) => {
-    state.selectedCategory = next;
-    renderProjectFilters(state.projects, state, el.projectFilters, onFilterChange);
-    onFilterChange();
+  setupProjectInteractions({
+    elements,
+    getFilteredProject(index) {
+      return state.filteredProjects[index];
+    },
+    openProject(action) {
+      if (action.type === "filter") {
+        state.activeCategory = action.category;
+        renderProjectFilters(categories, state.activeCategory, elements);
+        state.filteredProjects = renderProjects(
+          state.data.projects,
+          state.activeCategory,
+          elements
+        );
+      }
+
+      if (action.type === "modal") {
+        renderModal(action.project, elements);
+        modalController.open();
+      }
+    }
   });
 
-  onFilterChange();
+  setupReveal();
+  setupNavigation(elements);
 }
-
-function onFilterChange() {
-  renderProjectGrid(state.projects, state.selectedCategory, el.projectGrid);
-  setupCardTilt();
-}
-
-init();

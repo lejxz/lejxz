@@ -1,99 +1,176 @@
-import { STATUS_TEXT } from "./config.js";
-import { escapeAttribute, escapeHtml } from "./utils.js";
+import { escapeHTML, formatToken } from "./utils.js";
 
-export function renderProfile(profile, el) {
-  el.heroName.textContent = profile.name;
-  el.heroHeadline.textContent = profile.headline;
-  el.heroBio.textContent = profile.shortBio;
-  el.githubLink.href = profile.github;
-  el.linkedinLink.href = profile.linkedin;
-  el.emailLink.href = profile.email ? `mailto:${profile.email}` : "#";
+export function renderHero(profile, elements) {
+  elements.heroName.textContent = profile.name;
+  elements.heroHeadline.textContent = profile.headline;
+  elements.heroBio.textContent = profile.shortBio;
+
+  const links = [
+    { href: profile.github, label: "GitHub", className: "btn primary" },
+    { href: profile.linkedin, label: "LinkedIn", className: "btn" },
+    { href: `mailto:${profile.email}`, label: "Email", className: "btn" }
+  ];
+
+  elements.heroActions.innerHTML = links
+    .map(
+      (link) =>
+        `<a class="${link.className}" href="${escapeHTML(link.href)}" target="_blank" rel="noreferrer">${link.label}</a>`
+    )
+    .join("");
+
+  const highlights = [
+    "Building at the intersection of AI and real-time vision.",
+    "Exploring secure and scalable machine learning systems.",
+    "Focused on hireable impact: practical, deployable prototypes."
+  ];
+
+  elements.heroHighlights.innerHTML = highlights
+    .map((item) => `<li>${escapeHTML(item)}</li>`)
+    .join("");
 }
 
-export function renderFocusAreas(focusAreas, focusGrid) {
-  focusGrid.innerHTML = focusAreas
+export function renderImpact(data, elements) {
+  elements.projectCount.textContent = String(data.projects.length);
+  elements.researchCount.textContent = String(data.researchPapers.length);
+  elements.focusCount.textContent = String(data.focusAreas.length);
+
+  const metricItems = [
+    "Research-first approach with practical deployment goals",
+    "Computer vision and AR/VR specialization",
+    "Strong foundation in secure AI and systems thinking"
+  ];
+
+  elements.heroMetrics.innerHTML = metricItems
+    .map((item) => `<li>${escapeHTML(item)}</li>`)
+    .join("");
+}
+
+export function renderFocus(items, elements) {
+  elements.focusGrid.innerHTML = items
     .map(
       (item) => `
-      <article class="panel-card">
-        <h3>${escapeHtml(item.title || "Focus")}</h3>
-        <p>${escapeHtml(item.description || "")}</p>
+      <article class="card">
+        <h3>${escapeHTML(item.title)}</h3>
+        <p>${escapeHTML(item.description)}</p>
       </article>
     `
     )
     .join("");
 }
 
-export function renderResearch(researchPapers, researchGrid) {
-  researchGrid.innerHTML = researchPapers
-    .map((paper) => renderContentCard(paper, "paper"))
-    .join("");
-}
-
-export function renderProjectFilters(projects, state, projectFilters, onFilterChange) {
-  if (!projectFilters) {
-    return;
-  }
-
+export function getProjectCategories(projects) {
   const categories = new Set(["all"]);
   projects.forEach((project) => {
     project.category.forEach((category) => categories.add(category));
   });
-
-  projectFilters.innerHTML = Array.from(categories)
-    .map((category) => {
-      const label = category === "all" ? "All" : category.toUpperCase();
-      const isActive = category === state.selectedCategory;
-      return `<button type="button" class="filter-btn${isActive ? " active" : ""}" data-filter="${escapeAttribute(category)}" aria-pressed="${isActive}">${escapeHtml(label)}</button>`;
-    })
-    .join("");
-
-  projectFilters.querySelectorAll(".filter-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      onFilterChange(button.dataset.filter || "all");
-    });
-  });
+  return [...categories];
 }
 
-export function renderProjectGrid(projects, selectedCategory, projectGrid) {
-  const filtered = selectedCategory === "all"
-    ? projects
-    : projects.filter((project) => project.category.includes(selectedCategory));
-
-  if (!filtered.length) {
-    projectGrid.innerHTML = '<article class="panel-card"><h3>No projects in this category yet</h3><p>Try another filter or add more project entries in portfolio data.</p></article>';
-    return;
-  }
-
-  projectGrid.innerHTML = filtered
-    .map((project) => renderContentCard(project, "project"))
+export function renderProjectFilters(categories, activeCategory, elements) {
+  elements.projectFilters.innerHTML = categories
+    .map(
+      (category) =>
+        `<button type="button" class="chip ${category === activeCategory ? "active" : ""}" data-category="${escapeHTML(category)}">${escapeHTML(formatToken(category))}</button>`
+    )
     .join("");
 }
 
-function renderContentCard(item, type) {
-  const title = escapeHtml(item.title || (type === "paper" ? "Research" : "Project"));
-  const description = escapeHtml(item.description || item.abstract || item.plainSummary || "");
-  const thumbnail = item.thumbnail || "";
-  const tags = Array.isArray(item.tags) ? item.tags : [];
-  const normalizedStatus = item.status || "in-progress";
-  const status = escapeHtml(STATUS_TEXT[normalizedStatus] || normalizedStatus);
-  const venue = type === "paper" ? escapeHtml(item.venue || "Research Venue") : "";
-  const year = type === "paper" && item.year ? ` (${item.year})` : "";
-  const repo = item.repo || item.paperUrl || "#";
-  const demo = item.demo || item.demoUrl || repo;
+export function renderProjects(projects, activeCategory, elements) {
+  const filteredProjects =
+    activeCategory === "all"
+      ? projects
+      : projects.filter((project) => project.category.includes(activeCategory));
 
-  const tagMarkup = tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+  elements.projectsGrid.innerHTML = filteredProjects
+    .map(
+      (project, index) => `
+      <article class="card project-card" data-project-index="${index}" role="button" tabindex="0" aria-label="Open details for ${escapeHTML(project.title)}">
+        <img src="${escapeHTML(project.thumbnail)}" alt="${escapeHTML(project.title)} preview" loading="lazy" decoding="async" />
+        <div class="project-content">
+          <div class="meta-row">
+            <h3>${escapeHTML(project.title)}</h3>
+            <span class="status-pill">${escapeHTML(formatToken(project.status))}</span>
+          </div>
+          <p>${escapeHTML(project.plainSummary)}</p>
+          <div class="tags">${project.tags.map((tag) => `<span class="tag">${escapeHTML(tag)}</span>`).join("")}</div>
+          <div class="hero-actions">
+            <a class="btn" href="${escapeHTML(project.repo)}" target="_blank" rel="noreferrer">Repository</a>
+            <a class="btn" href="${escapeHTML(project.demo)}" target="_blank" rel="noreferrer">Demo</a>
+          </div>
+        </div>
+      </article>
+    `
+    )
+    .join("");
 
-  return `
-    <article class="panel-card">
-      ${thumbnail ? `<img class="thumb" src="${escapeAttribute(thumbnail)}" alt="${title}" loading="lazy" />` : ""}
-      <h3>${title}</h3>
-      <p>${description}</p>
-      <div class="tag-list">${tagMarkup}</div>
-      <p class="meta">${status}${venue ? ` | ${venue}${year}` : ""}</p>
-      <div class="links">
-        <a href="${escapeAttribute(repo)}" target="_blank" rel="noreferrer">Source</a>
-        <a href="${escapeAttribute(demo)}" target="_blank" rel="noreferrer">Demo</a>
+  return filteredProjects;
+}
+
+export function renderResearch(papers, elements) {
+  elements.researchList.innerHTML = papers
+    .map(
+      (paper) => `
+      <details class="research-item">
+        <summary>${escapeHTML(paper.title)} <span class="tag">${escapeHTML(paper.venue)} ${escapeHTML(paper.year)}</span></summary>
+        <p>${escapeHTML(paper.abstract)}</p>
+        <div class="tags">${paper.tags.map((tag) => `<span class="tag">${escapeHTML(tag)}</span>`).join("")}</div>
+        <div class="hero-actions">
+          <a class="btn" href="${escapeHTML(paper.paperUrl)}" target="_blank" rel="noreferrer">Paper</a>
+          <a class="btn" href="${escapeHTML(paper.demoUrl)}" target="_blank" rel="noreferrer">Demo</a>
+        </div>
+      </details>
+    `
+    )
+    .join("");
+}
+
+export function renderSkills(skills, elements) {
+  const groups = [
+    { title: "Languages", list: skills.languages },
+    { title: "AI / ML", list: skills.ai_ml },
+    { title: "Tools", list: skills.tools }
+  ];
+
+  elements.skillsGrid.innerHTML = groups
+    .map(
+      (group) => `
+      <article class="card skill-block">
+        <h3>${escapeHTML(group.title)}</h3>
+        <div class="skill-list">
+          ${group.list.map((item) => `<span class="chip">${escapeHTML(item)}</span>`).join("")}
+        </div>
+      </article>
+    `
+    )
+    .join("");
+}
+
+export function renderContact(profile, elements) {
+  const actions = [
+    { href: `mailto:${profile.email}`, label: "Email" },
+    { href: profile.linkedin, label: "LinkedIn" },
+    { href: profile.github, label: "GitHub" }
+  ];
+
+  elements.contactActions.innerHTML = actions
+    .map(
+      (item, index) =>
+        `<a class="btn ${index === 0 ? "primary" : ""}" href="${escapeHTML(item.href)}" target="_blank" rel="noreferrer">${item.label}</a>`
+    )
+    .join("");
+}
+
+export function renderModal(project, elements) {
+  elements.modalContent.innerHTML = `
+    <div class="modal-content-grid">
+      <img src="${escapeHTML(project.thumbnail)}" alt="${escapeHTML(project.title)} image" loading="lazy" decoding="async" />
+      <div>
+        <h3>${escapeHTML(project.title)}</h3>
+        <p><strong>Problem:</strong> ${escapeHTML(project.problem)}</p>
+        <p><strong>Solution:</strong> ${escapeHTML(project.solution)}</p>
+        <p>${escapeHTML(project.description)}</p>
+        <div class="tags">${project.tags.map((tag) => `<span class="tag">${escapeHTML(tag)}</span>`).join("")}</div>
       </div>
-    </article>
+    </div>
   `;
 }

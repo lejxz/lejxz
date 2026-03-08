@@ -3,32 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lejuene Delantar | AI x AR/VR Portfolio</title>
-  <meta name="theme-color" content="#03131f" />
-  <meta
-    name="description"
-    content="3D portfolio focused on AI, computer vision, and AR/VR experiences."
-  />
-  <meta property="og:title" content="Lejuene Delantar | AI x AR/VR Portfolio" />
-  <meta
-    property="og:description"
-    content="AI, machine learning, computer vision, and AR/VR portfolio with an interactive 3D experience."
-  />
-  <meta property="og:type" content="website" />
+  <meta name="description" content="Portfolio of Lejuene Delantar - AI, ML, and AR/VR developer focused on computer vision and spatial computing." />
+  <meta name="theme-color" content="#0d1118" />
+  <title>Lejuene Delantar | AI x Vision Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  <div class="noise"></div>
-  <header class="topbar container" role="banner">
-    <a class="logo" href="#home">lejxz<span>.ai</span></a>
-    <nav class="nav" aria-label="Primary">
+  <a class="skip-link" href="#about">Skip to content</a>
+  <div class="bg-orb orb-a" aria-hidden="true"></div>
+  <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+  <header class="site-header" id="top">
+    <a class="logo" href="#top" aria-label="Go to top">lejxz</a>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    <nav id="main-nav" class="main-nav" aria-label="Main">
+      <a href="#about">About</a>
+      <a href="#impact">Impact</a>
       <a href="#focus">Focus</a>
       <a href="#projects">Projects</a>
       <a href="#research">Research</a>
@@ -36,70 +29,101 @@
     </nav>
   </header>
 
-  <main id="main-content">
-    <section id="home" class="hero container reveal">
-      <div class="hero-copy">
-        <p class="kicker">AI + Spatial Computing</p>
-        <h1 id="heroName">Lejuene Delantar</h1>
-        <p id="heroHeadline" class="headline">AI | ML | AR/VR</p>
-        <p id="heroBio" class="summary"></p>
-        <div class="hero-cta">
-          <a class="btn primary" id="githubLink" href="#" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="btn ghost" id="linkedinLink" href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+  <main>
+    <section class="hero section reveal" id="about">
+      <p class="eyebrow">AI | ML | AR/VR</p>
+      <h1 id="hero-name">Loading...</h1>
+      <p class="hero-sub" id="hero-headline"></p>
+      <p class="hero-bio" id="hero-bio"></p>
+      <div class="hero-actions" id="hero-actions"></div>
+      <ul class="hero-highlights" id="hero-highlights"></ul>
+      <ul class="hero-metrics" id="hero-metrics" aria-label="Professional strengths"></ul>
+    </section>
+
+    <section class="section reveal" id="impact" aria-labelledby="impact-heading">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">Hireability Snapshot</p>
+          <h2 id="impact-heading">Execution + Research Balance</h2>
         </div>
       </div>
-      <div class="hero-visual">
-        <canvas id="scene3d" aria-label="Decorative 3D visual of a neural core" role="img"></canvas>
-        <div class="hud">
-          <p>Realtime Vision Layer</p>
-          <p class="pulse">tracking objects in 3D space</p>
+      <div class="impact-grid">
+        <article class="card impact-card">
+          <p class="impact-label">Projects</p>
+          <p class="impact-value" id="project-count">0</p>
+          <p class="impact-note">Applied builds across AI, vision, and AR/VR contexts.</p>
+        </article>
+        <article class="card impact-card">
+          <p class="impact-label">Research Tracks</p>
+          <p class="impact-value" id="research-count">0</p>
+          <p class="impact-note">Active exploration from concept to experimental validation.</p>
+        </article>
+        <article class="card impact-card">
+          <p class="impact-label">Focus Domains</p>
+          <p class="impact-value" id="focus-count">0</p>
+          <p class="impact-note">Clear specialization in machine learning and spatial computing.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="focus">
+      <div class="section-head">
+        <p class="eyebrow">Current Direction</p>
+        <h2>What I am Building</h2>
+      </div>
+      <div class="focus-grid" id="focus-grid"></div>
+    </section>
+
+    <section class="section reveal" id="projects">
+      <div class="section-head split">
+        <div>
+          <p class="eyebrow">Featured Work</p>
+          <h2>Project Portfolio</h2>
         </div>
+        <div class="chip-row" id="project-filters"></div>
       </div>
+      <div class="projects-grid" id="projects-grid"></div>
     </section>
 
-    <section id="focus" class="container panel reveal">
-      <div class="section-heading">
-        <p class="kicker">Current Focus</p>
-        <h2>Where AI Meets AR/VR</h2>
+    <section class="section reveal" id="research">
+      <div class="section-head">
+        <p class="eyebrow">Research Path</p>
+        <h2>Papers & Experiments</h2>
       </div>
-      <div id="focusGrid" class="focus-grid"></div>
+      <div class="research-list" id="research-list"></div>
     </section>
 
-    <section id="projects" class="container panel reveal">
-      <div class="section-heading">
-        <p class="kicker">Featured Work</p>
-        <h2>Vision-Driven Systems</h2>
+    <section class="section reveal" id="skills">
+      <div class="section-head">
+        <p class="eyebrow">Capabilities</p>
+        <h2>Stack & Tooling</h2>
       </div>
-      <div id="projectFilters" class="filters" role="group" aria-label="Project filters"></div>
-      <div id="projectGrid" class="card-grid"></div>
+      <div class="skills-grid" id="skills-grid"></div>
     </section>
 
-    <section id="research" class="container panel reveal">
-      <div class="section-heading">
-        <p class="kicker">Research</p>
-        <h2>Applied Intelligence for Spatial Interfaces</h2>
+    <section class="section reveal contact" id="contact">
+      <div class="section-head">
+        <p class="eyebrow">Collaboration</p>
+        <h2>Ready to Build with You</h2>
       </div>
-      <div id="researchGrid" class="card-grid"></div>
-    </section>
-
-    <section id="contact" class="container contact reveal">
-      <h2>Build the Next Intelligent Interface</h2>
-      <p>
-        Interested in AR/VR, computer vision, or secure AI systems? Let's collaborate.
-      </p>
-      <a id="emailLink" class="btn primary" href="#">Send an Email</a>
+      <p>I am actively seeking opportunities in AI engineering, computer vision, and spatial computing research. If your team is building ambitious products, let us talk.</p>
+      <div class="contact-actions" id="contact-actions"></div>
     </section>
   </main>
 
-  <footer class="container footer">
-    <p>Designed around AI, AR/VR, and real-time perception.</p>
+  <dialog id="project-modal" class="project-modal" aria-label="Project details">
+    <button class="modal-close" id="modal-close" aria-label="Close details">Close</button>
+    <article id="modal-content"></article>
+  </dialog>
+
+  <footer class="site-footer">
+    <p><span id="footer-name">Lejuene Delantar</span> <span id="footer-year"></span></p>
   </footer>
 
   <noscript>
-    <p class="noscript container">This portfolio uses JavaScript for 3D and dynamic content loading. Please enable JavaScript.</p>
+    <p class="noscript-msg">This portfolio needs JavaScript enabled to load dynamic sections.</p>
   </noscript>
 
-  <script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
-  <script type="module" src="assets/js/app.js"></script>
+  <script src="assets/js/app.js" type="module"></script>
 </body>
 </html>

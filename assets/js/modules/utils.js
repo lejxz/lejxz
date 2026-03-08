@@ -1,16 +1,20 @@
-export function escapeHtml(input) {
-  return String(input)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+export function formatToken(value) {
+  return String(value)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-export function escapeAttribute(input) {
-  return String(input).replace(/"/g, "&quot;");
+export function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-export function isReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+export function getByIdMap(selectors) {
+  return Object.fromEntries(
+    Object.entries(selectors).map(([key, id]) => [key, document.getElementById(id)])
+  );
 }
