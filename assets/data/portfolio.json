@@ -27,16 +27,11 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "impact": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1200&q=80",
       "tags": ["YOLOv8", "OpenCV", "NumPy", "Python"],
       "category": ["ai", "vision", "arvr"],
       "status": "active-research",
-      "metrics": [
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 }
-      ],
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     },
@@ -45,16 +40,11 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "impact": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1200&q=80",
       "tags": ["PyTorch", "Computer Vision", "Adversarial ML"],
       "category": ["ai", "vision"],
       "status": "active-research",
-      "metrics": [
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 }
-      ],
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     },
@@ -63,16 +53,11 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "impact": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1614729939124-032f0f2f5f2f?auto=format&fit=crop&w=1200&q=80",
       "tags": ["AR", "OpenCV", "Rendering"],
       "category": ["vision", "arvr"],
       "status": "prototype",
-      "metrics": [
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 }
-      ],
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     }
@@ -86,15 +71,11 @@
       "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "impact": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80",
       "tags": ["Computer Vision", "AR", "YOLO"],
-      "metrics": [
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 }
-      ],
       "paperUrl": "https://github.com/lejxz/",
-      "codeUrl": "https://github.com/lejxz/"
+      "demoUrl": "https://github.com/lejxz/"
     },
     {
       "title": "Lorem Ipsum",
@@ -104,15 +85,11 @@
       "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "impact": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
       "tags": ["Adversarial ML", "Security", "Vision"],
-      "metrics": [
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 },
-        { "label": "Metric Placeholder", "value": "TBD", "progress": 0 }
-      ],
       "paperUrl": "https://github.com/lejxz/",
-      "codeUrl": "https://github.com/lejxz/"
+      "demoUrl": "https://github.com/lejxz/"
     }
   ],
   "skills": {

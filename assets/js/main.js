@@ -2,6 +2,8 @@ import { getPortfolioData } from "./data-loader.js";
 import {
   setupMobileMenu,
   setupSectionReveal,
+  setupActiveNavLink,
+  setupCardInteractivity,
   setupCounterAnimation,
   setupContactForm,
   updateYear
@@ -35,7 +37,7 @@ function renderProjects(projects) {
     .map(
       (project) => `
         <article class="project-card" data-categories="${project.category.join(" ")}">
-          <div class="project-thumb" aria-hidden="true"></div>
+          <img class="project-thumb" src="${project.thumbnail || "https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=1200&q=80"}" alt="Project preview image" loading="lazy" />
           <h3>${project.title}</h3>
           <p class="section-copy">${project.description}</p>
           <div class="summary-grid">
@@ -47,19 +49,14 @@ function renderProjects(projects) {
               <h4>Solution</h4>
               <p>${project.solution || "Solution summary coming soon."}</p>
             </div>
-            <div class="summary-row">
-              <h4>Impact</h4>
-              <p>${project.impact || "Impact summary coming soon."}</p>
-            </div>
           </div>
-          ${renderMetrics(project.metrics || [])}
           <p class="plain-note">${project.plainSummary || "Plain-language summary will be added."}</p>
           <div class="tags">
             ${project.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
           </div>
           <div class="links">
-            <a href="${project.repo}" target="_blank" rel="noreferrer">Repository</a>
-            <a href="${project.demo}" target="_blank" rel="noreferrer">Demo</a>
+            <a class="link-btn" href="${project.repo}" target="_blank" rel="noreferrer">Repository</a>
+            <a class="link-btn" href="${project.demo}" target="_blank" rel="noreferrer">Demo</a>
           </div>
         </article>
       `
@@ -77,7 +74,7 @@ function renderResearchPapers(papers) {
     .map(
       (paper) => `
         <article class="research-card">
-          <div class="research-thumb" aria-hidden="true"></div>
+          <img class="research-thumb" src="${paper.thumbnail || "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80"}" alt="Research preview image" loading="lazy" />
           <h3>${paper.title}</h3>
           <p class="research-meta">${paper.venue} • ${paper.year}</p>
           <p class="section-copy">${paper.abstract}</p>
@@ -90,19 +87,14 @@ function renderResearchPapers(papers) {
               <h4>Solution</h4>
               <p>${paper.solution || "Solution summary coming soon."}</p>
             </div>
-            <div class="summary-row">
-              <h4>Impact</h4>
-              <p>${paper.impact || "Impact summary coming soon."}</p>
-            </div>
           </div>
-          ${renderMetrics(paper.metrics || [])}
           <p class="plain-note">${paper.plainSummary || "Plain-language summary will be added."}</p>
           <div class="tags">
             ${(paper.tags || []).map((tag) => `<span class="tag">${tag}</span>`).join("")}
           </div>
           <div class="links">
-            <a href="${paper.paperUrl}" target="_blank" rel="noreferrer">Paper</a>
-            <a href="${paper.codeUrl}" target="_blank" rel="noreferrer">Code</a>
+            <a class="link-btn" href="${paper.paperUrl}" target="_blank" rel="noreferrer">Paper</a>
+            <a class="link-btn" href="${paper.demoUrl || paper.codeUrl || paper.paperUrl}" target="_blank" rel="noreferrer">Demo</a>
           </div>
         </article>
       `
@@ -134,33 +126,6 @@ function renderSkills(skills) {
       `
     )
     .join("");
-}
-
-function renderMetrics(metrics) {
-  if (!metrics.length) {
-    return "";
-  }
-
-  return `
-    <div class="metrics" aria-label="Outcome metrics">
-      ${metrics
-        .map((metric) => {
-          const boundedProgress = Math.min(100, Math.max(0, Number(metric.progress || 0)));
-          return `
-            <div class="metric-item">
-              <div class="metric-label">
-                <span>${metric.label}</span>
-                <strong>${metric.value}</strong>
-              </div>
-              <div class="metric-track" role="presentation">
-                <div class="metric-fill" style="width: ${boundedProgress}%;"></div>
-              </div>
-            </div>
-          `;
-        })
-        .join("")}
-    </div>
-  `;
 }
 
 function updateStats(data) {
@@ -214,6 +179,7 @@ function setupProjectFilters() {
 async function init() {
   setupMobileMenu();
   setupSectionReveal();
+  setupActiveNavLink();
   setupContactForm();
   updateYear();
 
@@ -226,6 +192,7 @@ async function init() {
     updateStats(data);
     setupCounterAnimation();
     setupProjectFilters();
+    setupCardInteractivity();
   } catch (error) {
     const grid = document.getElementById("projectGrid");
     if (grid) {
