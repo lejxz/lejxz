@@ -18,8 +18,9 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 ## 🛠️ Tools & Technologies
 
+> I prioritize
+
 <div align="center">
-> I prioritize 
 
 | **Languages** | **AI / ML** | **Tools** |
 |:---:|:---:|:---:|
