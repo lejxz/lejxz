@@ -54,6 +54,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <div align="center">
 
 [![GitHub Streak](https://streak-stats.demolab.com?user=lejxz&theme=tokyonight&hide_border=true&background=0D1117&stroke=B660EB&ring=B660EB&fire=7800BF&currStreakLabel=B660EB)](https://git.io/streak-stats)
+
 [![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB)](https://github.com/lejxz)
 [![Top Languages](https://github-readme-stats-nine-lovat-17.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
 
