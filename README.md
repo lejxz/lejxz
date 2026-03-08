@@ -14,24 +14,11 @@ I am me.
 
 ## `> tech_stack`
 
-**Languages**
+| **Languages** | **AI / ML ** | **Tools** |
+|---|---|---|
+| [![Lanugaes](https://skillicons.dev/icons?i=python,c,cpp,java)](https://skillicons.dev) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow)](https://skillicons.dev) | [![Lanugaes](https://skillicons.dev/icons?i=git,github,vscode)](https://skillicons.dev) |
 
-[![Python](https://skillicons.dev/icons?i=python)](https://skillicons.dev)
-[![C](https://skillicons.dev/icons?i=c)](https://skillicons.dev)
-[![C++](https://skillicons.dev/icons?i=cpp)](https://skillicons.dev)
-[![Java](https://skillicons.dev/icons?i=java)](https://skillicons.dev)
 
-**AI / ML / Vision**
-
-[![PyTorch](https://skillicons.dev/icons?i=pytorch)](https://skillicons.dev)
-[![OpenCV](https://skillicons.dev/icons?i=opencv)](https://skillicons.dev)
-[![TensorFlow](https://skillicons.dev/icons?i=tensorflow)](https://skillicons.dev)
-
-**Tools**
-
-[![Git](https://skillicons.dev/icons?i=git)](https://skillicons.dev)
-[![GitHub](https://skillicons.dev/icons?i=github)](https://skillicons.dev)
-[![VSCode](https://skillicons.dev/icons?i=vscode)](https://skillicons.dev)
 
 ## `> current_focus`
 
