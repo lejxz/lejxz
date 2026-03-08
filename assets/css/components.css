@@ -1,0 +1,263 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--bg), transparent 14%);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-shell {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-size: 1.1rem;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.site-nav a {
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  transition: 180ms ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--text);
+  background: var(--surface-alt);
+}
+
+.menu-toggle {
+  display: none;
+  border: 0;
+  background: transparent;
+  padding: 0.4rem;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin: 5px 0;
+  background: var(--text);
+  transition: transform 180ms ease;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.62rem 1rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  transition: 180ms ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.btn-ghost {
+  border-color: var(--line);
+  color: var(--text);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  background: var(--surface-alt);
+}
+
+.hero-stats {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.hero-stats article {
+  background: var(--surface-alt);
+  border-radius: var(--radius-md);
+  padding: 0.8rem;
+}
+
+.hero-stats h3 {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  margin-bottom: 0.15rem;
+}
+
+.hero-stats p {
+  color: var(--muted);
+}
+
+.focus-card,
+.project-card,
+.contact-form {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.focus-card {
+  padding: 1rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.focus-card p {
+  color: var(--muted);
+}
+
+.project-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: 180ms ease;
+}
+
+.chip.is-active,
+.chip:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent), var(--line) 45%);
+  background: var(--accent-soft);
+}
+
+.project-card {
+  padding: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.project-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  background: var(--surface-alt);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.project-card .links {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.project-card .links a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.skill-pill {
+  padding: 0.44rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.contact-links {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.contact-links a {
+  width: fit-content;
+  color: var(--accent);
+}
+
+.contact-form {
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.contact-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+
+.contact-form input,
+.contact-form textarea {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem;
+  background: var(--surface-alt);
+}
+
+.form-feedback {
+  min-height: 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.site-footer {
+  padding: 1.5rem 0;
+}
+
+.site-footer a {
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .site-nav {
+    position: absolute;
+    top: 73px;
+    left: 4%;
+    right: 4%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 0.7rem;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-nav.is-open {
+    display: flex;
+  }
+}

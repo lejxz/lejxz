@@ -1,0 +1,47 @@
+{
+  "profile": {
+    "name": "Lejuene Delantar",
+    "headline": "AI | ML | AR/VR",
+    "email": "delantarlejuene@gmail.com",
+    "github": "https://github.com/lejxz",
+    "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/"
+  },
+  "projects": [
+    {
+      "title": "Real-Time AR Detection System",
+      "description": "A pipeline for detecting and tracking physical objects in real time with AR-aligned overlays.",
+      "tags": ["YOLOv8", "OpenCV", "NumPy", "Python"],
+      "category": ["ai", "vision", "arvr"],
+      "repo": "https://github.com/lejxz/",
+      "demo": "https://github.com/lejxz/"
+    },
+    {
+      "title": "Adversarial ML Sandbox",
+      "description": "Experiments with adversarial attacks and model hardening to evaluate vision model robustness.",
+      "tags": ["PyTorch", "Security", "Computer Vision"],
+      "category": ["ai", "vision"],
+      "repo": "https://github.com/lejxz/",
+      "demo": "https://github.com/lejxz/"
+    },
+    {
+      "title": "Spatial Overlay Prototype",
+      "description": "A lightweight AR prototype for scene-aware object labeling and interactive visual hints.",
+      "tags": ["AR", "OpenCV", "Rendering"],
+      "category": ["vision", "arvr"],
+      "repo": "https://github.com/lejxz/",
+      "demo": "https://github.com/lejxz/"
+    }
+  ],
+  "skills": [
+    "Python",
+    "C",
+    "C++",
+    "Java",
+    "PyTorch",
+    "OpenCV",
+    "TensorFlow",
+    "Git",
+    "GitHub",
+    "VS Code"
+  ]
+}
