@@ -55,7 +55,7 @@ I am me.
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-blue)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-blue?logo=linkedin)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/lejxz)
 
