@@ -6,42 +6,74 @@
     "github": "https://github.com/lejxz",
     "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/"
   },
+  "focusAreas": [
+    {
+      "title": "Machine Learning",
+      "description": "Bayesian Networks, Adversarial ML, and Federated Learning pipelines."
+    },
+    {
+      "title": "Computer Vision",
+      "description": "OpenCV workflows and low-latency AR object detection with YOLO."
+    },
+    {
+      "title": "AR / VR",
+      "description": "Spatial overlays, scene awareness, and Vision-AI integration."
+    }
+  ],
   "projects": [
     {
-      "title": "Real-Time AR Detection System",
-      "description": "A pipeline for detecting and tracking physical objects in real time with AR-aligned overlays.",
+      "title": "Lorem Ipsum",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "tags": ["YOLOv8", "OpenCV", "NumPy", "Python"],
       "category": ["ai", "vision", "arvr"],
+      "status": "active-research",
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     },
     {
-      "title": "Adversarial ML Sandbox",
-      "description": "Experiments with adversarial attacks and model hardening to evaluate vision model robustness.",
-      "tags": ["PyTorch", "Security", "Computer Vision"],
+      "title": "Lorem Ipsum",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "tags": ["PyTorch", "Computer Vision", "Adversarial ML"],
       "category": ["ai", "vision"],
+      "status": "active-research",
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     },
     {
-      "title": "Spatial Overlay Prototype",
-      "description": "A lightweight AR prototype for scene-aware object labeling and interactive visual hints.",
+      "title": "Lorem Ipsum",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "tags": ["AR", "OpenCV", "Rendering"],
       "category": ["vision", "arvr"],
+      "status": "prototype",
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     }
   ],
-  "skills": [
-    "Python",
-    "C",
-    "C++",
-    "Java",
-    "PyTorch",
-    "OpenCV",
-    "TensorFlow",
-    "Git",
-    "GitHub",
-    "VS Code"
-  ]
+  "researchPapers": [
+    {
+      "title": "Lorem Ipsum",
+      "venue": "Lorem Ipsum",
+      "year": 2026,
+      "status": "active-research",
+      "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "tags": ["Computer Vision", "AR", "YOLO"],
+      "paperUrl": "https://github.com/lejxz/",
+      "codeUrl": "https://github.com/lejxz/"
+    },
+    {
+      "title": "Lorem Ipsum",
+      "venue": "Lorem Ipsum",
+      "year": 2026,
+      "status": "in-progress",
+      "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "tags": ["Adversarial ML", "Security", "Vision"],
+      "paperUrl": "https://github.com/lejxz/",
+      "codeUrl": "https://github.com/lejxz/"
+    }
+  ],
+  "skills": {
+    "languages": ["Python", "C", "C++", "Java"],
+    "ai_ml": ["PyTorch", "OpenCV", "TensorFlow"],
+    "tools": ["Git", "GitHub", "VS Code"]
+  }
 }

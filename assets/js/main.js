@@ -7,6 +7,24 @@ import {
   updateYear
 } from "./ui.js";
 
+function renderFocusAreas(focusAreas) {
+  const grid = document.getElementById("focusGrid");
+  if (!grid) {
+    return;
+  }
+
+  grid.innerHTML = (focusAreas || [])
+    .map(
+      (item) => `
+        <article class="focus-card">
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+        </article>
+      `
+    )
+    .join("");
+}
+
 function renderProjects(projects) {
   const grid = document.getElementById("projectGrid");
   if (!grid) {
@@ -32,13 +50,81 @@ function renderProjects(projects) {
     .join("");
 }
 
-function renderSkills(skills) {
-  const list = document.getElementById("skillList");
-  if (!list) {
+function renderResearchPapers(papers) {
+  const grid = document.getElementById("researchGrid");
+  if (!grid) {
     return;
   }
 
-  list.innerHTML = skills.map((skill) => `<span class="skill-pill">${skill}</span>`).join("");
+  grid.innerHTML = (papers || [])
+    .map(
+      (paper) => `
+        <article class="research-card">
+          <h3>${paper.title}</h3>
+          <p class="research-meta">${paper.venue} • ${paper.year}</p>
+          <p class="section-copy">${paper.abstract}</p>
+          <div class="tags">
+            ${(paper.tags || []).map((tag) => `<span class="tag">${tag}</span>`).join("")}
+          </div>
+          <div class="links">
+            <a href="${paper.paperUrl}" target="_blank" rel="noreferrer">Paper</a>
+            <a href="${paper.codeUrl}" target="_blank" rel="noreferrer">Code</a>
+          </div>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function renderSkills(skills) {
+  const groups = document.getElementById("skillGroups");
+  if (!groups) {
+    return;
+  }
+
+  const sections = [
+    { title: "Languages", items: skills.languages || [] },
+    { title: "AI / ML", items: skills.ai_ml || [] },
+    { title: "Tools", items: skills.tools || [] }
+  ];
+
+  groups.innerHTML = sections
+    .map(
+      (section) => `
+        <article class="skill-group">
+          <h3>${section.title}</h3>
+          <div class="skill-list">
+            ${section.items.map((skill) => `<span class="skill-pill">${skill}</span>`).join("")}
+          </div>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function updateStats(data) {
+  const projectCount = (data.projects || []).length;
+  const paperCount = (data.researchPapers || []).length;
+  const activeProjectTracks = (data.projects || []).filter(
+    (project) => project.status === "active-research"
+  ).length;
+  const activePaperTracks = (data.researchPapers || []).filter(
+    (paper) => paper.status === "active-research"
+  ).length;
+
+  const stats = {
+    statProjects: projectCount,
+    statPapers: paperCount,
+    statResearchTracks: activeProjectTracks + activePaperTracks
+  };
+
+  Object.entries(stats).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.dataset.target = String(value);
+      element.textContent = "0";
+    }
+  });
 }
 
 function setupProjectFilters() {
@@ -67,14 +153,17 @@ function setupProjectFilters() {
 async function init() {
   setupMobileMenu();
   setupSectionReveal();
-  setupCounterAnimation();
   setupContactForm();
   updateYear();
 
   try {
     const data = await getPortfolioData();
+    renderFocusAreas(data.focusAreas || []);
     renderProjects(data.projects || []);
-    renderSkills(data.skills || []);
+    renderResearchPapers(data.researchPapers || []);
+    renderSkills(data.skills || {});
+    updateStats(data);
+    setupCounterAnimation();
     setupProjectFilters();
   } catch (error) {
     const grid = document.getElementById("projectGrid");

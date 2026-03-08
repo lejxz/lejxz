@@ -57,13 +57,13 @@ export function setupCounterAnimation() {
   }
 
   const animateCounter = (counter) => {
-    const target = Number(counter.dataset.target || 0);
+    const target = Math.max(0, Number(counter.dataset.target || 0));
     const duration = 900;
     const start = performance.now();
 
     const tick = (now) => {
       const progress = Math.min((now - start) / duration, 1);
-      counter.textContent = String(Math.floor(target * progress));
+      counter.textContent = String(Math.round(target * progress));
       if (progress < 1) {
         requestAnimationFrame(tick);
       } else {

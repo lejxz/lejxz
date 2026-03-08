@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Portfolio of Lejuene Delantar, focused on AI, computer vision, and spatial computing."
+      content="Portfolio of Lejuene Delantar, focused on AI, computer vision, cybersecurity, and spatial computing."
     />
     <title>lejxz | Portfolio</title>
 
@@ -41,6 +41,8 @@
           <a href="#about">About</a>
           <a href="#focus">Focus</a>
           <a href="#projects">Projects</a>
+          <a href="#research">Research</a>
+          <a href="#skills">Skills</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>
@@ -64,16 +66,16 @@
 
           <aside class="hero-stats reveal" id="statsPanel" aria-label="Quick highlights">
             <article>
-              <h3 class="counter" data-target="3">0</h3>
-              <p>Core Domains</p>
+              <h3 class="counter" id="statProjects" data-target="0">0</h3>
+              <p>Projects Built</p>
             </article>
             <article>
-              <h3 class="counter" data-target="4">0</h3>
-              <p>Primary Languages</p>
+              <h3 class="counter" id="statPapers" data-target="0">0</h3>
+              <p>Research Papers</p>
             </article>
             <article>
-              <h3 class="counter" data-target="1">0</h3>
-              <p>Active Research Track</p>
+              <h3 class="counter" id="statResearchTracks" data-target="0">0</h3>
+              <p>Active Research Tracks</p>
             </article>
           </aside>
         </div>
@@ -99,20 +101,7 @@
             <p class="eyebrow">Current Focus</p>
             <h2>What I am building and studying now</h2>
           </div>
-          <div class="focus-grid reveal">
-            <article class="focus-card">
-              <h3>Machine Learning</h3>
-              <p>Bayesian Networks, Adversarial ML, and Federated Learning pipelines.</p>
-            </article>
-            <article class="focus-card">
-              <h3>Computer Vision</h3>
-              <p>OpenCV workflows and low-latency AR object detection with YOLO.</p>
-            </article>
-            <article class="focus-card">
-              <h3>AR / VR</h3>
-              <p>Spatial overlays, scene awareness, and Vision-AI integration.</p>
-            </article>
-          </div>
+          <div class="focus-grid reveal" id="focusGrid"></div>
         </div>
       </section>
 
@@ -134,13 +123,23 @@
         </div>
       </section>
 
+      <section class="section" id="research">
+        <div class="container">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Research Papers</p>
+            <h2>Publications, drafts, and ongoing studies</h2>
+          </div>
+          <div class="research-grid" id="researchGrid" aria-live="polite"></div>
+        </div>
+      </section>
+
       <section class="section" id="skills">
         <div class="container">
           <div class="section-heading reveal">
             <p class="eyebrow">Toolkit</p>
             <h2>Languages and technologies</h2>
           </div>
-          <div class="skill-list reveal" id="skillList"></div>
+          <div class="skill-groups reveal" id="skillGroups"></div>
         </div>
       </section>
 
@@ -184,7 +183,7 @@
     <footer class="site-footer">
       <div class="container footer-shell">
         <p>© <span id="year"></span> Lejuene Delantar</p>
-        <a href="#top">Back to top</a>
+        <a href="#hero">Back to top</a>
       </div>
     </footer>
 

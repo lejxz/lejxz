@@ -98,7 +98,15 @@ You can open `index.html` directly, but for module/data loading it is better to 
 
 ### Customize Quickly
 
-- Update projects and skills in `assets/data/portfolio.json`
+- Update focus areas, projects, research papers, and skills in `assets/data/portfolio.json`
 - Adjust colors/spacing in `assets/css/tokens.css`
 - Add new sections in `index.html` and behavior in `assets/js/ui.js`
 - Set your own Formspree endpoint in `index.html` (`action="https://formspree.io/f/your-form-id"`)
+
+### Data-Driven Counters
+
+Hero counters are automatically computed from `portfolio.json`:
+
+- `Projects Built` = total items in `projects`
+- `Research Papers` = total items in `researchPapers`
+- `Active Research Tracks` = total items with `status: "active-research"` in both `projects` and `researchPapers`
