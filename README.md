@@ -68,6 +68,7 @@ My work sits at the intersection of intelligent systems and spatial computing â€
 </div>
 
 <div align="center">
+  
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=100&section=footer" />
   
 </div>
