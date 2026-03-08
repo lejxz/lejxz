@@ -3,79 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="3D Portfolio of Lejuene Delantar — an immersive AR/VR workspace experience focused on AI, computer vision, and spatial computing." />
+    <meta name="description" content="Cinematic 3D portfolio of Lejuene Delantar. Scroll through a spatial room narrative from desk setup to projects, research, skills, and contact." />
     <title>lejxz | 3D Portfolio</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/scene.css" />
   </head>
   <body>
-    <!-- Loading Screen -->
     <div id="loadingScreen">
       <div class="loader-content">
         <div class="loader-ring"></div>
         <h1 class="loader-title">lejxz</h1>
-        <p class="loader-sub">Initializing Spatial Workspace…</p>
+        <p class="loader-sub">Rendering cinematic room sequence...</p>
         <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
       </div>
     </div>
 
-    <!-- 3D Canvas -->
     <canvas id="roomCanvas"></canvas>
 
-    <!-- HUD Overlay -->
+    <div id="scrollSpace" aria-hidden="true"></div>
+
     <div id="hud">
-      <div class="hud-top-left">
+      <div class="hud-brand-wrap">
         <span class="hud-brand">lejxz</span>
-        <span class="hud-tag">SPATIAL PORTFOLIO v1.0</span>
+        <span class="hud-tag">AR WEB EXPERIENCE</span>
       </div>
-      <div class="hud-top-right">
-        <button class="hud-btn" id="btnHelp" title="Controls">?</button>
+
+      <div class="hud-meta">
+        <span id="sectionCount">01/06</span>
       </div>
-      <div class="hud-crosshair" id="crosshair">+</div>
-      <div class="hud-bottom">
-        <div class="hud-prompt" id="interactPrompt"></div>
+
+      <div class="section-headline">
+        <p id="sectionTitle">INTRO</p>
+        <h1>Spatial Portfolio Room</h1>
+        <p id="sectionSubtitle">The desk where ideas become systems.</p>
       </div>
-      <div class="hud-minimap" id="minimap">
-        <div class="minimap-player" id="minimapPlayer"></div>
+
+      <nav class="story-progress" aria-label="Section progress">
+        <button class="progress-dot active" type="button" aria-label="Go to Intro"></button>
+        <button class="progress-dot" type="button" aria-label="Go to About"></button>
+        <button class="progress-dot" type="button" aria-label="Go to Projects"></button>
+        <button class="progress-dot" type="button" aria-label="Go to Research"></button>
+        <button class="progress-dot" type="button" aria-label="Go to Skills"></button>
+        <button class="progress-dot" type="button" aria-label="Go to Contact"></button>
+      </nav>
+
+      <aside id="storyTrack">
+        <article class="story-card active" data-section-card="intro"></article>
+        <article class="story-card" data-section-card="about"></article>
+        <article class="story-card" data-section-card="projects"></article>
+        <article class="story-card" data-section-card="research"></article>
+        <article class="story-card" data-section-card="skills"></article>
+        <article class="story-card" data-section-card="contact"></article>
+      </aside>
+
+      <div class="hud-actions">
+        <button id="openReference" class="ghost-btn" type="button">References</button>
+        <span>Scroll to navigate</span>
+      </div>
+
+      <div id="referencePanel" class="reference-panel hidden">
+        <button id="closeReference" class="ghost-btn" type="button">Close</button>
+        <h2>3D Portfolio References</h2>
+        <ul>
+          <li><a href="https://bruno-simon.com/" target="_blank" rel="noreferrer">Bruno Simon</a> - playful world navigation and embedded storytelling.</li>
+          <li><a href="https://www.awwwards.com/websites/three-js/" target="_blank" rel="noreferrer">Awwwards Three.js Collection</a> - broad gallery of production-grade 3D experiences.</li>
+          <li><a href="https://tympanus.net/codrops/" target="_blank" rel="noreferrer">Codrops</a> - breakdowns of scroll-driven WebGL techniques and case studies.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- Help Panel -->
-    <div id="helpPanel" class="overlay-panel hidden">
-      <div class="panel-inner panel-help">
-        <button class="panel-close" id="closeHelp">&times;</button>
-        <h2>Controls</h2>
-        <div class="controls-grid">
-          <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><p>Move</p>
-          <div><kbd>Mouse</kbd></div><p>Look around</p>
-          <div><kbd>Click</kbd></div><p>Interact with objects</p>
-          <div><kbd>ESC</kbd></div><p>Release cursor / Close panel</p>
-          <div><kbd>Scroll</kbd></div><p>Zoom carousel</p>
-        </div>
-        <p class="help-note">Click the canvas to start navigating. Walk up to glowing objects and click to interact.</p>
-      </div>
-    </div>
-
-    <!-- Detail Panel (Projects / Research / About / Skills / Contact) -->
-    <div id="detailPanel" class="overlay-panel hidden">
-      <div class="panel-inner" id="panelContent">
-        <!-- Dynamically populated -->
-      </div>
-      <button class="panel-close" id="closeDetail">&times;</button>
-    </div>
-
-    <!-- Entry Gate (first visit) -->
     <div id="entryGate">
       <div class="gate-content">
         <img class="gate-photo" src="https://github.com/lejxz.png" alt="Lejuene Delantar" />
         <h1>Lejuene Delantar</h1>
-        <p class="gate-role">AI &amp; Spatial Computing Researcher</p>
-        <p class="gate-desc">Welcome to my 3D workspace. Explore the room to discover my projects, research, and skills.</p>
-        <button class="btn-enter" id="btnEnter">Enter Workspace</button>
-        <p class="gate-hint">Best experienced on desktop with mouse &amp; keyboard</p>
+        <p class="gate-role">AI / Computer Vision / AR Portfolio</p>
+        <p class="gate-desc">Start by looking at the desk and monitor, then scroll through a guided spatial journey across projects, research, skills, and contact.</p>
+        <button class="btn-enter" id="btnEnter">Start Experience</button>
+        <p class="gate-hint">Desktop and mobile supported</p>
       </div>
     </div>
 

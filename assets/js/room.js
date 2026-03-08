@@ -1,513 +1,444 @@
-/*  room.js — Builds the 3D workspace room with interactive furniture  */
 import * as THREE from "three";
 
-const ROOM_W = 20, ROOM_H = 7, ROOM_D = 20;
-const NEON = 0xb660eb, CYAN = 0x00e5ff, PINK = 0xff2d95;
+const palette = {
+  wallLight: 0xe2ddd4,
+  wallDark: 0x2a231d,
+  wood: 0x3f332a,
+  woodAlt: 0x5a4a3f,
+  metal: 0x121212,
+  monitor: 0x181c22,
+  screen: 0x8aa8bd,
+  paper: 0xd9d6cb,
+  cyan: 0x78b6d6,
+  amber: 0xc88c50,
+  mist: 0x9da6b1,
+};
 
-/* ── Helpers ─────────────────────────────────────────────── */
-function mat(color, opts = {}) {
-  return new THREE.MeshStandardMaterial({ color, ...opts });
+const SECTION_ORDER = ["intro", "about", "projects", "research", "skills", "contact"];
+
+const sectionViews = {
+  intro: {
+    position: new THREE.Vector3(-2.1, 1.7, 3.9),
+    target: new THREE.Vector3(1.2, 1.25, -0.85),
+    subtitle: "The desk where ideas become systems.",
+  },
+  about: {
+    position: new THREE.Vector3(-0.4, 1.55, 2.4),
+    target: new THREE.Vector3(0.85, 1.3, -0.9),
+    subtitle: "Who I am and what I build.",
+  },
+  projects: {
+    position: new THREE.Vector3(2.25, 1.6, 1.45),
+    target: new THREE.Vector3(1.8, 1.2, -0.7),
+    subtitle: "Applied experiments and working prototypes.",
+  },
+  research: {
+    position: new THREE.Vector3(2.55, 1.75, -0.25),
+    target: new THREE.Vector3(1.15, 1.55, -2.1),
+    subtitle: "Notes, methods, and technical depth.",
+  },
+  skills: {
+    position: new THREE.Vector3(0.45, 1.75, -0.95),
+    target: new THREE.Vector3(-1.55, 1.25, -1.15),
+    subtitle: "Tools and languages I rely on daily.",
+  },
+  contact: {
+    position: new THREE.Vector3(-1.95, 1.6, 0.85),
+    target: new THREE.Vector3(-1.8, 1.35, -0.3),
+    subtitle: "Ways to collaborate and connect.",
+  },
+};
+
+export function buildSceneKit(scene) {
+  const dynamic = {
+    bobbing: [],
+    monitors: [],
+    particles: null,
+    lamps: [],
+  };
+
+  buildEnvironment(scene);
+  buildDeskZone(scene, dynamic);
+  buildProjectShelf(scene, dynamic);
+  buildResearchWall(scene, dynamic);
+  buildSkillRack(scene, dynamic);
+  buildContactDock(scene, dynamic);
+  dynamic.particles = addParticles(scene);
+
+  return {
+    sections: SECTION_ORDER.map((id, index) => ({
+      id,
+      index,
+      ...sectionViews[id],
+    })),
+    dynamic,
+  };
 }
 
-function glowMat(color) {
-  return new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85 });
+export function updateSceneDynamics(dynamic, elapsedTime) {
+  dynamic.bobbing.forEach((item, index) => {
+    item.position.y = item.baseY + Math.sin(elapsedTime * item.speed + index * 0.9) * item.amp;
+    item.rotation.y += item.spin;
+  });
+
+  dynamic.monitors.forEach((screen, index) => {
+    const n = (Math.sin(elapsedTime * (1.2 + index * 0.2)) + 1) * 0.5;
+    screen.material.opacity = 0.62 + n * 0.2;
+  });
+
+  dynamic.lamps.forEach((lamp, index) => {
+    const jitter = Math.sin(elapsedTime * (2 + index * 0.4)) * 0.15;
+    lamp.intensity = lamp.base + jitter;
+  });
+
+  if (dynamic.particles) {
+    const arr = dynamic.particles.geometry.attributes.position.array;
+    for (let i = 0; i < arr.length; i += 3) {
+      arr[i + 1] += Math.sin(elapsedTime * 0.4 + i) * 0.0008;
+      if (arr[i + 1] > 3.4) arr[i + 1] = 0.2;
+    }
+    dynamic.particles.geometry.attributes.position.needsUpdate = true;
+  }
 }
 
-function neonEdge(geo, color, parent) {
-  const edges = new THREE.EdgesGeometry(geo);
-  const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.6 }));
-  parent.add(line);
-  return line;
+function material(color, opts = {}) {
+  return new THREE.MeshStandardMaterial({
+    color,
+    roughness: 0.65,
+    metalness: 0.18,
+    ...opts,
+  });
 }
 
-function label3D(text, color = CYAN) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 512; canvas.height = 128;
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "transparent"; ctx.fillRect(0, 0, 512, 128);
-  ctx.font = "bold 36px 'Space Grotesk', sans-serif";
-  ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
-  ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.fillText(text, 256, 64);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.minFilter = THREE.LinearFilter;
-  const spriteMat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
-  const sprite = new THREE.Sprite(spriteMat);
-  sprite.scale.set(3, 0.75, 1);
-  return sprite;
-}
+function buildEnvironment(scene) {
+  const room = new THREE.Group();
 
-/* ── Build the Room ─────────────────────────────────────── */
-export function buildRoom(scene) {
-  const interactables = [];  // objects the player can click
-
-  // Floor
-  const floorGeo = new THREE.PlaneGeometry(ROOM_W, ROOM_D);
-  const floorMat = mat(0x0d0b24, { roughness: 0.8 });
-  const floor = new THREE.Mesh(floorGeo, floorMat);
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    material(palette.wood, { roughness: 0.8, metalness: 0.08 })
+  );
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
-  scene.add(floor);
+  room.add(floor);
 
-  // Floor grid overlay
-  const gridHelper = new THREE.GridHelper(ROOM_W, 30, 0x1a1550, 0x120e35);
-  gridHelper.position.y = 0.01;
-  scene.add(gridHelper);
+  const trim = new THREE.Mesh(
+    new THREE.RingGeometry(4.3, 4.95, 4),
+    material(0x181818, { roughness: 0.5 })
+  );
+  trim.rotation.x = -Math.PI / 2;
+  trim.position.y = 0.02;
+  trim.rotation.z = Math.PI * 0.25;
+  room.add(trim);
 
-  // Walls
-  const wallMat1 = mat(0x110e30, { roughness: 0.9 });
-  const wallGeo = new THREE.PlaneGeometry(ROOM_W, ROOM_H);
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.2), material(palette.wallDark, { roughness: 0.9 }));
+  backWall.position.set(0, 2.1, -3.1);
+  room.add(backWall);
 
-  // Back wall (z = -ROOM_D/2)
-  const backWall = new THREE.Mesh(wallGeo, wallMat1);
-  backWall.position.set(0, ROOM_H / 2, -ROOM_D / 2);
-  scene.add(backWall);
-
-  // Front wall (z = ROOM_D/2) — behind player start
-  const frontWall = new THREE.Mesh(wallGeo, wallMat1);
-  frontWall.position.set(0, ROOM_H / 2, ROOM_D / 2);
-  frontWall.rotation.y = Math.PI;
-  scene.add(frontWall);
-
-  // Side walls
-  const sideGeo = new THREE.PlaneGeometry(ROOM_D, ROOM_H);
-  const leftWall = new THREE.Mesh(sideGeo, wallMat1);
-  leftWall.position.set(-ROOM_W / 2, ROOM_H / 2, 0);
+  const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.2), material(palette.wallLight, { roughness: 0.95 }));
+  leftWall.position.set(-3.7, 2.1, 0);
   leftWall.rotation.y = Math.PI / 2;
-  scene.add(leftWall);
+  room.add(leftWall);
 
-  const rightWall = new THREE.Mesh(sideGeo, wallMat1);
-  rightWall.position.set(ROOM_W / 2, ROOM_H / 2, 0);
+  const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.2), material(palette.wallDark, { roughness: 0.9 }));
+  rightWall.position.set(3.7, 2.1, 0);
   rightWall.rotation.y = -Math.PI / 2;
-  scene.add(rightWall);
+  room.add(rightWall);
 
-  // Ceiling
-  const ceil = new THREE.Mesh(floorGeo, mat(0x0a0820));
-  ceil.rotation.x = Math.PI / 2;
-  ceil.position.y = ROOM_H;
-  scene.add(ceil);
-
-  // Neon strips on ceiling
-  addCeilingStrips(scene);
-
-  /* ── DESK + MONITOR (About / Profile) ────────────────── */
-  const deskGroup = new THREE.Group();
-  deskGroup.position.set(0, 0, -ROOM_D / 2 + 1.8);
-
-  // Desk surface
-  const deskGeo = new THREE.BoxGeometry(4, 0.12, 1.6);
-  const deskMesh = new THREE.Mesh(deskGeo, mat(0x1c1845));
-  deskMesh.position.y = 1.0;
-  deskMesh.castShadow = true;
-  neonEdge(deskGeo, NEON, deskMesh);
-  deskGroup.add(deskMesh);
-
-  // Desk legs
-  const legGeo = new THREE.BoxGeometry(0.08, 1, 0.08);
-  const legMat = mat(0x2a2460);
-  [[-1.9, 0.5, -0.7], [1.9, 0.5, -0.7], [-1.9, 0.5, 0.7], [1.9, 0.5, 0.7]].forEach(p => {
-    const leg = new THREE.Mesh(legGeo, legMat);
-    leg.position.set(...p);
-    deskGroup.add(leg);
-  });
-
-  // Monitor
-  const monGeo = new THREE.BoxGeometry(2.2, 1.3, 0.06);
-  const monMesh = new THREE.Mesh(monGeo, mat(0x0e0c28));
-  monMesh.position.set(0, 2.0, -0.4);
-  neonEdge(monGeo, CYAN, monMesh);
-  deskGroup.add(monMesh);
-
-  // Screen glow
-  const screenGeo = new THREE.PlaneGeometry(2.0, 1.1);
-  const screenMesh = new THREE.Mesh(screenGeo, new THREE.MeshBasicMaterial({
-    color: 0x0a1a3a, transparent: true, opacity: 0.9
-  }));
-  screenMesh.position.set(0, 2.0, -0.36);
-  deskGroup.add(screenMesh);
-
-  // Monitor stand
-  const standGeo = new THREE.BoxGeometry(0.15, 0.65, 0.15);
-  const stand = new THREE.Mesh(standGeo, legMat);
-  stand.position.set(0, 1.38, -0.4);
-  deskGroup.add(stand);
-
-  // Keyboard
-  const kbGeo = new THREE.BoxGeometry(1.2, 0.04, 0.4);
-  const kb = new THREE.Mesh(kbGeo, mat(0x1a1640));
-  kb.position.set(0, 1.1, 0.2);
-  neonEdge(kbGeo, NEON, kb);
-  deskGroup.add(kb);
-
-  // Chair
-  const chairGroup = buildChair();
-  chairGroup.position.set(0, 0, 1.2);
-  deskGroup.add(chairGroup);
-
-  // Floating label
-  const deskLabel = label3D("ABOUT ME", CYAN);
-  deskLabel.position.set(0, 3.6, -0.4);
-  deskGroup.add(deskLabel);
-
-  scene.add(deskGroup);
-
-  // Make monitor interactive
-  monMesh.userData = { type: "about", label: "Click to view profile & about" };
-  interactables.push(monMesh);
-
-  /* ── BOOKSHELF (Projects) ────────────────────────────── */
-  const shelfGroup = buildBookshelf();
-  shelfGroup.position.set(-ROOM_W / 2 + 1.3, 0, 0);
-  shelfGroup.rotation.y = Math.PI / 2;
-  scene.add(shelfGroup);
-
-  const shelfLabel = label3D("PROJECTS", NEON);
-  shelfLabel.position.set(-ROOM_W / 2 + 1.3, 4.5, 0);
-  scene.add(shelfLabel);
-
-  const shelfHitbox = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 4, 5),
-    new THREE.MeshBasicMaterial({ visible: false })
+  const ceiling = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    material(0x191919, { roughness: 0.7, metalness: 0.2 })
   );
-  shelfHitbox.position.set(-ROOM_W / 2 + 1.3, 2, 0);
-  shelfHitbox.userData = { type: "projects", label: "Click to browse projects" };
-  scene.add(shelfHitbox);
-  interactables.push(shelfHitbox);
+  ceiling.rotation.x = Math.PI / 2;
+  ceiling.position.y = 4.2;
+  room.add(ceiling);
 
-  /* ── WHITEBOARD (Research) ───────────────────────────── */
-  const wbGroup = buildWhiteboard();
-  wbGroup.position.set(ROOM_W / 2 - 0.3, 2.2, 0);
-  wbGroup.rotation.y = -Math.PI / 2;
-  scene.add(wbGroup);
-
-  const wbLabel = label3D("RESEARCH", PINK);
-  wbLabel.position.set(ROOM_W / 2 - 0.3, 4.5, 0);
-  scene.add(wbLabel);
-
-  const wbHitbox = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 3, 4),
-    new THREE.MeshBasicMaterial({ visible: false })
+  const skylight = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.2, 1.1),
+    new THREE.MeshBasicMaterial({ color: 0xf3f5ff, transparent: true, opacity: 0.22 })
   );
-  wbHitbox.position.set(ROOM_W / 2 - 0.8, 2.5, 0);
-  wbHitbox.userData = { type: "research", label: "Click to read research papers" };
-  scene.add(wbHitbox);
-  interactables.push(wbHitbox);
+  skylight.position.set(1.8, 4.17, -2.1);
+  skylight.rotation.x = Math.PI / 2;
+  room.add(skylight);
 
-  /* ── HOLOGRAM TABLE (Skills) ─────────────────────────── */
-  const holoGroup = buildHologramTable();
-  holoGroup.position.set(5, 0, 5);
-  scene.add(holoGroup);
-
-  const holoLabel = label3D("SKILLS", CYAN);
-  holoLabel.position.set(5, 3.8, 5);
-  scene.add(holoLabel);
-
-  const holoHitbox = new THREE.Mesh(
-    new THREE.BoxGeometry(2.5, 3, 2.5),
-    new THREE.MeshBasicMaterial({ visible: false })
-  );
-  holoHitbox.position.set(5, 1.5, 5);
-  holoHitbox.userData = { type: "skills", label: "Click to view tech stack" };
-  scene.add(holoHitbox);
-  interactables.push(holoHitbox);
-
-  /* ── FLOATING ORB (Contact) ──────────────────────────── */
-  const orbGroup = buildContactOrb();
-  orbGroup.position.set(-5, 2.5, 5);
-  scene.add(orbGroup);
-
-  const contactLabel = label3D("CONTACT", PINK);
-  contactLabel.position.set(-5, 4.5, 5);
-  scene.add(contactLabel);
-
-  const orbHitbox = new THREE.Mesh(
-    new THREE.SphereGeometry(1.2, 8, 8),
-    new THREE.MeshBasicMaterial({ visible: false })
-  );
-  orbHitbox.position.set(-5, 2.5, 5);
-  orbHitbox.userData = { type: "contact", label: "Click to get in touch" };
-  scene.add(orbHitbox);
-  interactables.push(orbHitbox);
-
-  /* ── FOCUS AREA PEDESTAL ─────────────────────────────── */
-  const focusGroup = buildFocusPedestal();
-  focusGroup.position.set(0, 0, 5);
-  scene.add(focusGroup);
-
-  const focusLabel = label3D("FOCUS", CYAN);
-  focusLabel.position.set(0, 3.8, 5);
-  scene.add(focusLabel);
-
-  const focusHitbox = new THREE.Mesh(
-    new THREE.BoxGeometry(2, 3, 2),
-    new THREE.MeshBasicMaterial({ visible: false })
-  );
-  focusHitbox.position.set(0, 1.5, 5);
-  focusHitbox.userData = { type: "focus", label: "Click to see current focus" };
-  scene.add(focusHitbox);
-  interactables.push(focusHitbox);
-
-  /* ── AMBIENT DECORATIONS ─────────────────────────────── */
-  addFloatingParticles(scene);
-
-  return interactables;
+  scene.add(room);
 }
 
-/* ── Sub-builders ────────────────────────────────────────── */
-function buildChair() {
-  const g = new THREE.Group();
-  const seatGeo = new THREE.BoxGeometry(0.8, 0.08, 0.8);
-  const seat = new THREE.Mesh(seatGeo, mat(0x1e1a45));
-  seat.position.y = 0.7;
-  g.add(seat);
-  const backGeo = new THREE.BoxGeometry(0.8, 0.9, 0.08);
-  const back = new THREE.Mesh(backGeo, mat(0x1e1a45));
-  back.position.set(0, 1.15, -0.36);
-  g.add(back);
-  const legGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.7, 6);
-  const legMt = mat(0x2a2460);
-  [[-0.3, 0.35, -0.3], [0.3, 0.35, -0.3], [-0.3, 0.35, 0.3], [0.3, 0.35, 0.3]].forEach(p => {
-    const l = new THREE.Mesh(legGeo, legMt);
-    l.position.set(...p);
-    g.add(l);
+function buildDeskZone(scene, dynamic) {
+  const group = new THREE.Group();
+
+  const deskTop = new THREE.Mesh(
+    new THREE.BoxGeometry(4.6, 0.14, 1.35),
+    material(palette.woodAlt, { roughness: 0.62 })
+  );
+  deskTop.position.set(0.9, 1.03, -1.15);
+  deskTop.castShadow = true;
+  group.add(deskTop);
+
+  const sideTable = new THREE.Mesh(
+    new THREE.BoxGeometry(1.7, 0.14, 1.4),
+    material(palette.wood, { roughness: 0.62 })
+  );
+  sideTable.position.set(-1.05, 1.03, -0.82);
+  sideTable.castShadow = true;
+  group.add(sideTable);
+
+  const legGeo = new THREE.BoxGeometry(0.1, 1.02, 0.1);
+  const legPos = [
+    [-1.2, 0.5, -1.7],
+    [3.05, 0.5, -1.7],
+    [-1.2, 0.5, -0.55],
+    [3.05, 0.5, -0.55],
+    [-1.85, 0.5, -1.43],
+    [-1.85, 0.5, -0.18],
+  ];
+  legPos.forEach(([x, y, z]) => {
+    const leg = new THREE.Mesh(legGeo, material(palette.metal, { roughness: 0.5 }));
+    leg.position.set(x, y, z);
+    group.add(leg);
   });
-  return g;
+
+  const monitor = new THREE.Mesh(
+    new THREE.BoxGeometry(1.5, 0.94, 0.07),
+    material(palette.monitor, { roughness: 0.45, metalness: 0.35 })
+  );
+  monitor.position.set(1.35, 1.58, -1.25);
+  monitor.castShadow = true;
+  group.add(monitor);
+
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.33, 0.78),
+    new THREE.MeshBasicMaterial({ color: palette.screen, transparent: true, opacity: 0.74 })
+  );
+  screen.position.set(1.35, 1.58, -1.21);
+  group.add(screen);
+  dynamic.monitors.push(screen);
+
+  const stand = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.4, 0.12), material(palette.metal));
+  stand.position.set(1.35, 1.16, -1.22);
+  group.add(stand);
+
+  const keyboard = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.04, 0.32), material(0x202228, { roughness: 0.4 }));
+  keyboard.position.set(1.28, 1.08, -0.72);
+  keyboard.rotation.y = -0.05;
+  group.add(keyboard);
+
+  const mouse = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.04, 0.2), material(0x282a31, { roughness: 0.38 }));
+  mouse.position.set(1.88, 1.08, -0.65);
+  group.add(mouse);
+
+  const stack = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.12, 0.42), material(palette.paper, { roughness: 0.94, metalness: 0.02 }));
+  stack.position.set(0.23, 1.11, -0.7);
+  group.add(stack);
+
+  const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.11, 18), material(0x30414f, { roughness: 0.45 }));
+  mug.position.set(2.15, 1.11, -0.95);
+  group.add(mug);
+
+  scene.add(group);
 }
 
-function buildBookshelf() {
-  const g = new THREE.Group();
-  const shelfMt = mat(0x1a1640);
-  // Frame
-  const sideGeo = new THREE.BoxGeometry(0.08, 4, 0.6);
-  const side1 = new THREE.Mesh(sideGeo, shelfMt); side1.position.set(-2, 2, 0); g.add(side1);
-  const side2 = new THREE.Mesh(sideGeo, shelfMt); side2.position.set(2, 2, 0); g.add(side2);
+function buildProjectShelf(scene, dynamic) {
+  const group = new THREE.Group();
 
-  // Shelves
-  const shGeo = new THREE.BoxGeometry(4, 0.08, 0.6);
-  [0.5, 1.4, 2.3, 3.2, 4.0].forEach(y => {
-    const sh = new THREE.Mesh(shGeo, shelfMt);
-    sh.position.set(0, y, 0);
-    neonEdge(shGeo, NEON, sh);
-    g.add(sh);
+  const shelf = new THREE.Mesh(
+    new THREE.BoxGeometry(1.65, 2.15, 0.42),
+    material(0x171717, { roughness: 0.7 })
+  );
+  shelf.position.set(2.75, 1.08, -0.95);
+  group.add(shelf);
+
+  const tiers = [0.45, 0.96, 1.48, 2.0];
+  tiers.forEach((y) => {
+    const plank = new THREE.Mesh(new THREE.BoxGeometry(1.55, 0.06, 0.4), material(0x2a2a2a, { roughness: 0.66 }));
+    plank.position.set(2.75, y, -0.95);
+    group.add(plank);
   });
 
-  // Books (colored boxes)
-  const bookColors = [0xb660eb, 0x00e5ff, 0xff2d95, 0x6c3beb, 0x4a90d9];
-  [0.5, 1.4, 2.3, 3.2].forEach((shelfY, si) => {
-    const count = 4 + Math.floor(Math.random() * 3);
-    let x = -1.6;
-    for (let i = 0; i < count; i++) {
-      const w = 0.12 + Math.random() * 0.15;
-      const h = 0.5 + Math.random() * 0.3;
-      const bookGeo = new THREE.BoxGeometry(w, h, 0.35);
-      const book = new THREE.Mesh(bookGeo, mat(bookColors[(si + i) % bookColors.length]));
-      book.position.set(x + w / 2, shelfY + 0.08 + h / 2, 0);
-      g.add(book);
-      x += w + 0.04;
-    }
-  });
+  const colors = [0x8aa8bd, 0xc88c50, 0xad7070, 0x6d7d89, 0xd6be84];
+  for (let i = 0; i < 18; i += 1) {
+    const book = new THREE.Mesh(
+      new THREE.BoxGeometry(0.09 + (i % 3) * 0.015, 0.24 + (i % 5) * 0.03, 0.22),
+      material(colors[i % colors.length], { roughness: 0.7, metalness: 0.04 })
+    );
+    const row = Math.floor(i / 5);
+    const col = i % 5;
+    book.position.set(2.23 + col * 0.2, 0.6 + row * 0.54, -0.95 + ((i % 2) * 0.05 - 0.02));
+    group.add(book);
+  }
 
-  return g;
+  const orb = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.17, 1),
+    new THREE.MeshBasicMaterial({ color: palette.amber, wireframe: true, transparent: true, opacity: 0.6 })
+  );
+  orb.position.set(2.75, 2.3, -1);
+  orb.baseY = orb.position.y;
+  orb.amp = 0.08;
+  orb.speed = 1.1;
+  orb.spin = 0.012;
+  dynamic.bobbing.push(orb);
+  group.add(orb);
+
+  scene.add(group);
 }
 
-function buildWhiteboard() {
-  const g = new THREE.Group();
-  // Board
-  const boardGeo = new THREE.BoxGeometry(4, 2.5, 0.08);
-  const board = new THREE.Mesh(boardGeo, mat(0x161240));
-  neonEdge(boardGeo, PINK, board);
-  g.add(board);
+function buildResearchWall(scene, dynamic) {
+  const group = new THREE.Group();
 
-  // Screen surface
-  const surfGeo = new THREE.PlaneGeometry(3.6, 2.2);
-  const surf = new THREE.Mesh(surfGeo, new THREE.MeshBasicMaterial({ color: 0x0d0a25, transparent: true, opacity: 0.9 }));
-  surf.position.z = 0.05;
-  g.add(surf);
+  const board = new THREE.Mesh(
+    new THREE.BoxGeometry(2.3, 1.4, 0.08),
+    material(0x1f1f24, { roughness: 0.5 })
+  );
+  board.position.set(1.35, 1.85, -2.95);
+  group.add(board);
 
-  // Some "post-it" rectangles
-  const postItColors = [NEON, CYAN, PINK];
-  [[-1, 0.5], [0.3, -0.3], [1.2, 0.6]].forEach(([x, y], i) => {
-    const piGeo = new THREE.PlaneGeometry(0.6, 0.4);
-    const pi = new THREE.Mesh(piGeo, glowMat(postItColors[i]));
-    pi.position.set(x, y, 0.06);
-    g.add(pi);
+  const rows = [-0.36, -0.06, 0.25];
+  rows.forEach((y, rowIndex) => {
+    const stroke = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.8, 0.03),
+      new THREE.MeshBasicMaterial({ color: rowIndex % 2 ? palette.cyan : palette.amber, transparent: true, opacity: 0.4 })
+    );
+    stroke.position.set(1.35, 1.85 + y, -2.9);
+    group.add(stroke);
   });
 
-  return g;
+  const memoColors = [0xd1e0ea, 0xf1d7ad, 0xdcc6b0];
+  for (let i = 0; i < 6; i += 1) {
+    const note = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.22, 0.18),
+      new THREE.MeshBasicMaterial({ color: memoColors[i % memoColors.length], transparent: true, opacity: 0.72 })
+    );
+    note.position.set(0.68 + (i % 3) * 0.42, 1.55 + Math.floor(i / 3) * 0.38, -2.89);
+    note.rotation.z = (i % 2 ? -1 : 1) * 0.05;
+    group.add(note);
+  }
+
+  const chip = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.2, 0),
+    new THREE.MeshBasicMaterial({ color: palette.cyan, transparent: true, opacity: 0.55, wireframe: true })
+  );
+  chip.position.set(1.35, 1.2, -2.35);
+  chip.baseY = chip.position.y;
+  chip.amp = 0.07;
+  chip.speed = 1.5;
+  chip.spin = 0.01;
+  dynamic.bobbing.push(chip);
+  group.add(chip);
+
+  scene.add(group);
 }
 
-function buildHologramTable() {
-  const g = new THREE.Group();
-  // Round table base
-  const baseGeo = new THREE.CylinderGeometry(0.8, 0.9, 0.1, 24);
-  const base = new THREE.Mesh(baseGeo, mat(0x1a1640));
-  base.position.y = 0.85;
-  neonEdge(baseGeo, CYAN, base);
-  g.add(base);
+function buildSkillRack(scene, dynamic) {
+  const group = new THREE.Group();
 
-  // Pedestal
-  const pedGeo = new THREE.CylinderGeometry(0.2, 0.3, 0.85, 12);
-  const ped = new THREE.Mesh(pedGeo, mat(0x151240));
-  ped.position.y = 0.43;
-  g.add(ped);
+  const rack = new THREE.Mesh(
+    new THREE.BoxGeometry(1.7, 1.2, 0.4),
+    material(0x202020, { roughness: 0.6 })
+  );
+  rack.position.set(-1.8, 1.32, -1.28);
+  group.add(rack);
 
-  // Hologram cone (upside-down cone with transparency)
-  const holoGeo = new THREE.ConeGeometry(0.6, 2, 24, 1, true);
-  const holoMat = new THREE.MeshBasicMaterial({
-    color: CYAN, transparent: true, opacity: 0.08,
-    side: THREE.DoubleSide, wireframe: true
+  const chips = ["PY", "CV", "ML", "AR", "SEC", "C++"];
+  chips.forEach((_, index) => {
+    const tile = new THREE.Mesh(
+      new THREE.BoxGeometry(0.45, 0.2, 0.06),
+      material(index % 2 ? 0x2f3942 : 0x3f2e24, { roughness: 0.45, metalness: 0.22 })
+    );
+    tile.position.set(-2.28 + (index % 3) * 0.48, 1.63 - Math.floor(index / 3) * 0.34, -1.04);
+    group.add(tile);
+
+    const glow = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.36, 0.1),
+      new THREE.MeshBasicMaterial({ color: index % 2 ? palette.cyan : palette.amber, transparent: true, opacity: 0.28 })
+    );
+    glow.position.copy(tile.position);
+    glow.position.z += 0.04;
+    group.add(glow);
   });
-  const holo = new THREE.Mesh(holoGeo, holoMat);
-  holo.position.y = 1.9;
-  holo.name = "holoCone";
-  g.add(holo);
 
-  // Floating icosahedron
-  const icoGeo = new THREE.IcosahedronGeometry(0.35, 0);
-  const icoMat = new THREE.MeshBasicMaterial({ color: CYAN, wireframe: true, transparent: true, opacity: 0.7 });
-  const ico = new THREE.Mesh(icoGeo, icoMat);
-  ico.position.y = 2.2;
-  ico.name = "holoIco";
-  g.add(ico);
-
-  // Ring
-  const ringGeo = new THREE.TorusGeometry(0.55, 0.015, 8, 48);
-  const ring = new THREE.Mesh(ringGeo, glowMat(CYAN));
-  ring.position.y = 1.0;
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.26, 0.03, 8, 24),
+    new THREE.MeshBasicMaterial({ color: palette.cyan, transparent: true, opacity: 0.45 })
+  );
+  ring.position.set(-1.8, 2.18, -1.15);
   ring.rotation.x = Math.PI / 2;
-  ring.name = "holoRing";
-  g.add(ring);
+  ring.baseY = ring.position.y;
+  ring.amp = 0.09;
+  ring.speed = 1.2;
+  ring.spin = 0.015;
+  dynamic.bobbing.push(ring);
+  group.add(ring);
 
-  return g;
+  scene.add(group);
 }
 
-function buildContactOrb() {
-  const g = new THREE.Group();
-  // Outer wireframe sphere
-  const outerGeo = new THREE.SphereGeometry(0.7, 16, 16);
-  const outer = new THREE.Mesh(outerGeo, new THREE.MeshBasicMaterial({
-    color: PINK, wireframe: true, transparent: true, opacity: 0.25
-  }));
-  outer.name = "contactOuter";
-  g.add(outer);
+function buildContactDock(scene, dynamic) {
+  const group = new THREE.Group();
 
-  // Inner core
-  const coreGeo = new THREE.SphereGeometry(0.25, 16, 16);
-  const core = new THREE.Mesh(coreGeo, new THREE.MeshBasicMaterial({
-    color: PINK, transparent: true, opacity: 0.6
-  }));
-  core.name = "contactCore";
-  g.add(core);
+  const plinth = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.42, 0.48, 0.86, 16),
+    material(0x232323, { roughness: 0.55 })
+  );
+  plinth.position.set(-1.95, 0.43, -0.2);
+  group.add(plinth);
 
-  // Orbiting ring
-  const ringGeo = new THREE.TorusGeometry(0.55, 0.012, 8, 48);
-  const ring = new THREE.Mesh(ringGeo, glowMat(PINK));
-  ring.name = "contactRing";
-  g.add(ring);
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 18, 18),
+    new THREE.MeshBasicMaterial({ color: palette.amber, transparent: true, opacity: 0.68 })
+  );
+  sphere.position.set(-1.95, 1.27, -0.2);
+  sphere.baseY = sphere.position.y;
+  sphere.amp = 0.07;
+  sphere.speed = 1.35;
+  sphere.spin = 0.009;
+  dynamic.bobbing.push(sphere);
+  group.add(sphere);
 
-  return g;
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.34, 0.015, 12, 48),
+    new THREE.MeshBasicMaterial({ color: palette.cyan, transparent: true, opacity: 0.4 })
+  );
+  ring.position.copy(sphere.position);
+  ring.rotation.x = 0.55;
+  ring.baseY = ring.position.y;
+  ring.amp = 0.05;
+  ring.speed = 1.8;
+  ring.spin = -0.02;
+  dynamic.bobbing.push(ring);
+  group.add(ring);
+
+  const lamp = new THREE.PointLight(0xf4c88f, 0.9, 3.8, 1.8);
+  lamp.position.set(-1.95, 1.45, -0.2);
+  lamp.base = 0.9;
+  dynamic.lamps.push(lamp);
+  group.add(lamp);
+
+  scene.add(group);
 }
 
-function buildFocusPedestal() {
-  const g = new THREE.Group();
-  // Pillar
-  const pilGeo = new THREE.CylinderGeometry(0.5, 0.6, 1.4, 6);
-  const pillar = new THREE.Mesh(pilGeo, mat(0x1a1640));
-  pillar.position.y = 0.7;
-  neonEdge(pilGeo, CYAN, pillar);
-  g.add(pillar);
-
-  // Floating diamond
-  const diamGeo = new THREE.OctahedronGeometry(0.4, 0);
-  const diam = new THREE.Mesh(diamGeo, new THREE.MeshBasicMaterial({
-    color: CYAN, wireframe: true, transparent: true, opacity: 0.6
-  }));
-  diam.position.y = 2.2;
-  diam.name = "focusDiamond";
-  g.add(diam);
-
-  return g;
-}
-
-/* ── Ceiling Neon Strips ─────────────────────────────────── */
-function addCeilingStrips(scene) {
-  const stripGeo = new THREE.BoxGeometry(ROOM_W - 2, 0.04, 0.06);
-  const colors = [NEON, CYAN];
-  [-3, 0, 3].forEach((z, i) => {
-    const strip = new THREE.Mesh(stripGeo, glowMat(colors[i % 2]));
-    strip.position.set(0, ROOM_H - 0.05, z);
-    scene.add(strip);
-  });
-  // Cross strips
-  const crossGeo = new THREE.BoxGeometry(0.06, 0.04, ROOM_D - 2);
-  [-4, 4].forEach((x, i) => {
-    const strip = new THREE.Mesh(crossGeo, glowMat(colors[(i + 1) % 2]));
-    strip.position.set(x, ROOM_H - 0.05, 0);
-    scene.add(strip);
-  });
-}
-
-/* ── Floating Particles ──────────────────────────────────── */
-function addFloatingParticles(scene) {
-  const count = 200;
+function addParticles(scene) {
+  const count = 140;
   const positions = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    positions[i * 3]     = (Math.random() - 0.5) * ROOM_W;
-    positions[i * 3 + 1] = Math.random() * ROOM_H;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * ROOM_D;
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
-  const particleMat = new THREE.PointsMaterial({
-    color: NEON, size: 0.04, transparent: true, opacity: 0.5,
-    sizeAttenuation: true
-  });
-  const particles = new THREE.Points(geo, particleMat);
-  particles.name = "particles";
-  scene.add(particles);
+  for (let i = 0; i < count; i += 1) {
+    positions[i * 3] = (Math.random() - 0.5) * 7;
+    positions[i * 3 + 1] = Math.random() * 3.4 + 0.2;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 6.4;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+  const points = new THREE.Points(
+    geometry,
+    new THREE.PointsMaterial({
+      color: 0xe0d4bc,
+      size: 0.02,
+      transparent: true,
+      opacity: 0.4,
+      sizeAttenuation: true,
+    })
+  );
+
+  scene.add(points);
+  return points;
 }
-
-/* ── Animate Objects ─────────────────────────────────────── */
-export function animateRoom(scene, time) {
-  // Hologram rotation
-  const ico = scene.getObjectByName("holoIco");
-  if (ico) {
-    ico.rotation.y = time * 0.5;
-    ico.rotation.x = Math.sin(time * 0.3) * 0.3;
-    ico.position.y = 2.2 + Math.sin(time * 0.8) * 0.15;
-  }
-  const ring = scene.getObjectByName("holoRing");
-  if (ring) ring.rotation.z = time * 0.3;
-
-  const cone = scene.getObjectByName("holoCone");
-  if (cone) cone.rotation.y = time * 0.2;
-
-  // Contact orb
-  const outer = scene.getObjectByName("contactOuter");
-  if (outer) { outer.rotation.y = time * 0.4; outer.rotation.x = time * 0.2; }
-  const core = scene.getObjectByName("contactCore");
-  if (core) core.scale.setScalar(1 + Math.sin(time * 2) * 0.1);
-  const cRing = scene.getObjectByName("contactRing");
-  if (cRing) { cRing.rotation.x = time * 0.6; cRing.rotation.y = time * 0.3; }
-
-  // Focus diamond
-  const diam = scene.getObjectByName("focusDiamond");
-  if (diam) {
-    diam.rotation.y = time * 0.7;
-    diam.position.y = 2.2 + Math.sin(time * 1.2) * 0.12;
-  }
-
-  // Particles drift
-  const particles = scene.getObjectByName("particles");
-  if (particles) {
-    const posArr = particles.geometry.attributes.position.array;
-    for (let i = 0; i < posArr.length; i += 3) {
-      posArr[i + 1] += Math.sin(time + i) * 0.0008;
-      if (posArr[i + 1] > ROOM_H) posArr[i + 1] = 0;
-    }
-    particles.geometry.attributes.position.needsUpdate = true;
-  }
-}
-
-export { ROOM_W, ROOM_D };
