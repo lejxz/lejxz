@@ -1,162 +1,247 @@
-export function setupMobileMenu() {
-  const menuToggle = document.getElementById("menuToggle");
-  const nav = document.getElementById("primaryNav");
+/*  ui.js — Overlay panel system for 3D portfolio  */
 
-  if (!menuToggle || !nav) {
-    return;
+let currentPanel = null;
+let carouselIndex = 0;
+
+/* ── Sanitize text for safe innerHTML insertion ────────── */
+function esc(str) {
+  const el = document.createElement("span");
+  el.textContent = str || "";
+  return el.innerHTML;
+}
+
+function safeUrl(url) {
+  if (!url) return "#";
+  try {
+    const u = new URL(url);
+    if (u.protocol === "https:" || u.protocol === "http:") return u.href;
+  } catch { /* ignore */ }
+  return "#";
+}
+
+/* ── Show Detail Panel ────────────────────────────────── */
+export function showPanel(type, data) {
+  const panel = document.getElementById("detailPanel");
+  const content = document.getElementById("panelContent");
+  if (!panel || !content) return;
+
+  let html = "";
+  carouselIndex = 0;
+
+  switch (type) {
+    case "about":
+      html = renderAbout(data);
+      break;
+    case "projects":
+      html = renderCarousel("Featured Projects", "projects", data.projects || []);
+      break;
+    case "research":
+      html = renderCarousel("Research Papers", "research", data.researchPapers || []);
+      break;
+    case "skills":
+      html = renderSkills(data.skills || {});
+      break;
+    case "contact":
+      html = renderContact(data.profile || {});
+      break;
+    case "focus":
+      html = renderFocus(data.focusAreas || []);
+      break;
+    default:
+      return;
   }
 
-  menuToggle.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("is-open");
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  content.innerHTML = html;
+  panel.classList.remove("hidden");
+  currentPanel = type;
+
+  // wire carousel buttons
+  wireCarousel(content);
+
+  document.exitPointerLock?.();
+}
+
+export function hidePanel() {
+  const panel = document.getElementById("detailPanel");
+  if (panel) panel.classList.add("hidden");
+  currentPanel = null;
+}
+
+export function isPanelOpen() {
+  return currentPanel !== null;
+}
+
+export function setupPanelListeners() {
+  document.getElementById("closeDetail")?.addEventListener("click", hidePanel);
+  document.getElementById("closeHelp")?.addEventListener("click", () => {
+    document.getElementById("helpPanel")?.classList.add("hidden");
+  });
+  document.getElementById("btnHelp")?.addEventListener("click", () => {
+    document.getElementById("helpPanel")?.classList.toggle("hidden");
   });
 
-  nav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("is-open");
-      menuToggle.setAttribute("aria-expanded", "false");
-    });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      hidePanel();
+      document.getElementById("helpPanel")?.classList.add("hidden");
+    }
   });
 }
 
-export function setupSectionReveal() {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.14 }
-  );
-
-  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+/* ── Renderers ───────────────────────────────────────── */
+function renderAbout(data) {
+  const p = data.profile || {};
+  return `
+    <p class="detail-eyebrow">PROFILE</p>
+    <h2 class="detail-title">${esc(p.name)}</h2>
+    <div class="detail-body">
+      <p>${esc(p.shortBio)}</p>
+      <p style="margin-top:12px">I am double-majoring in Artificial Intelligence and Cybersecurity. My work explores real-time object detection, AR overlays, and practical machine learning systems that bridge digital and physical spaces.</p>
+      <div class="contact-info" style="margin-top:20px">
+        <a href="${safeUrl(p.github)}" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="${safeUrl(p.linkedin)}" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </div>
+  `;
 }
 
-export function setupActiveNavLink() {
-  const links = Array.from(document.querySelectorAll('.site-nav a'));
-  const sectionIds = links.map((link) => link.getAttribute('href')).filter((href) => href?.startsWith('#'));
-  const sections = sectionIds
-    .map((id) => document.querySelector(id))
-    .filter((section) => section instanceof HTMLElement);
+function renderCarousel(title, type, items) {
+  const eyebrow = type === "projects" ? "FEATURED WORK" : "RESEARCH";
+  const cards = items.map((item, i) => {
+    const thumb = safeUrl(item.thumbnail);
+    const tags = (item.tags || []).map(t => `<span class="carousel-tag">${esc(t)}</span>`).join("");
+    const link1 = type === "projects"
+      ? `<a class="carousel-link" href="${safeUrl(item.repo)}" target="_blank" rel="noreferrer">Repository</a>`
+      : `<a class="carousel-link" href="${safeUrl(item.paperUrl)}" target="_blank" rel="noreferrer">Paper</a>`;
+    const link2Url = type === "projects" ? item.demo : (item.demoUrl || item.paperUrl);
+    const link2 = `<a class="carousel-link" href="${safeUrl(link2Url)}" target="_blank" rel="noreferrer">Demo</a>`;
 
-  if (!sections.length || !links.length) {
-    return;
-  }
+    const meta = type === "research" && item.venue
+      ? `<p style="font-size:0.75rem;color:var(--accent);margin-bottom:6px">${esc(item.venue)} &bull; ${esc(String(item.year))}</p>` : "";
 
-  const setActive = (id) => {
-    links.forEach((link) => {
-      const isCurrent = link.getAttribute('href') === `#${id}`;
-      link.classList.toggle('is-current', isCurrent);
-      if (isCurrent) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
-    });
+    return `
+      <div class="carousel-card">
+        <img src="${thumb}" alt="${esc(item.title)} preview" loading="lazy" />
+        <h3>${esc(item.title)}</h3>
+        ${meta}
+        <p>${esc(item.description || item.abstract)}</p>
+        <div class="carousel-tags">${tags}</div>
+        <div class="carousel-links">${link1}${link2}</div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <p class="detail-eyebrow">${eyebrow}</p>
+    <h2 class="detail-title">${esc(title)}</h2>
+    <div class="carousel-wrapper">
+      <div class="carousel-track" id="carouselTrack">${cards}</div>
+    </div>
+    <div class="carousel-nav">
+      <button class="carousel-btn" id="carouselPrev">&larr;</button>
+      <button class="carousel-btn" id="carouselNext">&rarr;</button>
+    </div>
+  `;
+}
+
+function renderSkills(skills) {
+  const sections = [
+    { title: "Languages", items: skills.languages || [] },
+    { title: "AI / ML", items: skills.ai_ml || [] },
+    { title: "Tools", items: skills.tools || [] },
+  ];
+
+  const html = sections.map(s => `
+    <div class="skills-section">
+      <h3>${esc(s.title)}</h3>
+      <div class="skills-pills">
+        ${s.items.map(sk => `<span class="skill-pill">${esc(sk)}</span>`).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  return `
+    <p class="detail-eyebrow">TOOLKIT</p>
+    <h2 class="detail-title">Languages &amp; Technologies</h2>
+    ${html}
+  `;
+}
+
+function renderContact(profile) {
+  return `
+    <p class="detail-eyebrow">CONTACT</p>
+    <h2 class="detail-title">Let's Build Something</h2>
+    <div class="detail-body">
+      <p>Interested in AI, computer vision, or AR/VR collaboration? Reach out and I'll reply as soon as I can.</p>
+      <div class="contact-info">
+        <a href="mailto:${esc(profile.email)}">${esc(profile.email)}</a>
+        <a href="${safeUrl(profile.github)}" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="${safeUrl(profile.linkedin)}" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderFocus(areas) {
+  const cards = areas.map(a => `
+    <div class="focus-card-panel">
+      <h3>${esc(a.title)}</h3>
+      <p>${esc(a.description)}</p>
+    </div>
+  `).join("");
+
+  return `
+    <p class="detail-eyebrow">CURRENT FOCUS</p>
+    <h2 class="detail-title">What I'm Building &amp; Studying</h2>
+    <div class="focus-grid-panel">${cards}</div>
+  `;
+}
+
+/* ── Carousel wiring ─────────────────────────────────── */
+function wireCarousel(container) {
+  const track = container.querySelector("#carouselTrack");
+  const prev = container.querySelector("#carouselPrev");
+  const next = container.querySelector("#carouselNext");
+  if (!track || !prev || !next) return;
+
+  const cards = track.querySelectorAll(".carousel-card");
+  if (!cards.length) return;
+
+  const updatePos = () => {
+    const cardW = cards[0].offsetWidth + 20; // gap
+    track.style.transform = `translateX(-${carouselIndex * cardW}px)`;
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActive(entry.target.id);
-        }
-      });
-    },
-    { threshold: 0.45 }
-  );
-
-  sections.forEach((section) => observer.observe(section));
-}
-
-export function setupCardInteractivity() {
-  const cards = Array.from(document.querySelectorAll('.project-card, .research-card, .focus-card'));
-  if (!cards.length) {
-    return;
-  }
-
-  cards.forEach((card) => {
-    card.addEventListener('mousemove', (event) => {
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-
-      const rotateX = ((y / rect.height) - 0.5) * -6;
-      const rotateY = ((x / rect.width) - 0.5) * 6;
-
-      card.style.setProperty('--mx', `${x}px`);
-      card.style.setProperty('--my', `${y}px`);
-      card.style.setProperty('--rx', `${rotateX.toFixed(2)}deg`);
-      card.style.setProperty('--ry', `${rotateY.toFixed(2)}deg`);
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.setProperty('--rx', '0deg');
-      card.style.setProperty('--ry', '0deg');
-    });
+  prev.addEventListener("click", () => {
+    carouselIndex = Math.max(0, carouselIndex - 1);
+    updatePos();
   });
-}
-
-export function setupContactForm() {
-  const form = document.getElementById("contactForm");
-  const feedback = document.getElementById("formFeedback");
-
-  if (!form || !feedback) {
-    return;
-  }
-
-  form.addEventListener("submit", () => {
-    feedback.textContent = "Sending message...";
+  next.addEventListener("click", () => {
+    carouselIndex = Math.min(cards.length - 1, carouselIndex + 1);
+    updatePos();
   });
+
+  updatePos();
 }
 
-export function setupCounterAnimation() {
-  const counters = Array.from(document.querySelectorAll(".counter"));
-  const statsPanel = document.getElementById("statsPanel");
-
-  if (!counters.length || !statsPanel) {
-    return;
-  }
-
-  const animateCounter = (counter) => {
-    const target = Math.max(0, Number(counter.dataset.target || 0));
-    const duration = 900;
-    const start = performance.now();
-
-    const tick = (now) => {
-      const progress = Math.min((now - start) / duration, 1);
-      counter.textContent = String(Math.round(target * progress));
-      if (progress < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        counter.textContent = String(target);
-      }
-    };
-
-    requestAnimationFrame(tick);
-  };
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          counters.forEach(animateCounter);
-          observer.disconnect();
-        }
-      });
-    },
-    { threshold: 0.45 }
-  );
-
-  observer.observe(statsPanel);
+/* ── HUD functions ───────────────────────────────────── */
+export function showPrompt(text) {
+  const el = document.getElementById("interactPrompt");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.add("show");
 }
 
-export function updateYear() {
-  const yearEl = document.getElementById("year");
-  if (yearEl) {
-    yearEl.textContent = String(new Date().getFullYear());
-  }
+export function hidePrompt() {
+  const el = document.getElementById("interactPrompt");
+  if (el) el.classList.remove("show");
+}
+
+export function updateMinimap(px, pz, roomW, roomD) {
+  const player = document.getElementById("minimapPlayer");
+  if (!player) return;
+  const x = ((px + roomW / 2) / roomW) * 100;
+  const y = ((pz + roomD / 2) / roomD) * 100;
+  player.style.left = `${Math.max(5, Math.min(95, x))}%`;
+  player.style.top = `${Math.max(5, Math.min(95, y))}%`;
 }

@@ -3,222 +3,90 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Portfolio of Lejuene Delantar, focused on AI, computer vision, cybersecurity, and spatial computing."
-    />
-    <title>lejxz | Portfolio</title>
+    <meta name="description" content="3D Portfolio of Lejuene Delantar — an immersive AR/VR workspace experience focused on AI, computer vision, and spatial computing." />
+    <title>lejxz | 3D Portfolio</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="assets/css/tokens.css" />
-    <link rel="stylesheet" href="assets/css/base.css" />
-    <link rel="stylesheet" href="assets/css/layout.css" />
-    <link rel="stylesheet" href="assets/css/components.css" />
-    <link rel="stylesheet" href="assets/css/animations.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/scene.css" />
   </head>
   <body>
-    <a class="skip-link" href="#mainContent">Skip to content</a>
-    <div class="bg-orb orb-a" aria-hidden="true"></div>
-    <div class="bg-orb orb-b" aria-hidden="true"></div>
-
-    <header class="site-header" id="top">
-      <div class="container nav-shell">
-        <a class="brand" href="#hero">lejxz</a>
-
-        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="primaryNav">
-          <span class="sr-only">Toggle navigation</span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <nav class="site-nav" id="primaryNav">
-          <a href="#about">About</a>
-          <a href="#focus">Focus</a>
-          <a href="#projects">Projects</a>
-          <a href="#research">Research</a>
-          <a href="#skills">Skills</a>
-          <a href="#contact">Contact</a>
-        </nav>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+      <div class="loader-content">
+        <div class="loader-ring"></div>
+        <h1 class="loader-title">lejxz</h1>
+        <p class="loader-sub">Initializing Spatial Workspace…</p>
+        <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
       </div>
-    </header>
+    </div>
 
-    <main id="mainContent">
-      <section class="hero section" id="hero">
-        <div class="container hero-grid">
-          <div class="hero-copy reveal">
-            <p class="eyebrow">AI | ML | AR/VR</p>
-            <h1>Enter the Spatial Vision Interface.</h1>
-            <p class="lead">
-              I design and prototype camera-based systems where AI, computer vision, and AR/VR
-              interactions meet in real time.
-            </p>
-            <p class="plain-summary">
-              In plain language: this site is meant to feel like opening an AR/VR workspace,
-              not just reading a static resume.
-            </p>
-            <div class="hero-cta">
-              <a class="btn btn-primary" href="#projects">View Projects</a>
-              <a class="btn btn-ghost" href="https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/" target="_blank" rel="noreferrer">LinkedIn</a>
-            </div>
-          </div>
+    <!-- 3D Canvas -->
+    <canvas id="roomCanvas"></canvas>
 
-          <aside class="hero-side reveal" aria-label="Profile and highlights">
-            <article class="hero-preview-card">
-              <img
-                class="hero-preview-image"
-                src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=1200&q=80"
-                alt="Futuristic AR and VR style interface lighting"
-                loading="lazy"
-              />
-              <p>AR/VR Moodboard Preview</p>
-            </article>
-
-            <article class="profile-card">
-              <img
-                class="profile-photo"
-                src="https://github.com/lejxz.png"
-                alt="Portrait of Lejuene Delantar"
-                loading="lazy"
-              />
-              <div>
-                <p class="profile-name">Lejuene Delantar</p>
-                <p class="profile-role">AI and Spatial Computing Student Researcher</p>
-              </div>
-            </article>
-
-            <div class="hero-stats" id="statsPanel" aria-label="Quick highlights">
-            <article>
-              <h3 class="counter" id="statProjects" data-target="0">0</h3>
-              <p>Projects Built</p>
-            </article>
-            <article>
-              <h3 class="counter" id="statPapers" data-target="0">0</h3>
-              <p>Research Papers</p>
-            </article>
-            <article>
-              <h3 class="counter" id="statResearchTracks" data-target="0">0</h3>
-              <p>Active Research Tracks</p>
-            </article>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="section" id="about">
-        <div class="container reveal">
-          <div class="section-heading">
-            <p class="eyebrow">About</p>
-            <h2>Focused on Spatial Computing and Computer Vision</h2>
-          </div>
-          <p class="section-copy">
-            I am double-majoring in Artificial Intelligence and Cybersecurity. My work explores
-            real-time object detection, AR overlays, and practical machine learning systems that
-            bridge digital and physical spaces.
-          </p>
-        </div>
-      </section>
-
-      <section class="section" id="focus">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Current Focus</p>
-            <h2>What I am building and studying now</h2>
-          </div>
-          <div class="focus-grid reveal" id="focusGrid"></div>
-        </div>
-      </section>
-
-      <section class="section" id="projects">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Featured Work</p>
-            <h2>Selected projects in problem and solution format</h2>
-            <p class="section-copy">Each project includes visual context and direct actions for repo and demo.</p>
-          </div>
-
-          <div class="project-toolbar reveal" role="toolbar" aria-label="Project filters">
-            <button class="chip is-active" data-filter="all">All</button>
-            <button class="chip" data-filter="ai">AI/ML</button>
-            <button class="chip" data-filter="vision">Vision</button>
-            <button class="chip" data-filter="arvr">AR/VR</button>
-          </div>
-
-          <div class="project-grid" id="projectGrid" aria-live="polite"></div>
-        </div>
-      </section>
-
-      <section class="section" id="research">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Research Papers</p>
-            <h2>Research papers with quick-read structure</h2>
-            <p class="section-copy">Papers follow the same interaction model with two direct action buttons.</p>
-          </div>
-          <div class="research-grid" id="researchGrid" aria-live="polite"></div>
-        </div>
-      </section>
-
-      <section class="section" id="skills">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Toolkit</p>
-            <h2>Languages and technologies</h2>
-          </div>
-          <div class="skill-groups reveal" id="skillGroups"></div>
-        </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="container contact-shell reveal">
-          <div>
-            <div class="section-heading">
-              <p class="eyebrow">Contact</p>
-              <h2>Let us build something useful</h2>
-            </div>
-            <p class="section-copy">
-              Interested in AI, computer vision, or AR/VR collaboration? Reach out and I will reply
-              as soon as I can.
-            </p>
-            <div class="contact-links">
-              <a href="mailto:delantarlejuene@gmail.com">delantarlejuene@gmail.com</a>
-              <a href="https://github.com/lejxz" target="_blank" rel="noreferrer">github.com/lejxz</a>
-            </div>
-          </div>
-
-          <form class="contact-form" id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
-            <label>
-              Name
-              <input type="text" name="name" placeholder="Your name" required />
-            </label>
-            <label>
-              Email
-              <input type="email" name="email" placeholder="you@example.com" required />
-            </label>
-            <label>
-              Message
-              <textarea name="message" rows="4" placeholder="Tell me about your project..." required></textarea>
-            </label>
-            <button class="btn btn-primary" type="submit">Send Message</button>
-            <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-shell">
-        <p>© <span id="year"></span> Lejuene Delantar</p>
-        <a href="#hero">Back to top</a>
+    <!-- HUD Overlay -->
+    <div id="hud">
+      <div class="hud-top-left">
+        <span class="hud-brand">lejxz</span>
+        <span class="hud-tag">SPATIAL PORTFOLIO v1.0</span>
       </div>
-    </footer>
+      <div class="hud-top-right">
+        <button class="hud-btn" id="btnHelp" title="Controls">?</button>
+      </div>
+      <div class="hud-crosshair" id="crosshair">+</div>
+      <div class="hud-bottom">
+        <div class="hud-prompt" id="interactPrompt"></div>
+      </div>
+      <div class="hud-minimap" id="minimap">
+        <div class="minimap-player" id="minimapPlayer"></div>
+      </div>
+    </div>
 
+    <!-- Help Panel -->
+    <div id="helpPanel" class="overlay-panel hidden">
+      <div class="panel-inner panel-help">
+        <button class="panel-close" id="closeHelp">&times;</button>
+        <h2>Controls</h2>
+        <div class="controls-grid">
+          <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><p>Move</p>
+          <div><kbd>Mouse</kbd></div><p>Look around</p>
+          <div><kbd>Click</kbd></div><p>Interact with objects</p>
+          <div><kbd>ESC</kbd></div><p>Release cursor / Close panel</p>
+          <div><kbd>Scroll</kbd></div><p>Zoom carousel</p>
+        </div>
+        <p class="help-note">Click the canvas to start navigating. Walk up to glowing objects and click to interact.</p>
+      </div>
+    </div>
+
+    <!-- Detail Panel (Projects / Research / About / Skills / Contact) -->
+    <div id="detailPanel" class="overlay-panel hidden">
+      <div class="panel-inner" id="panelContent">
+        <!-- Dynamically populated -->
+      </div>
+      <button class="panel-close" id="closeDetail">&times;</button>
+    </div>
+
+    <!-- Entry Gate (first visit) -->
+    <div id="entryGate">
+      <div class="gate-content">
+        <img class="gate-photo" src="https://github.com/lejxz.png" alt="Lejuene Delantar" />
+        <h1>Lejuene Delantar</h1>
+        <p class="gate-role">AI &amp; Spatial Computing Researcher</p>
+        <p class="gate-desc">Welcome to my 3D workspace. Explore the room to discover my projects, research, and skills.</p>
+        <button class="btn-enter" id="btnEnter">Enter Workspace</button>
+        <p class="gate-hint">Best experienced on desktop with mouse &amp; keyboard</p>
+      </div>
+    </div>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+      }
+    }
+    </script>
     <script type="module" src="assets/js/main.js"></script>
   </body>
 </html>
