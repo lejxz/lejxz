@@ -8,11 +8,19 @@
 
 </div>
 
-## `> whoami`
+## -> About Me:
 
-I am me.
+> I am me.
 
-## `> tech_stack`
+## -> My Github Stats:
+
+<div align="center">
+
+[![GitHub Streak](https://streak-stats.demolab.com?user=lejxz&theme=tokyonight&hide_border=true&background=0D1117&stroke=B660EB&ring=B660EB&fire=7800BF&currStreakLabel=B660EB)](https://git.io/streak-stats)
+
+</div>
+
+## -> Tools & Technology I Use:
 
 <div align="center">
 
@@ -22,7 +30,7 @@ I am me.
 
 </div>
 
-## `> current_focus`
+## -> Current Focus:
 
 <div align="center">
 
@@ -33,20 +41,7 @@ I am me.
 
 </div>
 
-## `> github_stats`
-
-<div align="center">
-
-<img height="160em" src="https://github-readme-stats.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=B660EB&icon_color=B660EB&text_color=c9d1d9&ring_color=B660EB" />
-<img height="160em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=B660EB&text_color=c9d1d9" />
-
-<br/>
-
-[![GitHub Streak](https://streak-stats.demolab.com?user=lejxz&theme=tokyonight&hide_border=true&background=0D1117&stroke=B660EB&ring=B660EB&fire=7800BF&currStreakLabel=B660EB)](https://git.io/streak-stats)
-
-</div>
-
-## `> featured_projects`
+## -> Featured Projects:
 
 <div align="center">
 
@@ -56,7 +51,7 @@ I am me.
 
 </div>
 
-## `> connect`
+## -> Connect with Me:
 
 <div align="center">
 
