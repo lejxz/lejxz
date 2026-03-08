@@ -11,11 +11,9 @@
 I am a Computer Science student double-majoring in **Artificial Intelligence** and **Cybersecurity**. While my curriculum covers security, my passion and research are dedicated to **Spatial Computing** and **Computer Vision**.
 My work sits at the intersection of intelligent systems and spatial computing — building toward a career in **AR/VR**.
 
-> 🎓 **Focus:** AI Real-time object detection and AR/VR integration.
-
-> 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
-
-> 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences.
+- 🎓 **Focus:** AI Real-time object detection and AR/VR integration.
+- 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
+- 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences.
 
 
 ## 🛠️ Tools & Technologies
