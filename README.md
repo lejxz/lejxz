@@ -64,7 +64,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 <div align="center">
 
-[![Website](https://img.shields.io/badge/Website-Portfolio-B660EB?style=flat&logo=html5&logoColor=white)](https://www.placeholder.com/)
+[![Website](https://img.shields.io/badge/Website-Portfolio-B660EB?style=flat&logo=html5&logoColor=white)](https://lejxz.github.io/lejxz/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-B660EB?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
 [![Email](https://img.shields.io/badge/Email-lejxz-B660EB?style=flat&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-lejxz-B660EB?style=flat&logo=github&logoColor=white)](https://github.com/lejxz)
@@ -74,39 +74,3 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=100&section=footer" />
 </div>
-
----
-
-## Portfolio Website (New)
-
-A modern, minimal static portfolio has been added to this repository.
-
-### Structure
-
-- `index.html` - main site entry
-- `assets/css/` - separated style layers (`tokens`, `base`, `layout`, `components`, `animations`)
-- `assets/js/` - modular scripts (`main`, `ui`, `data-loader`)
-- `assets/data/portfolio.json` - editable content source for projects and skills
-- `assets/images/` - image placeholders for future assets
-
-### Run Locally
-
-You can open `index.html` directly, but for module/data loading it is better to serve locally:
-
-1. VS Code Live Server extension, then click "Go Live"
-2. or run a local static server from the repo root
-
-### Customize Quickly
-
-- Update focus areas, projects, research papers, and skills in `assets/data/portfolio.json`
-- Adjust colors/spacing in `assets/css/tokens.css`
-- Add new sections in `index.html` and behavior in `assets/js/ui.js`
-- Set your own Formspree endpoint in `index.html` (`action="https://formspree.io/f/your-form-id"`)
-
-### Data-Driven Counters
-
-Hero counters are automatically computed from `portfolio.json`:
-
-- `Projects Built` = total items in `projects`
-- `Research Papers` = total items in `researchPapers`
-- `Active Research Tracks` = total items with `status: "active-research"` in both `projects` and `researchPapers`
