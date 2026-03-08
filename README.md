@@ -12,7 +12,7 @@ I am an undergraduate Computer Science student with a double major in **Artifici
 My work sits at the intersection of intelligent systems and spatial computing — building toward a career in **AR/VR**.
 
 - 🎓 BS Computer Science — AI & ML focus
-- 🔭 Currently working on real-time AR object detection with YOLOv8 + OpenCV
+- 🔭 Currently working on real-time AR object detection
 - 🎯 Goal: Contribute to the next generation of intelligent AR/VR experiences
 
 
