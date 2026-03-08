@@ -29,6 +29,7 @@ profile = {
 ## `> tech_stack`
 
 **Languages**
+
 [![Python](https://skillicons.dev/icons?i=python)](https://skillicons.dev)
 [![C](https://skillicons.dev/icons?i=c)](https://skillicons.dev)
 [![C++](https://skillicons.dev/icons?i=cpp)](https://skillicons.dev)
