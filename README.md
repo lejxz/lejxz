@@ -48,11 +48,11 @@
 ## Connect with Me:
 
 <div align="center">
-  
-[![LinkedIn](https://img.shields.io/badge/Website-Portfolio-B660EB?style=for-the-badge&logo=html&logoColor=white)](https://www.placeholder.com/)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Lejuene%20Delantar-B660EB?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
-[![Email](https://img.shields.io/badge/Email-lejxz-B660EB?style=for-the-badge&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
-[![GitHub](https://img.shields.io/badge/GitHub-lejxz-B660EB?style=for-the-badge&logo=github&logoColor=white)](https://github.com/lejxz)
+
+[![Website](https://img.shields.io/badge/Website-Portfolio-B660EB?style=flat&logo=html5&logoColor=white)](https://www.placeholder.com/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Lejuene%20Delantar-B660EB?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
+[![Email](https://img.shields.io/badge/Email-lejxz-B660EB?style=flat&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-lejxz-B660EB?style=flat&logo=github&logoColor=white)](https://github.com/lejxz)
 
 </div>
 
