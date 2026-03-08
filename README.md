@@ -15,6 +15,7 @@ My work sits at the intersection of intelligent systems and spatial computing �
 - 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
 - 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences.
 
+</br>
 
 ## 🛠️ Tools & Technologies
 
@@ -28,6 +29,7 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
+</br>
 
 ## 📊 GitHub Stats
 
@@ -39,6 +41,7 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
+</br>
 
 ## 🚀 Current Focus
 
@@ -52,6 +55,7 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
+</br>
 
 ## 📁 Featured Projects
 
@@ -64,6 +68,7 @@ A system designed to identify and track physical objects in 3D space using **Ope
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 * **Key Tech:** HTML5/CSS, JavaScript, 3D Logic.
 
+</br>
 
 ## 🔗 Connect with Me
 
