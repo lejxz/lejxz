@@ -6,8 +6,6 @@
 
 </div>
 
----
-
 ## 👤 About Me
 
 I am a Computer Science student double-majoring in **Artificial Intelligence** and **Cybersecurity**. My passion and research are dedicated to **Spatial Computing** and **Computer Vision**.
@@ -15,8 +13,6 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 - 🎓 **Focus:** AI, real-time object detection, and AR/VR integration
 - 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO
 - 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences
-
----
 
 ## 🚀 Current Focus
 
@@ -30,8 +26,6 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 
 </div>
 
----
-
 ## 🛠️ Tools & Technologies
 
 <div align="center">
@@ -41,8 +35,6 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 | [![Languages](https://skillicons.dev/icons?i=python,c,cpp,java)](https://skillicons.dev) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow)](https://skillicons.dev) | [![Tools](https://skillicons.dev/icons?i=git,github,vscode)](https://skillicons.dev) |
 
 </div>
-
----
 
 ## 📁 Featured Projects
 
@@ -57,8 +49,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 - **Key Tech:** HTML5/CSS, JavaScript, 3D Logic
 
----
-
 ## 📊 GitHub Stats
 
 <div align="center">
@@ -68,8 +58,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 [![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
 
 </div>
-
----
 
 ## 🔗 Connect with Me
 
