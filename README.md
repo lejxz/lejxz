@@ -17,6 +17,22 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </br>
 
+
+## 🚀 Current Focus
+
+<div align="center">
+
+| Area | Topic |
+|:---:|:---|
+| 🧠 Machine Learning | Bayesian Networks, Adversarial ML, Federated Learning |
+| 👁️ Computer Vision | OpenCV, Real-Time AR Object Detection |
+| 🥽 AR / VR | Spatial Computing, Overlay Systems, Vision-AI Integration |
+
+</div>
+
+</br>
+
+
 ## 🛠️ Tools & Technologies
 
 > I prioritize
@@ -39,20 +55,6 @@ My work sits at the intersection of intelligent systems and spatial computing �
 
 </div>
 
-
-## 🚀 Current Focus
-
-<div align="center">
-
-| Area | Topic |
-|:---:|:---|
-| 🧠 Machine Learning | Bayesian Networks, Adversarial ML, Federated Learning |
-| 👁️ Computer Vision | OpenCV, Real-Time AR Object Detection |
-| 🥽 AR / VR | Spatial Computing, Overlay Systems, Vision-AI Integration |
-
-</div>
-
-</br>
 
 ## 📁 Featured Projects
 
