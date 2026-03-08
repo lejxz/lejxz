@@ -8,11 +8,11 @@
 
 </div>
 
-## -> About Me:
+## About Me:
 
 > I am me.
 
-## -> My Github Stats:
+## My Github Stats:
 
 <div align="center">
 
@@ -20,7 +20,7 @@
 
 </div>
 
-## -> Tools & Technology I Use:
+## Tools & Technology I Use:
 
 <div align="center">
 
@@ -30,7 +30,7 @@
 
 </div>
 
-## -> Current Focus:
+## Current Focus:
 
 <div align="center">
 
@@ -41,7 +41,7 @@
 
 </div>
 
-## -> Featured Projects:
+## Featured Projects:
 
 <div align="center">
 
@@ -51,10 +51,11 @@
 
 </div>
 
-## -> Connect with Me:
+## Connect with Me:
 
 <div align="center">
-
+  
+[![LinkedIn](https://img.shields.io/badge/Website-Portfolio-B660EB?style=for-the-badge&logo=html&logoColor=white)](https://www.placeholder.com/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-B660EB?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
 [![Email](https://img.shields.io/badge/Email-lejxz-B660EB?style=for-the-badge&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-lejxz-B660EB?style=for-the-badge&logo=github&logoColor=white)](https://github.com/lejxz)
