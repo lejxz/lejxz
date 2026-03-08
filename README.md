@@ -4,11 +4,13 @@
 
 <br/>
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&pause=1000&color=00F5FF&center=true&vCenter=true&width=600&lines=Building+at+the+intersection+of+AI+%26+Vision;Cybersecurity+%7C+Machine+Learning+%7C+AR%2FVR;C+%7C+C%2B%2B+%7C+Python+%7C+OpenCV+%7C+YOLOv8;Always+learning.+Always+building.)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains&weight=600&size=22&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=600&lines=Building+at+the+Intersection+of+AI+%26+Vision;Python+%7C+C+%7C+C%2B%2B+%7C+Java;Always+Learning.;Stay+Hungry%2C+Stay+Foolish.)](https://git.io/typing-svg)
 
 </div>
 
 ## `> whoami`
+
+I am me.
 
 ## `> tech_stack`
 
