@@ -1,6 +1,6 @@
 @keyframes riseIn {
   from {
-    transform: translateY(16px);
+    transform: translateY(20px);
     opacity: 0;
   }
 
@@ -16,5 +16,18 @@
 }
 
 .reveal.is-visible {
-  animation: riseIn 540ms ease forwards;
+  animation: riseIn 560ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }

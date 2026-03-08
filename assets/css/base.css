@@ -9,11 +9,33 @@ html {
 body {
   margin: 0;
   font-family: "Space Grotesk", sans-serif;
-  background: radial-gradient(circle at 10% 10%, rgba(120, 0, 191, 0.26), transparent 36%),
-    radial-gradient(circle at 90% 24%, rgba(182, 96, 235, 0.22), transparent 40%),
-    linear-gradient(160deg, #0f0c29 0%, #302b63 52%, #24243e 100%);
+  background: radial-gradient(circle at 8% 10%, rgba(15, 118, 110, 0.11), transparent 38%),
+    radial-gradient(circle at 90% 22%, rgba(194, 65, 12, 0.08), transparent 40%),
+    linear-gradient(165deg, #f6f8f7 0%, #edf4f1 52%, #f6f8f7 100%);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.72;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.7rem;
+  z-index: 999;
+}
+
+.skip-link:focus {
+  top: 10px;
 }
 
 img {

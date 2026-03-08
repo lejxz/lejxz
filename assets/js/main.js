@@ -31,12 +31,29 @@ function renderProjects(projects) {
     return;
   }
 
-  grid.innerHTML = projects
+  grid.innerHTML = (projects || [])
     .map(
       (project) => `
         <article class="project-card" data-categories="${project.category.join(" ")}">
+          <div class="project-thumb" aria-hidden="true"></div>
           <h3>${project.title}</h3>
           <p class="section-copy">${project.description}</p>
+          <div class="summary-grid">
+            <div class="summary-row">
+              <h4>Problem</h4>
+              <p>${project.problem || "Problem statement coming soon."}</p>
+            </div>
+            <div class="summary-row">
+              <h4>Solution</h4>
+              <p>${project.solution || "Solution summary coming soon."}</p>
+            </div>
+            <div class="summary-row">
+              <h4>Impact</h4>
+              <p>${project.impact || "Impact summary coming soon."}</p>
+            </div>
+          </div>
+          ${renderMetrics(project.metrics || [])}
+          <p class="plain-note">${project.plainSummary || "Plain-language summary will be added."}</p>
           <div class="tags">
             ${project.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
           </div>
@@ -60,9 +77,26 @@ function renderResearchPapers(papers) {
     .map(
       (paper) => `
         <article class="research-card">
+          <div class="research-thumb" aria-hidden="true"></div>
           <h3>${paper.title}</h3>
           <p class="research-meta">${paper.venue} • ${paper.year}</p>
           <p class="section-copy">${paper.abstract}</p>
+          <div class="summary-grid">
+            <div class="summary-row">
+              <h4>Problem</h4>
+              <p>${paper.problem || "Problem statement coming soon."}</p>
+            </div>
+            <div class="summary-row">
+              <h4>Solution</h4>
+              <p>${paper.solution || "Solution summary coming soon."}</p>
+            </div>
+            <div class="summary-row">
+              <h4>Impact</h4>
+              <p>${paper.impact || "Impact summary coming soon."}</p>
+            </div>
+          </div>
+          ${renderMetrics(paper.metrics || [])}
+          <p class="plain-note">${paper.plainSummary || "Plain-language summary will be added."}</p>
           <div class="tags">
             ${(paper.tags || []).map((tag) => `<span class="tag">${tag}</span>`).join("")}
           </div>
@@ -100,6 +134,33 @@ function renderSkills(skills) {
       `
     )
     .join("");
+}
+
+function renderMetrics(metrics) {
+  if (!metrics.length) {
+    return "";
+  }
+
+  return `
+    <div class="metrics" aria-label="Outcome metrics">
+      ${metrics
+        .map((metric) => {
+          const boundedProgress = Math.min(100, Math.max(0, Number(metric.progress || 0)));
+          return `
+            <div class="metric-item">
+              <div class="metric-label">
+                <span>${metric.label}</span>
+                <strong>${metric.value}</strong>
+              </div>
+              <div class="metric-track" role="presentation">
+                <div class="metric-fill" style="width: ${boundedProgress}%;"></div>
+              </div>
+            </div>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
 }
 
 function updateStats(data) {

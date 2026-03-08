@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Portfolio of Lejuene Delantar, focused on AI, computer vision, cybersecurity, and spatial computing."
+      content="Portfolio of Lejuene Delantar, focused on AI, computer vision, cybersecurity, and spatial computing with measurable project outcomes."
     />
     <title>lejxz | Portfolio</title>
 
@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="assets/css/animations.css" />
   </head>
   <body>
+    <a class="skip-link" href="#mainContent">Skip to content</a>
     <div class="bg-orb orb-a" aria-hidden="true"></div>
     <div class="bg-orb orb-b" aria-hidden="true"></div>
 
@@ -48,7 +49,7 @@
       </div>
     </header>
 
-    <main>
+    <main id="mainContent">
       <section class="hero section" id="hero">
         <div class="container hero-grid">
           <div class="hero-copy reveal">
@@ -58,13 +59,31 @@
               I am Lejuene Delantar, a Computer Science student focused on Computer Vision,
               Spatial Computing, and secure AI-powered systems.
             </p>
+            <p class="plain-summary">
+              In plain language: I build software that helps cameras understand what they see and
+              respond in real time, especially for AR and safety-focused applications.
+            </p>
             <div class="hero-cta">
               <a class="btn btn-primary" href="#projects">View Projects</a>
               <a class="btn btn-ghost" href="https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/" target="_blank" rel="noreferrer">LinkedIn</a>
             </div>
           </div>
 
-          <aside class="hero-stats reveal" id="statsPanel" aria-label="Quick highlights">
+          <aside class="hero-side reveal" aria-label="Profile and highlights">
+            <article class="profile-card">
+              <img
+                class="profile-photo"
+                src="https://github.com/lejxz.png"
+                alt="Portrait of Lejuene Delantar"
+                loading="lazy"
+              />
+              <div>
+                <p class="profile-name">Lejuene Delantar</p>
+                <p class="profile-role">AI and Spatial Computing Student Researcher</p>
+              </div>
+            </article>
+
+            <div class="hero-stats" id="statsPanel" aria-label="Quick highlights">
             <article>
               <h3 class="counter" id="statProjects" data-target="0">0</h3>
               <p>Projects Built</p>
@@ -77,6 +96,7 @@
               <h3 class="counter" id="statResearchTracks" data-target="0">0</h3>
               <p>Active Research Tracks</p>
             </article>
+            </div>
           </aside>
         </div>
       </section>
@@ -109,7 +129,8 @@
         <div class="container">
           <div class="section-heading reveal">
             <p class="eyebrow">Featured Work</p>
-            <h2>Selected projects and experiments</h2>
+            <h2>Selected projects with clear outcomes</h2>
+            <p class="section-copy">Each project is presented as problem, solution, and impact so visitors can scan quickly.</p>
           </div>
 
           <div class="project-toolbar reveal" role="toolbar" aria-label="Project filters">
@@ -127,7 +148,8 @@
         <div class="container">
           <div class="section-heading reveal">
             <p class="eyebrow">Research Papers</p>
-            <h2>Publications, drafts, and ongoing studies</h2>
+            <h2>Research with practical impact framing</h2>
+            <p class="section-copy">Research cards include technical abstracts and plain-language summaries for broader readability.</p>
           </div>
           <div class="research-grid" id="researchGrid" aria-live="polite"></div>
         </div>
