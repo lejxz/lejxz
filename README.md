@@ -37,8 +37,6 @@ My work sits at the intersection of intelligent systems and spatial computing â€
 
 [![GitHub Streak](https://streak-stats.demolab.com?user=lejxz&theme=tokyonight&hide_border=true&background=0D1117&stroke=B660EB&ring=B660EB&fire=7800BF&currStreakLabel=B660EB)](https://git.io/streak-stats)
 
-[![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
-
 </div>
 
 </br>
