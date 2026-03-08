@@ -29,10 +29,10 @@ profile = {
 ## `> tech_stack`
 
 **Languages**
-
+[![Python](https://skillicons.dev/icons?i=python)](https://skillicons.dev)
 [![C](https://skillicons.dev/icons?i=c)](https://skillicons.dev)
 [![C++](https://skillicons.dev/icons?i=cpp)](https://skillicons.dev)
-[![Python](https://skillicons.dev/icons?i=python)](https://skillicons.dev)
+[![Java](https://skillicons.dev/icons?i=java)](https://skillicons.dev)
 
 **AI / ML / Vision**
 
