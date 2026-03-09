@@ -48,7 +48,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 - **Key Tech:** HTML5/CSS, JavaScript, 3D Logic
 
-## 📊 GitHub Stats
+## 📊 GitHub Stats & 🔗 Connect With Me
 
 <div align="center">
 
@@ -56,12 +56,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 [![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB)](https://github.com/lejxz)
 [![Top Languages](https://github-readme-stats-nine-lovat-17.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
-
-</div>
-
-## 🔗 Connect with Me
-
-<div align="center">
 
 [![Website](https://img.shields.io/badge/Website-Portfolio-B660EB?style=flat&logo=html5&logoColor=white)](https://lejxz.github.io/lejxz/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-B660EB?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
