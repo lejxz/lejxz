@@ -88,11 +88,16 @@
   const navToggle = $('#navToggle');
   const navMenu   = $('#navMenu');
   if (navToggle && navMenu) {
+    const lockBodyScroll = (locked) => {
+      document.body.classList.toggle('nav-open', locked);
+      document.body.style.overflow = locked ? 'hidden' : '';
+    };
+
     navToggle.addEventListener('click', () => {
       const open = navToggle.getAttribute('aria-expanded') === 'true';
       navToggle.setAttribute('aria-expanded', String(!open));
       navMenu.classList.toggle('open', !open);
-      document.body.style.overflow = open ? '' : 'hidden';
+      lockBodyScroll(!open);
     });
 
     /* Close menu on link click */
@@ -100,7 +105,7 @@
       link.addEventListener('click', () => {
         navToggle.setAttribute('aria-expanded', 'false');
         navMenu.classList.remove('open');
-        document.body.style.overflow = '';
+        lockBodyScroll(false);
       });
     });
 
@@ -109,10 +114,18 @@
       if (e.key === 'Escape' && navMenu.classList.contains('open')) {
         navToggle.setAttribute('aria-expanded', 'false');
         navMenu.classList.remove('open');
-        document.body.style.overflow = '';
+        lockBodyScroll(false);
         navToggle.focus();
       }
     });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 640 && navMenu.classList.contains('open')) {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navMenu.classList.remove('open');
+        lockBodyScroll(false);
+      }
+    }, { passive: true });
   }
 
   /* --- Scroll spy — highlight active nav link --- */

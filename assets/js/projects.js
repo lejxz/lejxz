@@ -145,6 +145,11 @@
   /* ---- Filter logic ---- */
   function setupFilters(cards) {
     const buttons = $$('.filter-btn');
+
+    buttons.forEach((btn, idx) => {
+      btn.setAttribute('aria-pressed', String(idx === 0));
+    });
+
     buttons.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.dataset.filter;
@@ -152,12 +157,13 @@
         /* Update active state */
         buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        buttons.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
 
         /* Show / hide cards */
         cards.forEach(card => {
           const cats = (card.dataset.categories || '').split(' ');
           const show = filter === 'all' || cats.includes(filter);
-          card.style.display = show ? '' : 'none';
+          card.classList.toggle('is-hidden', !show);
         });
       });
     });

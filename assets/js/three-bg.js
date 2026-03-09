@@ -13,6 +13,8 @@
   const canvas = document.getElementById('hero-canvas');
   if (!canvas) return;
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   /* ---- Renderer ---- */
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -28,7 +30,7 @@
   camera.position.z = 5;
 
   /* ---- Particles ---- */
-  const PARTICLE_COUNT = 700;
+  const PARTICLE_COUNT = prefersReducedMotion ? 220 : 700;
   const positions = new Float32Array(PARTICLE_COUNT * 3);
   const sizes     = new Float32Array(PARTICLE_COUNT);
 
@@ -58,7 +60,7 @@
   /* ---- Connection lines (sparse network effect) ---- */
   const LINE_THRESHOLD_SQ = 2.5 * 2.5;   // only connect nearby particles
   const linePositions = [];
-  const sampleCount   = Math.min(PARTICLE_COUNT, 200); // limit to keep geometry light
+  const sampleCount   = Math.min(PARTICLE_COUNT, prefersReducedMotion ? 80 : 200); // limit to keep geometry light
 
   for (let i = 0; i < sampleCount; i++) {
     for (let j = i + 1; j < sampleCount; j++) {
@@ -92,7 +94,9 @@
     mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
     mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
   };
-  window.addEventListener('mousemove', handleMouseMove, { passive: true });
+  if (!prefersReducedMotion) {
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+  }
 
   /* ---- Resize handler ---- */
   function onResize() {
@@ -107,10 +111,12 @@
   onResize();
 
   /* ---- Animation loop ---- */
-  let rafId;
+  let rafId = null;
+  let running = false;
   const clock = new THREE.Clock();
 
   function animate() {
+    if (!running) return;
     rafId = requestAnimationFrame(animate);
     const t = clock.getElapsedTime();
 
@@ -125,20 +131,37 @@
     points.scale.set(breathe, breathe, breathe);
 
     /* Mouse parallax — gently tilt the scene */
-    scene.rotation.y += (mouseX * 0.08 - scene.rotation.y) * 0.04;
-    scene.rotation.x += (-mouseY * 0.05 - scene.rotation.x) * 0.04;
+    if (!prefersReducedMotion) {
+      scene.rotation.y += (mouseX * 0.08 - scene.rotation.y) * 0.04;
+      scene.rotation.x += (-mouseY * 0.05 - scene.rotation.x) * 0.04;
+    }
 
     renderer.render(scene, camera);
   }
-  animate();
+
+  function start() {
+    if (running) return;
+    running = true;
+    clock.start();
+    animate();
+  }
+
+  function stop() {
+    running = false;
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  start();
 
   /* ---- Pause when tab is hidden (performance) ---- */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      cancelAnimationFrame(rafId);
+      stop();
     } else {
-      clock.start();
-      animate();
+      start();
     }
   });
 })();
