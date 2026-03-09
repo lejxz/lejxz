@@ -245,6 +245,8 @@
 
     function stagger(selector) {
       const items = $$(selector);
+      if (!items.length) return;
+
       items.forEach((el, i) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
@@ -254,7 +256,7 @@
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const children = $$(selector, entry.target.parentElement);
+            const children = $$(selector, entry.target);
             children.forEach((el) => {
               el.style.opacity = '1';
               el.style.transform = 'translateY(0)';
@@ -264,9 +266,9 @@
         });
       }, { threshold: 0.1 });
 
-      if (items.length > 0 && items[0].parentElement) {
-        observer.observe(items[0].parentElement);
-      }
+      /* Observe each unique parent so all groups reveal independently */
+      const parents = new Set(items.map(el => el.parentElement));
+      parents.forEach(p => { if (p) observer.observe(p); });
     }
 
     document.addEventListener('portfolio:rendered', () => {
