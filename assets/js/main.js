@@ -15,44 +15,94 @@
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
   /* =====================================================
-     INITIAL LOADER
+     INITIAL LOADER — tracks real asset loading progress
      ===================================================== */
   (function initialLoader() {
     const loader = $('#site-loader');
     if (!loader) return;
 
-    let windowReady = document.readyState === 'complete';
-    let contentReady = false;
+    const progressFill = $('.loader-progress-fill');
+    const loaderPercent = $('.loader-percent');
+    const loaderSubtitle = $('.loader-subtitle');
     let dismissed = false;
+    const tasks = { dom: false, fonts: false, content: false, window: false };
+
+    const steps = [
+      'Preparing layout…',
+      'Loading fonts…',
+      'Fetching projects & research…',
+      'Rendering 3D scenes…',
+    ];
+
+    function updateProgress() {
+      const done = Object.values(tasks).filter(Boolean).length;
+      const total = Object.keys(tasks).length;
+      const pct = Math.round((done / total) * 100);
+
+      if (progressFill) {
+        progressFill.style.width = pct + '%';
+      }
+      if (loaderPercent) {
+        loaderPercent.textContent = pct + '%';
+      }
+      if (loaderSubtitle && done < total) {
+        loaderSubtitle.textContent = steps[done] || steps[steps.length - 1];
+      }
+      if (done === total) dismiss();
+    }
 
     const dismiss = () => {
       if (dismissed) return;
       dismissed = true;
-      document.body.classList.add('ready');
-      document.body.classList.remove('is-loading');
+
+      if (progressFill) progressFill.style.width = '100%';
+      if (loaderPercent) loaderPercent.textContent = '100%';
+      if (loaderSubtitle) loaderSubtitle.textContent = 'Ready.';
+
       setTimeout(() => {
-        loader.remove();
-      }, 700);
+        document.body.classList.add('ready');
+        document.body.classList.remove('is-loading');
+        setTimeout(() => loader.remove(), 700);
+      }, 350);
     };
 
-    const tryDismiss = () => {
-      if (windowReady && contentReady) {
-        dismiss();
-      }
-    };
+    /* Track DOM ready */
+    if (document.readyState !== 'loading') {
+      tasks.dom = true;
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        tasks.dom = true;
+        updateProgress();
+      }, { once: true });
+    }
 
+    /* Track fonts */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        tasks.fonts = true;
+        updateProgress();
+      });
+    } else {
+      tasks.fonts = true;
+    }
+
+    /* Track portfolio data render */
     document.addEventListener('portfolio:rendered', () => {
-      contentReady = true;
-      tryDismiss();
+      tasks.content = true;
+      updateProgress();
     }, { once: true });
 
+    /* Track window load (images, Three.js, etc.) */
     window.addEventListener('load', () => {
-      windowReady = true;
-      tryDismiss();
+      tasks.window = true;
+      updateProgress();
     }, { once: true });
 
-    /* Fallback so loader never blocks UX if data fetch fails. */
-    setTimeout(dismiss, 2800);
+    /* Initial check for tasks already completed */
+    updateProgress();
+
+    /* Fallback so loader never blocks UX if something fails */
+    setTimeout(dismiss, 4500);
   })();
 
   /* =====================================================

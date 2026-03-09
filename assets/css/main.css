@@ -221,10 +221,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .loader-progress-fill {
   display: block;
   height: 100%;
-  width: 42%;
+  width: 0%;
   border-radius: var(--radius-full);
   background: linear-gradient(90deg, var(--clr-purple-bright), var(--clr-success));
-  animation: loaderSweep 1.4s ease-in-out infinite;
+  transition: width 0.4s var(--ease-smooth);
+}
+
+.loader-percent {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+  z-index: 1;
+  letter-spacing: 0.05em;
 }
 
 body.ready .site-loader {
@@ -244,7 +252,9 @@ body.ready .site-loader {
   padding-block: var(--space-24);
 }
 
+.about-section,
 .projects-section,
+.research-section,
 .contact-section {
   position: relative;
   isolation: isolate;
@@ -261,7 +271,9 @@ body.ready .site-loader {
   opacity: 0.72;
 }
 
+.about-section .container,
 .projects-section .container,
+.research-section .container,
 .contact-section .container {
   position: relative;
   z-index: 1;
@@ -628,8 +640,8 @@ body.ready .site-loader {
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-8);
+  grid-template-columns: 5fr 6fr;
+  gap: var(--space-10);
   align-items: start;
 }
 
@@ -1023,6 +1035,8 @@ body.ready .site-loader {
    ===================================================== */
 .research-section {
   background: linear-gradient(180deg, var(--clr-bg-surface) 0%, var(--clr-bg-base) 100%);
+  position: relative;
+  overflow: hidden;
 }
 
 .research-list {
