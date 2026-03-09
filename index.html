@@ -112,15 +112,16 @@
 
     <!-- ========== ABOUT SECTION ========== -->
     <section id="about" class="section about-section" aria-labelledby="about-heading">
+      <canvas id="about-canvas" class="section-canvas" aria-hidden="true"></canvas>
       <div class="container">
         <div class="section-header">
           <span class="section-tag">// about</span>
           <h2 id="about-heading" class="section-title">About Me</h2>
         </div>
 
-        <div class="about-grid">
-          <!-- Bio card -->
-          <div class="about-bio card glass-card" data-animate="fade-left">
+        <div class="about-layout">
+          <!-- Bio card — horizontal layout -->
+          <div class="about-bio glass-card" data-animate="fade-up" data-tilt>
             <div class="about-avatar" aria-hidden="true">
               <div class="avatar-ring">
                 <div class="avatar-inner">
@@ -159,22 +160,19 @@
             </div>
           </div>
 
-          <!-- Skills -->
-          <div class="about-skills" data-animate="fade-right">
-            <!-- Focus areas -->
-            <div class="focus-areas" aria-label="Focus areas">
-              <h3 class="skills-heading">Current Focus</h3>
-              <div id="focus-areas-list" class="focus-list">
-                <!-- Populated from JSON -->
-              </div>
+          <!-- Focus areas — 3-column grid -->
+          <div class="about-focus" data-animate="fade-up">
+            <h3 class="skills-heading">Current Focus</h3>
+            <div id="focus-areas-list" class="focus-list">
+              <!-- Populated from JSON -->
             </div>
+          </div>
 
-            <!-- Tech skills -->
-            <div class="skills-block card glass-card" aria-label="Technical skills">
-              <h3 class="skills-heading">Tools &amp; Tech</h3>
-              <div id="skills-container" class="skills-groups">
-                <!-- Populated from JSON -->
-              </div>
+          <!-- Tech skills — full width -->
+          <div class="about-skills-block glass-card" data-animate="fade-up" data-tilt aria-label="Technical skills">
+            <h3 class="skills-heading">Tools &amp; Tech</h3>
+            <div id="skills-container" class="skills-groups">
+              <!-- Populated from JSON -->
             </div>
           </div>
         </div>
@@ -183,6 +181,7 @@
 
     <!-- ========== PROJECTS SECTION ========== -->
     <section id="projects" class="section projects-section" aria-labelledby="projects-heading">
+      <canvas id="projects-canvas" class="section-canvas" aria-hidden="true"></canvas>
       <div class="container">
         <div class="section-header">
           <span class="section-tag">// projects</span>
@@ -206,6 +205,7 @@
 
     <!-- ========== RESEARCH SECTION ========== -->
     <section id="research" class="section research-section" aria-labelledby="research-heading">
+      <canvas id="research-canvas" class="section-canvas" aria-hidden="true"></canvas>
       <div class="container">
         <div class="section-header">
           <span class="section-tag">// research</span>

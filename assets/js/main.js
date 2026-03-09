@@ -360,4 +360,121 @@
   const yearEl = $('#footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* =====================================================
+     SCROLL PROGRESS BAR
+     ===================================================== */
+  (function scrollProgress() {
+    const bar = document.createElement('div');
+    bar.className = 'scroll-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bar);
+
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = h > 0 ? window.scrollY / h : 0;
+      bar.style.transform = 'scaleX(' + pct + ')';
+    }, { passive: true });
+  })();
+
+  /* =====================================================
+     TILT EFFECT — 3D perspective tilt on hover
+     ===================================================== */
+  (function tiltEffect() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    function initTilt(card) {
+      if (card._tiltInit) return;
+      card._tiltInit = true;
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rX = ((y - cy) / cy) * -4;
+        const rY = ((x - cx) / cx) * 4;
+        card.style.transform = 'perspective(800px) rotateX(' + rX + 'deg) rotateY(' + rY + 'deg) scale3d(1.015,1.015,1.015)';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+        setTimeout(() => { card.style.transition = ''; }, 500);
+      });
+
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'none';
+      });
+    }
+
+    /* Init on existing elements */
+    $$('[data-tilt]').forEach(initTilt);
+
+    /* Re-init after dynamic content loads */
+    document.addEventListener('portfolio:rendered', () => {
+      $$('[data-tilt]').forEach(initTilt);
+    }, { once: true });
+  })();
+
+  /* =====================================================
+     GLASS-CARD GLOW TRACKING
+     ===================================================== */
+  (function cardGlow() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    function initGlow(card) {
+      if (card._glowInit) return;
+      card._glowInit = true;
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--glow-x', (e.clientX - rect.left) + 'px');
+        card.style.setProperty('--glow-y', (e.clientY - rect.top) + 'px');
+      });
+    }
+
+    $$('.glass-card').forEach(initGlow);
+
+    document.addEventListener('portfolio:rendered', () => {
+      $$('.glass-card').forEach(initGlow);
+    }, { once: true });
+  })();
+
+  /* =====================================================
+     STAGGERED SCROLL REVEALS for grid items
+     ===================================================== */
+  (function staggeredReveal() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    function stagger(selector) {
+      const items = $$(selector);
+      items.forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease ' + (i * 100) + 'ms, transform 0.5s ease ' + (i * 100) + 'ms';
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const children = $$(selector, entry.target.parentElement);
+            children.forEach((el) => {
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      if (items.length > 0 && items[0].parentElement) {
+        observer.observe(items[0].parentElement);
+      }
+    }
+
+    document.addEventListener('portfolio:rendered', () => {
+      stagger('.focus-item');
+      stagger('.skill-tags .skill-tag');
+    }, { once: true });
+  })();
+
 })();

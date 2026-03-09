@@ -279,17 +279,78 @@ body.ready .site-loader {
 
 /* ---------- Glass card ---------- */
 .glass-card {
+  position: relative;
   background: var(--clr-glass);
   border: 1px solid var(--clr-glass-border);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  overflow: hidden;
 }
 .glass-card:hover {
   border-color: rgba(182, 96, 235, 0.4);
   box-shadow: 0 0 32px var(--clr-purple-glow);
 }
+/* Glow that tracks mouse cursor */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(182, 96, 235, 0.12),
+    transparent 40%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  z-index: 0;
+}
+.glass-card:hover::before {
+  opacity: 1;
+}
+.glass-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Section 3D canvas ---------- */
+.section-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- Scroll progress bar ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--clr-purple-vivid), var(--clr-purple-bright));
+  z-index: 1000;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ---------- Tilt card base ---------- */
+[data-tilt] {
+  will-change: transform;
+}
+
+/* ---------- Cursor overrides ---------- */
+body { cursor: default; }
+a, button, [role="button"], .filter-btn, .social-link,
+.social-icon-btn, .nav-link, .nav-logo, .footer-link,
+.footer-icon, .chip, .btn, .scroll-indicator,
+.project-link, .research-link, .contact-method-link { cursor: pointer; }
+input[type="text"], input[type="email"], textarea { cursor: text; }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -625,21 +686,28 @@ body.ready .site-loader {
    ABOUT SECTION
    ===================================================== */
 .about-section {
-  background: linear-gradient(180deg, var(--clr-bg-base) 0%, var(--clr-bg-surface) 100%);
+  background: linear-gradient(180deg, #0e0b1e 0%, #110e22 100%);
 }
 
-.about-grid {
-  display: grid;
-  grid-template-columns: 5fr 6fr;
+.about-layout {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-10);
-  align-items: start;
+  align-items: center;
 }
 
 .about-bio {
   padding: var(--space-8);
   display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
+  flex-direction: row;
+  gap: var(--space-8);
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+.about-focus {
+  width: 100%;
 }
 
 /* Avatar with pulsing rings — AR/VR inspired */
@@ -691,10 +759,8 @@ body.ready .site-loader {
 .about-name {
   font-size: 1.5rem;
   font-weight: 700;
-  text-align: center;
 }
 .about-headline {
-  text-align: center;
   font-family: var(--font-mono);
   font-size: 0.9rem;
   margin-top: 0;
@@ -709,7 +775,6 @@ body.ready .site-loader {
 .about-social {
   display: flex;
   gap: var(--space-3);
-  justify-content: center;
   margin-top: var(--space-2);
 }
 .social-link {
@@ -732,17 +797,9 @@ body.ready .site-loader {
   transform: translateY(-3px);
 }
 
-/* Skills side */
-.about-skills {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-.focus-areas {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+.about-skills-block {
+  width: 100%;
+  padding: var(--space-6);
 }
 
 .skills-heading {
@@ -755,8 +812,8 @@ body.ready .site-loader {
 }
 
 .focus-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
 }
 
@@ -769,8 +826,8 @@ body.ready .site-loader {
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 .focus-item:hover {
-  transform: translateX(4px);
-  box-shadow: -4px 0 20px var(--clr-purple-glow);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--clr-purple-glow);
 }
 .focus-item-title {
   font-weight: 600;
@@ -783,13 +840,11 @@ body.ready .site-loader {
   color: var(--clr-text-secondary);
 }
 
-.skills-block {
-  padding: var(--space-6);
-}
 .skills-groups {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-6);
 }
 .skill-group-label {
   font-size: 0.75rem;
@@ -823,44 +878,8 @@ body.ready .site-loader {
 /* =====================================================
    PROJECTS SECTION
    ===================================================== */
-.about-section {
-  background:
-    radial-gradient(circle at 15% 18%, rgba(182, 96, 235, 0.16), transparent 38%),
-    radial-gradient(circle at 85% 84%, rgba(120, 0, 191, 0.18), transparent 40%),
-    linear-gradient(180deg, #141126 0%, #121022 100%);
-}
-
-.about-section::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: linear-gradient(rgba(182, 96, 235, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(182, 96, 235, 0.05) 1px, transparent 1px);
-  background-size: 36px 36px;
-  mask-image: radial-gradient(circle at 50% 50%, black 35%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 35%, transparent 100%);
-}
-
 .projects-section {
-  background:
-    linear-gradient(145deg, #0f0d21 0%, #171330 60%, #1b1639 100%);
-}
-
-.projects-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      -32deg,
-      rgba(182, 96, 235, 0.06) 0,
-      rgba(182, 96, 235, 0.06) 2px,
-      transparent 2px,
-      transparent 34px
-    );
-  opacity: 0.75;
+  background: linear-gradient(145deg, #0f0d21 0%, #131025 60%, #15112a 100%);
 }
 
 /* Filter bar */
@@ -1027,22 +1046,9 @@ body.ready .site-loader {
    RESEARCH SECTION
    ===================================================== */
 .research-section {
-  background:
-    radial-gradient(circle at 78% 20%, rgba(182, 96, 235, 0.14), transparent 32%),
-    linear-gradient(180deg, #131026 0%, #100d1f 100%);
+  background: linear-gradient(180deg, #110e22 0%, #0e0b1c 100%);
   position: relative;
   overflow: hidden;
-}
-
-.research-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, rgba(209, 123, 255, 0.12) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.28;
 }
 
 .research-list {
@@ -1429,7 +1435,18 @@ body.ready .site-loader {
    RESPONSIVE — Tablet
    ===================================================== */
 @media (max-width: 900px) {
-  .about-grid {
+  .about-bio {
+    flex-direction: column;
+    text-align: center;
+  }
+  .about-bio .about-name,
+  .about-bio .about-headline {
+    text-align: center;
+  }
+  .about-bio .about-social {
+    justify-content: center;
+  }
+  .focus-list {
     grid-template-columns: 1fr;
   }
   .contact-grid {

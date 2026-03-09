@@ -47,6 +47,7 @@
       <article class="project-card"
                role="listitem"
                data-categories="${esc(categories)}"
+               data-tilt
                style="animation-delay:${delay}ms">
 
         <div class="project-thumbnail">
@@ -83,7 +84,7 @@
       .join('');
 
     return `
-      <article class="research-card" role="listitem">
+      <article class="research-card" role="listitem" data-tilt>
         <div class="research-thumbnail">
           <img src="${esc(paper.thumbnail || '')}"
                alt="${esc(paper.title)} research thumbnail"
