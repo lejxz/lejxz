@@ -375,7 +375,7 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =====================================================
-     CURSOR TRAIL — smooth canvas-based comet tail
+     CURSOR TRAIL — smooth canvas-based ribbon
      ===================================================== */
   (function cursorTrail() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -385,67 +385,115 @@
     canvas.id = 'cursor-trail-canvas';
     document.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
+    let dpr = window.devicePixelRatio || 1;
 
     function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+      dpr = window.devicePixelRatio || 1;
+      canvas.width  = window.innerWidth  * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width  = window.innerWidth  + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const TRAIL_LENGTH = 50;
-    const trail = [];
-    let mouseX = -100, mouseY = -100, active = false;
+    /* Trail stored as smoothed points */
+    const MAX_POINTS = 80;
+    const points = [];
+    let mouseX = -200, mouseY = -200;
+    let smoothX = -200, smoothY = -200;
+    let active = false;
+    let idleFrames = 0;
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      active = true;
+      active  = true;
+      idleFrames = 0;
     }, { passive: true });
 
     document.addEventListener('mouseleave', () => { active = false; });
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+      /* Smooth interpolation toward mouse */
+      smoothX += (mouseX - smoothX) * 0.35;
+      smoothY += (mouseY - smoothY) * 0.35;
 
       if (active) {
-        trail.push({ x: mouseX, y: mouseY });
-      }
-      if (trail.length > TRAIL_LENGTH) {
-        trail.splice(0, trail.length - TRAIL_LENGTH);
+        /* Only add point if moved enough (avoids clustering) */
+        const last = points[points.length - 1];
+        const dx = last ? smoothX - last.x : 999;
+        const dy = last ? smoothY - last.y : 999;
+        if (dx * dx + dy * dy > 4) {
+          points.push({ x: smoothX, y: smoothY });
+        }
+      } else {
+        idleFrames++;
       }
 
-      if (trail.length < 2) { requestAnimationFrame(animate); return; }
+      /* Trim oldest points */
+      while (points.length > MAX_POINTS) points.shift();
 
-      /* Draw a smooth tapered line with gradient opacity */
-      for (let i = 1; i < trail.length; i++) {
-        const t = i / trail.length;                      /* 0→1 from tail to head */
-        const alpha = t * t * 0.55;                      /* quadratic fade-in */
-        const width = t * 4.5;                           /* taper from thin to thick */
+      /* Fade out by removing points when idle */
+      if (!active && points.length > 0 && idleFrames > 4) {
+        const removeCount = Math.min(3, points.length);
+        points.splice(0, removeCount);
+      }
+
+      if (points.length < 3) { requestAnimationFrame(animate); return; }
+
+      /* ---- Draw smooth quadratic B-spline ribbon ---- */
+      ctx.lineCap  = 'round';
+      ctx.lineJoin = 'round';
+
+      const len = points.length;
+      for (let i = 1; i < len; i++) {
+        const t = i / len;                             /* 0→1 tail→head */
+
+        /* Eased opacity: cubic ease-in for a silky fade */
+        const alpha = t * t * t * 0.5;
+        /* Tapered width */
+        const width = 1 + t * t * 5;
+
+        /* Purple-to-lavender colour shift along the ribbon */
+        const r = Math.round(160 + t * 60);           /* 160→220 */
+        const g = Math.round(80  + t * 80);           /*  80→160 */
+        const b = Math.round(220 + t * 35);           /* 220→255 */
 
         ctx.beginPath();
-        ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
-        ctx.lineTo(trail[i].x, trail[i].y);
-        ctx.strokeStyle = 'rgba(182, 96, 235, ' + alpha + ')';
-        ctx.lineWidth = width;
-        ctx.lineCap = 'round';
+
+        if (i === 1) {
+          ctx.moveTo(points[0].x, points[0].y);
+          ctx.lineTo(points[1].x, points[1].y);
+        } else {
+          /* Smooth midpoint curve */
+          const prev = points[i - 1];
+          const curr = points[i];
+          const mx   = (prev.x + curr.x) * 0.5;
+          const my   = (prev.y + curr.y) * 0.5;
+          ctx.moveTo((points[i - 2].x + prev.x) * 0.5,
+                     (points[i - 2].y + prev.y) * 0.5);
+          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+        }
+
+        ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+        ctx.lineWidth   = width;
         ctx.stroke();
       }
 
-      /* Glowing dot at the head */
-      const head = trail[trail.length - 1];
+      /* Soft glowing head dot */
+      const head = points[len - 1];
+      const grad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 8);
+      grad.addColorStop(0, 'rgba(220, 170, 255, 0.7)');
+      grad.addColorStop(0.5, 'rgba(182, 96, 235, 0.25)');
+      grad.addColorStop(1, 'rgba(182, 96, 235, 0)');
       ctx.beginPath();
-      ctx.arc(head.x, head.y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(210, 140, 255, 0.8)';
-      ctx.shadowColor = 'rgba(182, 96, 235, 0.6)';
-      ctx.shadowBlur = 12;
+      ctx.arc(head.x, head.y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
       ctx.fill();
-      ctx.shadowBlur = 0;
-
-      /* Slowly shrink trail when mouse stops */
-      if (!active && trail.length > 0) {
-        trail.splice(0, 2);
-      }
 
       requestAnimationFrame(animate);
     }
