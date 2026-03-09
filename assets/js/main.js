@@ -375,7 +375,7 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =====================================================
-     CURSOR TRAIL — smooth canvas-based ribbon
+     CURSOR TRAIL — stardust particle system
      ===================================================== */
   (function cursorTrail() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -398,102 +398,120 @@
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    /* Trail stored as smoothed points */
-    const MAX_POINTS = 80;
-    const points = [];
+    const particles = [];
+    const MAX_PARTICLES = 120;
     let mouseX = -200, mouseY = -200;
-    let smoothX = -200, smoothY = -200;
+    let prevX  = -200, prevY  = -200;
     let active = false;
-    let idleFrames = 0;
+    let spawnAccum = 0;
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      active  = true;
-      idleFrames = 0;
+      active = true;
     }, { passive: true });
 
     document.addEventListener('mouseleave', () => { active = false; });
 
+    function spawn(x, y) {
+      const angle  = Math.random() * Math.PI * 2;
+      const speed  = 0.3 + Math.random() * 0.8;
+      const radius = 1.5 + Math.random() * 2.5;
+      const life   = 40 + Math.random() * 35;
+
+      /* Colour palette: purple → pink → lavender */
+      const palette = [
+        [182, 96, 235],
+        [210, 120, 255],
+        [235, 160, 255],
+        [160, 100, 240],
+        [200, 140, 255],
+      ];
+      const col = palette[Math.floor(Math.random() * palette.length)];
+
+      particles.push({
+        x: x, y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 0.2,
+        radius: radius,
+        maxLife: life,
+        age: 0,
+        r: col[0], g: col[1], b: col[2],
+        /* Slight twinkle phase offset */
+        twinkle: Math.random() * Math.PI * 2,
+      });
+    }
+
     function animate() {
       ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
-      /* Smooth interpolation toward mouse */
-      smoothX += (mouseX - smoothX) * 0.35;
-      smoothY += (mouseY - smoothY) * 0.35;
-
+      /* Spawn particles along the mouse path for even distribution */
       if (active) {
-        /* Only add point if moved enough (avoids clustering) */
-        const last = points[points.length - 1];
-        const dx = last ? smoothX - last.x : 999;
-        const dy = last ? smoothY - last.y : 999;
-        if (dx * dx + dy * dy > 4) {
-          points.push({ x: smoothX, y: smoothY });
+        const dx = mouseX - prevX;
+        const dy = mouseY - prevY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        /* Spawn rate scales with speed — faster movement = denser trail */
+        spawnAccum += Math.min(dist * 0.4, 6);
+        const count = Math.floor(spawnAccum);
+        spawnAccum -= count;
+
+        for (let i = 0; i < count && particles.length < MAX_PARTICLES; i++) {
+          const t = count > 1 ? i / (count - 1) : 1;
+          spawn(prevX + dx * t, prevY + dy * t);
         }
-      } else {
-        idleFrames++;
       }
+      prevX = mouseX;
+      prevY = mouseY;
 
-      /* Trim oldest points */
-      while (points.length > MAX_POINTS) points.shift();
+      /* Update & draw particles */
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.age++;
 
-      /* Fade out by removing points when idle */
-      if (!active && points.length > 0 && idleFrames > 4) {
-        const removeCount = Math.min(3, points.length);
-        points.splice(0, removeCount);
-      }
+        if (p.age >= p.maxLife) {
+          particles.splice(i, 1);
+          continue;
+        }
 
-      if (points.length < 3) { requestAnimationFrame(animate); return; }
+        /* Physics: drift + slight gravity pull upward (floaty feel) */
+        p.x  += p.vx;
+        p.y  += p.vy;
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+        p.vy -= 0.008;  /* gentle upward float */
 
-      /* ---- Draw smooth quadratic B-spline ribbon ---- */
-      ctx.lineCap  = 'round';
-      ctx.lineJoin = 'round';
+        const progress = p.age / p.maxLife;          /* 0→1 */
+        /* Smooth fade: quick appear, long dissolve */
+        const fadeIn   = Math.min(p.age / 5, 1);
+        const fadeOut  = 1 - progress * progress;
+        const alpha    = fadeIn * fadeOut * 0.65;
 
-      const len = points.length;
-      for (let i = 1; i < len; i++) {
-        const t = i / len;                             /* 0→1 tail→head */
+        /* Shrink over lifetime */
+        const r = p.radius * (1 - progress * 0.6);
 
-        /* Eased opacity: cubic ease-in for a silky fade */
-        const alpha = t * t * t * 0.5;
-        /* Tapered width */
-        const width = 1 + t * t * 5;
+        /* Subtle twinkle */
+        const twinkle = 0.7 + 0.3 * Math.sin(p.age * 0.25 + p.twinkle);
 
-        /* Purple-to-lavender colour shift along the ribbon */
-        const r = Math.round(160 + t * 60);           /* 160→220 */
-        const g = Math.round(80  + t * 80);           /*  80→160 */
-        const b = Math.round(220 + t * 35);           /* 220→255 */
+        const finalAlpha = alpha * twinkle;
+
+        /* Soft glow halo */
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 3);
+        grad.addColorStop(0, 'rgba(' + p.r + ',' + p.g + ',' + p.b + ',' + (finalAlpha * 0.9) + ')');
+        grad.addColorStop(0.4, 'rgba(' + p.r + ',' + p.g + ',' + p.b + ',' + (finalAlpha * 0.3) + ')');
+        grad.addColorStop(1, 'rgba(' + p.r + ',' + p.g + ',' + p.b + ',0)');
 
         ctx.beginPath();
+        ctx.arc(p.x, p.y, r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
 
-        if (i === 1) {
-          ctx.moveTo(points[0].x, points[0].y);
-          ctx.lineTo(points[1].x, points[1].y);
-        } else {
-          /* Smooth midpoint curve */
-          const prev = points[i - 1];
-          const curr = points[i];
-          const mx   = (prev.x + curr.x) * 0.5;
-          const my   = (prev.y + curr.y) * 0.5;
-          ctx.moveTo((points[i - 2].x + prev.x) * 0.5,
-                     (points[i - 2].y + prev.y) * 0.5);
-          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
-        }
-
-        ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-        ctx.lineWidth   = width;
-        ctx.stroke();
+        /* Bright core */
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 240, 255, ' + (finalAlpha * 0.8) + ')';
+        ctx.fill();
       }
-
-      /* Soft glowing head dot */
-      const head = points[len - 1];
-      const grad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 8);
-      grad.addColorStop(0, 'rgba(220, 170, 255, 0.7)');
-      grad.addColorStop(0.5, 'rgba(182, 96, 235, 0.25)');
-      grad.addColorStop(1, 'rgba(182, 96, 235, 0)');
-      ctx.beginPath();
-      ctx.arc(head.x, head.y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
 
       requestAnimationFrame(animate);
     }
