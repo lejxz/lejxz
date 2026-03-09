@@ -252,13 +252,68 @@ body.ready .site-loader {
   padding-block: var(--space-24);
 }
 
+/* ---------- Section dividers — glowing line between sections ---------- */
+.section-divider {
+  position: relative;
+  z-index: 2;
+  height: 1px;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(182, 96, 235, 0.06) 15%,
+    rgba(182, 96, 235, 0.25) 50%,
+    rgba(182, 96, 235, 0.06) 85%,
+    transparent 100%
+  );
+}
+.divider-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 80px;
+  background: radial-gradient(ellipse, rgba(155, 48, 224, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+/* ---------- Section edge fades — smooth top/bottom blending ---------- */
+.about-section::before,
+.projects-section::before,
+.research-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.6) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.about-section::after,
+.projects-section::after,
+.research-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(0deg, rgba(13, 17, 23, 0.6) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 .about-section,
 .projects-section,
 .research-section,
 .contact-section {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
 }
 
 .about-section .container,
@@ -266,7 +321,7 @@ body.ready .site-loader {
 .research-section .container,
 .contact-section .container {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* ---------- Gradient text ---------- */
@@ -324,6 +379,7 @@ body.ready .site-loader {
   height: 100%;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 /* ---------- Scroll progress bar ---------- */
@@ -527,6 +583,19 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
   isolation: isolate;
 }
 
+/* Hero bottom fade — blends into first section */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(0deg, #0c0a19 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
 /* Three.js canvas fills the hero */
 #hero-canvas {
   position: absolute;
@@ -686,7 +755,7 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
    ABOUT SECTION
    ===================================================== */
 .about-section {
-  background: linear-gradient(180deg, #0e0b1e 0%, #110e22 100%);
+  background: linear-gradient(180deg, #0c0a19 0%, #0e0b1e 30%, #110e22 70%, #0f0c1f 100%);
 }
 
 .about-layout {
@@ -879,7 +948,7 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
    PROJECTS SECTION
    ===================================================== */
 .projects-section {
-  background: linear-gradient(145deg, #0f0d21 0%, #131025 60%, #15112a 100%);
+  background: linear-gradient(180deg, #0e0b1d 0%, #0f0d21 25%, #131025 65%, #100d20 100%);
 }
 
 /* Filter bar */
@@ -1046,9 +1115,8 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
    RESEARCH SECTION
    ===================================================== */
 .research-section {
-  background: linear-gradient(180deg, #110e22 0%, #0e0b1c 100%);
+  background: linear-gradient(180deg, #0e0b1d 0%, #110e22 35%, #0f0c1f 70%, #0d0a1a 100%);
   position: relative;
-  overflow: hidden;
 }
 
 .research-list {
@@ -1146,9 +1214,8 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
    ===================================================== */
 .contact-section {
   background:
-    linear-gradient(180deg, #120f25 0%, #0d0b1a 100%);
+    linear-gradient(180deg, #0d0a1a 0%, #100d20 40%, #0d0b1a 100%);
   position: relative;
-  overflow: hidden;
 }
 
 /* Decorative blur blobs */
@@ -1331,8 +1398,8 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
    FOOTER
    ===================================================== */
 .footer {
-  background: var(--clr-bg-deep);
-  border-top: 1px solid var(--clr-glass-border);
+  background: linear-gradient(180deg, #0d0a1a 0%, var(--clr-bg-deep) 40%);
+  border-top: none;
   padding-block: var(--space-12);
 }
 .footer-inner {
