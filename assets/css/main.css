@@ -408,15 +408,24 @@ a, button, [role="button"], .filter-btn, .social-link,
 .project-link, .research-link, .contact-method-link { cursor: pointer; }
 input[type="text"], input[type="email"], textarea { cursor: text; }
 
-/* ---------- Cursor trail canvas ---------- */
-#cursor-trail-canvas {
+/* ---------- Cursor trail ---------- */
+.cursor-trail-dot {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(182, 96, 235, 0.6);
   pointer-events: none;
   z-index: 9999;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1);
+  transition: opacity 0.15s;
+  mix-blend-mode: screen;
+}
+.cursor-trail-dot.active {
+  opacity: 1;
 }
 
 /* ---------- Buttons ---------- */
