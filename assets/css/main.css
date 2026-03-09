@@ -261,16 +261,6 @@ body.ready .site-loader {
   overflow: hidden;
 }
 
-.section-three-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.72;
-}
-
 .about-section .container,
 .projects-section .container,
 .research-section .container,
@@ -671,11 +661,13 @@ body.ready .site-loader {
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  border: 1.5px solid var(--clr-purple-bright);
-  opacity: 0;
-  animation: ringPulse 3s infinite;
+  border: 1px solid rgba(182, 96, 235, 0.35);
+  opacity: 0.7;
 }
-.avatar-ring::after { animation-delay: 1.5s; }
+.avatar-ring::after {
+  inset: -14px;
+  opacity: 0.38;
+}
 .avatar-inner {
   width: 90px;
   height: 90px;
@@ -694,20 +686,6 @@ body.ready .site-loader {
 .avatar-inner i {
   position: relative;
   z-index: 2;
-  transition: opacity var(--transition-base);
-}
-
-.avatar-inner.has-three-avatar i {
-  opacity: 0.18;
-}
-
-.avatar-three-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
 }
 
 .about-name {
@@ -845,8 +823,44 @@ body.ready .site-loader {
 /* =====================================================
    PROJECTS SECTION
    ===================================================== */
+.about-section {
+  background:
+    radial-gradient(circle at 15% 18%, rgba(182, 96, 235, 0.16), transparent 38%),
+    radial-gradient(circle at 85% 84%, rgba(120, 0, 191, 0.18), transparent 40%),
+    linear-gradient(180deg, #141126 0%, #121022 100%);
+}
+
+.about-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(182, 96, 235, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(182, 96, 235, 0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at 50% 50%, black 35%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 35%, transparent 100%);
+}
+
 .projects-section {
-  background: var(--clr-bg-base);
+  background:
+    linear-gradient(145deg, #0f0d21 0%, #171330 60%, #1b1639 100%);
+}
+
+.projects-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      -32deg,
+      rgba(182, 96, 235, 0.06) 0,
+      rgba(182, 96, 235, 0.06) 2px,
+      transparent 2px,
+      transparent 34px
+    );
+  opacity: 0.75;
 }
 
 /* Filter bar */
@@ -892,8 +906,8 @@ body.ready .site-loader {
   animation: fadeInUp 0.5s var(--ease-smooth) both;
 }
 .project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(120, 0, 191, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(120, 0, 191, 0.2);
   border-color: rgba(182, 96, 235, 0.4);
 }
 
@@ -913,34 +927,13 @@ body.ready .site-loader {
   pointer-events: none;
 }
 
-.project-three-canvas,
-.research-three-canvas {
-  position: absolute;
-  top: var(--space-3);
-  left: var(--space-3);
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.92;
-  z-index: 2;
-  background: radial-gradient(circle at 35% 35%, rgba(182, 96, 235, 0.24), rgba(13, 17, 23, 0));
-  border: 1px solid rgba(182, 96, 235, 0.22);
-  backdrop-filter: blur(3px);
-}
-
-.project-card:hover .project-three-canvas,
-.research-card:hover .research-three-canvas {
-  transform: scale(1.04);
-  border-color: rgba(182, 96, 235, 0.45);
-}
 .project-thumbnail img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s var(--ease-smooth);
 }
-.project-card:hover .project-thumbnail img { transform: scale(1.07); }
+.project-card:hover .project-thumbnail img { transform: scale(1.02); }
 
 /* Status badge overlay */
 .project-status-badge {
@@ -1034,9 +1027,22 @@ body.ready .site-loader {
    RESEARCH SECTION
    ===================================================== */
 .research-section {
-  background: linear-gradient(180deg, var(--clr-bg-surface) 0%, var(--clr-bg-base) 100%);
+  background:
+    radial-gradient(circle at 78% 20%, rgba(182, 96, 235, 0.14), transparent 32%),
+    linear-gradient(180deg, #131026 0%, #100d1f 100%);
   position: relative;
   overflow: hidden;
+}
+
+.research-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(209, 123, 255, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.28;
 }
 
 .research-list {
@@ -1056,8 +1062,8 @@ body.ready .site-loader {
   transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 .research-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(120, 0, 191, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(120, 0, 191, 0.18);
   border-color: rgba(182, 96, 235, 0.35);
 }
 
@@ -1075,7 +1081,7 @@ body.ready .site-loader {
   object-fit: cover;
   transition: transform 0.6s var(--ease-smooth);
 }
-.research-card:hover .research-thumbnail img { transform: scale(1.06); }
+.research-card:hover .research-thumbnail img { transform: scale(1.02); }
 
 .research-body {
   padding: var(--space-6) var(--space-6) var(--space-6) 0;
@@ -1133,7 +1139,8 @@ body.ready .site-loader {
    CONTACT SECTION
    ===================================================== */
 .contact-section {
-  background: var(--clr-bg-base);
+  background:
+    linear-gradient(180deg, #120f25 0%, #0d0b1a 100%);
   position: relative;
   overflow: hidden;
 }
@@ -1148,18 +1155,18 @@ body.ready .site-loader {
   z-index: 0;
 }
 .contact-section::before {
-  width: 400px;
-  height: 400px;
-  background: rgba(120, 0, 191, 0.12);
-  top: -100px;
-  left: -100px;
+  width: 360px;
+  height: 360px;
+  background: rgba(120, 0, 191, 0.18);
+  top: -120px;
+  left: -80px;
 }
 .contact-section::after {
-  width: 320px;
-  height: 320px;
-  background: rgba(182, 96, 235, 0.1);
-  bottom: -80px;
-  right: -80px;
+  width: 300px;
+  height: 300px;
+  background: rgba(182, 96, 235, 0.16);
+  bottom: -90px;
+  right: -70px;
 }
 
 .contact-section .container { position: relative; z-index: 1; }
@@ -1512,11 +1519,6 @@ body.ready .site-loader {
     align-items: flex-start;
   }
 
-  .project-three-canvas,
-  .research-three-canvas {
-    width: 58px;
-    height: 58px;
-  }
 }
 
 /* =====================================================

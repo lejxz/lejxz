@@ -31,7 +31,7 @@
       'Preparing layout…',
       'Loading fonts…',
       'Fetching projects & research…',
-      'Rendering 3D scenes…',
+      'Rendering visuals…',
     ];
 
     function updateProgress() {
@@ -92,7 +92,7 @@
       updateProgress();
     }, { once: true });
 
-    /* Track window load (images, Three.js, etc.) */
+    /* Track window load (images, scripts, etc.) */
     window.addEventListener('load', () => {
       tasks.window = true;
       updateProgress();
