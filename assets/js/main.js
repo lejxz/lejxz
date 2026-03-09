@@ -15,6 +15,47 @@
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
   /* =====================================================
+     INITIAL LOADER
+     ===================================================== */
+  (function initialLoader() {
+    const loader = $('#site-loader');
+    if (!loader) return;
+
+    let windowReady = document.readyState === 'complete';
+    let contentReady = false;
+    let dismissed = false;
+
+    const dismiss = () => {
+      if (dismissed) return;
+      dismissed = true;
+      document.body.classList.add('ready');
+      document.body.classList.remove('is-loading');
+      setTimeout(() => {
+        loader.remove();
+      }, 700);
+    };
+
+    const tryDismiss = () => {
+      if (windowReady && contentReady) {
+        dismiss();
+      }
+    };
+
+    document.addEventListener('portfolio:rendered', () => {
+      contentReady = true;
+      tryDismiss();
+    }, { once: true });
+
+    window.addEventListener('load', () => {
+      windowReady = true;
+      tryDismiss();
+    }, { once: true });
+
+    /* Fallback so loader never blocks UX if data fetch fails. */
+    setTimeout(dismiss, 2800);
+  })();
+
+  /* =====================================================
      TYPEWRITER
      ===================================================== */
   (function typewriter() {

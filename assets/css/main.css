@@ -87,6 +87,10 @@ body {
   background-attachment: fixed;
 }
 
+body.is-loading {
+  overflow: hidden;
+}
+
 body.nav-open {
   overscroll-behavior: none;
 }
@@ -147,6 +151,87 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 .skip-link:focus { top: var(--space-4); }
 
+/* ---------- Initial Loader ---------- */
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  background:
+    radial-gradient(ellipse at top, rgba(155, 48, 224, 0.24), transparent 55%),
+    linear-gradient(160deg, #090b13 0%, #0d1117 60%, #100820 100%);
+  transition: opacity 0.55s var(--ease-smooth), visibility 0.55s var(--ease-smooth);
+}
+
+.site-loader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(182, 96, 235, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(182, 96, 235, 0.07) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 95%);
+}
+
+.loader-orb {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 2px solid rgba(182, 96, 235, 0.45);
+  border-top-color: rgba(61, 220, 132, 0.9);
+  box-shadow: 0 0 0 8px rgba(182, 96, 235, 0.1), 0 0 44px rgba(155, 48, 224, 0.4);
+  animation: loaderSpin 1.1s linear infinite;
+  z-index: 1;
+}
+
+.loader-title,
+.loader-subtitle,
+.loader-progress {
+  z-index: 1;
+}
+
+.loader-title {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.88rem;
+  color: var(--clr-text-primary);
+}
+
+.loader-subtitle {
+  color: var(--clr-text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: 30ch;
+}
+
+.loader-progress {
+  width: min(76vw, 260px);
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: rgba(182, 96, 235, 0.14);
+  overflow: hidden;
+}
+
+.loader-progress-fill {
+  display: block;
+  height: 100%;
+  width: 42%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--clr-purple-bright), var(--clr-success));
+  animation: loaderSweep 1.4s ease-in-out infinite;
+}
+
+body.ready .site-loader {
+  opacity: 0;
+  visibility: hidden;
+}
+
 /* ---------- Layout Utilities ---------- */
 .container {
   width: 100%;
@@ -157,6 +242,29 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .section {
   padding-block: var(--space-24);
+}
+
+.projects-section,
+.contact-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.section-three-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.72;
+}
+
+.projects-section .container,
+.contact-section .container {
+  position: relative;
+  z-index: 1;
 }
 
 /* ---------- Gradient text ---------- */
@@ -844,6 +952,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.research-meta .project-status-badge {
+  position: static;
+  inset: auto;
+  max-width: none;
+  white-space: nowrap;
+  margin-left: auto;
+}
 .status-active-research { background: rgba(61, 220, 132, 0.2); color: var(--clr-success); border: 1px solid var(--clr-success); }
 .status-prototype       { background: rgba(249, 200, 70, 0.2);  color: var(--clr-warning);  border: 1px solid var(--clr-warning); }
 .status-in-progress     { background: rgba(182, 96, 235, 0.2);  color: var(--clr-purple-bright); border: 1px solid var(--clr-purple-bright); }
@@ -1267,6 +1383,13 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
+@keyframes loaderSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes loaderSweep {
+  0% { transform: translateX(-130%); }
+  100% { transform: translateX(280%); }
+}
 
 /* Intersection observer — reveal animation classes */
 [data-animate] {
@@ -1337,6 +1460,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
   .hero-cta { flex-direction: column; align-items: center; }
 
+  .loader-title {
+    font-size: 0.8rem;
+  }
+
+  .loader-subtitle {
+    font-size: 0.84rem;
+  }
+
   .hero-badge {
     max-width: 92vw;
     text-align: center;
@@ -1384,4 +1515,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
+
+  .site-loader {
+    transition: none;
+  }
 }

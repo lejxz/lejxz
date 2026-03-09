@@ -365,10 +365,143 @@
     });
   }
 
+  function initSectionBackgroundScene(canvasId, variant) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || canvas.dataset.threeInit === 'true') return;
+    canvas.dataset.threeInit = 'true';
+
+    const renderer = makeRenderer(canvas, true);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 80);
+    camera.position.z = 9;
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.75);
+    const point = new THREE.PointLight(0xb660eb, 1.2, 24);
+    point.position.set(3.4, 2.6, 5);
+    scene.add(ambient);
+    scene.add(point);
+
+    const objects = [];
+
+    if (variant === 'projects') {
+      const count = prefersReducedMotion ? 10 : 18;
+      for (let i = 0; i < count; i++) {
+        const geo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+        const mat = new THREE.MeshBasicMaterial({
+          color: i % 2 === 0 ? 0x9b30e0 : 0x3ddc84,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.24,
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set((Math.random() - 0.5) * 16, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 6);
+        mesh.rotation.set(Math.random(), Math.random(), Math.random());
+        mesh.scale.setScalar(Math.random() * 0.7 + 0.6);
+        scene.add(mesh);
+        objects.push(mesh);
+      }
+
+      const particlesCount = prefersReducedMotion ? 120 : 240;
+      const positions = new Float32Array(particlesCount * 3);
+      for (let i = 0; i < particlesCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 22;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+      }
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const pMat = new THREE.PointsMaterial({
+        color: 0xb660eb,
+        size: 0.06,
+        transparent: true,
+        opacity: 0.35,
+      });
+      const points = new THREE.Points(pGeo, pMat);
+      scene.add(points);
+      objects.push(points);
+    }
+
+    if (variant === 'contact') {
+      const ringGroup = new THREE.Group();
+      const ringCount = prefersReducedMotion ? 4 : 7;
+      for (let i = 0; i < ringCount; i++) {
+        const radius = 1.2 + i * 0.55;
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(radius, 0.025, 8, 72),
+          new THREE.MeshBasicMaterial({
+            color: i % 2 === 0 ? 0xb660eb : 0xd17bff,
+            transparent: true,
+            opacity: 0.22,
+          })
+        );
+        ring.rotation.x = Math.random() * Math.PI;
+        ring.rotation.y = Math.random() * Math.PI;
+        ringGroup.add(ring);
+        objects.push(ring);
+      }
+
+      ringGroup.position.set(0, -0.2, -1.2);
+      scene.add(ringGroup);
+
+      const crystal = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.9, 0),
+        new THREE.MeshStandardMaterial({
+          color: 0x3ddc84,
+          emissive: 0x1c4331,
+          metalness: 0.5,
+          roughness: 0.35,
+          transparent: true,
+          opacity: 0.42,
+          flatShading: true,
+        })
+      );
+      scene.add(crystal);
+      objects.push(crystal);
+    }
+
+    const entry = registerScene({
+      canvas,
+      renderer,
+      scene,
+      camera,
+      visible: true,
+      update: (t) => {
+        if (variant === 'projects') {
+          objects.forEach((obj, idx) => {
+            obj.rotation.x += 0.0007 + idx * 0.00002;
+            obj.rotation.y += 0.001 + idx * 0.00002;
+            if (idx < 18) {
+              obj.position.y += Math.sin(t * 0.4 + idx) * 0.0008;
+            }
+          });
+          scene.rotation.y = Math.sin(t * 0.12) * 0.08;
+        }
+
+        if (variant === 'contact') {
+          objects.forEach((obj, idx) => {
+            obj.rotation.z += 0.0012 + idx * 0.00005;
+            obj.rotation.y += 0.0005 + idx * 0.00003;
+          });
+          scene.rotation.x = Math.sin(t * 0.2) * 0.05;
+          scene.rotation.y = Math.cos(t * 0.22) * 0.06;
+        }
+      },
+    });
+
+    bindResize(entry, () => ({
+      width: canvas.clientWidth,
+      height: canvas.clientHeight,
+    }));
+
+    bindVisibility(entry, '220px');
+  }
+
   function boot() {
     initHeroScene();
     initAvatarScene();
     initThumbnailScenes();
+    initSectionBackgroundScene('projects-canvas', 'projects');
+    initSectionBackgroundScene('contact-canvas', 'contact');
     startLoop();
   }
 
