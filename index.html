@@ -68,24 +68,24 @@
       <div class="hero-grid" aria-hidden="true"></div>
 
       <div class="hero-content">
-        <div class="hero-badge">
+        <div class="hero-badge" id="hero-badge">
           <span class="badge-dot" aria-hidden="true"></span>
           Available for Dating
         </div>
 
         <h1 id="hero-heading" class="hero-title">
-          <span class="hero-greeting">Hi, I'm</span>
-          <span class="hero-name gradient-text">Lejuene</span>
+          <span class="hero-greeting" id="hero-greeting">Hi, I'm</span>
+          <span class="hero-name gradient-text" id="hero-name">Lejuene</span>
           <span class="hero-subtitle typewriter" id="typewriter" aria-live="polite"></span>
         </h1>
 
-        <p class="hero-description">
+        <p class="hero-description" id="hero-description">
           Computer Science student at the intersection of
           <strong>Artificial Intelligence</strong>, <strong>Computer Vision</strong>, and
           <strong>Spatial Computing</strong> — building the next generation of intelligent AR/VR experiences.
         </p>
 
-        <div class="hero-cta">
+        <div class="hero-cta" id="hero-cta">
           <a href="#projects" class="btn btn-primary">
             <i class="fas fa-rocket" aria-hidden="true"></i>
             View Projects
@@ -97,7 +97,7 @@
         </div>
 
         <!-- Focus area chips -->
-        <div class="hero-chips" aria-label="Focus areas">
+        <div class="hero-chips" id="hero-chips" aria-label="Focus areas">
           <span class="chip"><i class="fas fa-brain" aria-hidden="true"></i> Machine Learning</span>
           <span class="chip"><i class="fas fa-eye" aria-hidden="true"></i> Computer Vision</span>
           <span class="chip"><i class="fas fa-vr-cardboard" aria-hidden="true"></i> AR / VR</span>
@@ -127,28 +127,30 @@
             <div class="about-avatar" aria-hidden="true">
               <div class="avatar-ring">
                 <div class="avatar-inner">
-                  <i class="fas fa-user-astronaut"></i>
+                  <i id="about-avatar-icon" class="fas fa-user-astronaut"></i>
                 </div>
               </div>
             </div>
 
             <div class="about-text">
-              <h3 class="about-name">Lejuene Delantar</h3>
-              <p class="about-headline gradient-text">AI | ML | AR/VR</p>
-              <p class="about-bio-text">
-                I am a Computer Science student double-majoring in
-                <strong>Artificial Intelligence</strong> and <strong>Cybersecurity</strong>.
-                My passion and research are dedicated to <strong>Spatial Computing</strong> and
-                <strong>Computer Vision</strong>.
-              </p>
-              <p class="about-bio-text">
-                🔭 <strong>Current Project:</strong> Building a real-time AR detection system using OpenCV and YOLO.
-                <br/>
-                🎯 <strong>Goal:</strong> Contribute to the next generation of intelligent AR/VR experiences.
-              </p>
+              <h3 class="about-name" id="about-name">Lejuene Delantar</h3>
+              <p class="about-headline gradient-text" id="about-headline">AI | ML | AR/VR</p>
+              <div id="about-bio-content">
+                <p class="about-bio-text">
+                  I am a Computer Science student double-majoring in
+                  <strong>Artificial Intelligence</strong> and <strong>Cybersecurity</strong>.
+                  My passion and research are dedicated to <strong>Spatial Computing</strong> and
+                  <strong>Computer Vision</strong>.
+                </p>
+                <p class="about-bio-text">
+                  🔭 <strong>Current Project:</strong> Building a real-time AR detection system using OpenCV and YOLO.
+                  <br/>
+                  🎯 <strong>Goal:</strong> Contribute to the next generation of intelligent AR/VR experiences.
+                </p>
+              </div>
 
               <!-- Social links -->
-              <div class="about-social" aria-label="Social links">
+              <div class="about-social" id="about-social" aria-label="Social links">
                 <a href="https://github.com/lejxz" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub profile">
                   <i class="fab fa-github" aria-hidden="true"></i>
                 </a>

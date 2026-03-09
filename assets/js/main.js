@@ -112,7 +112,7 @@
     const el = $('#typewriter');
     if (!el) return;
 
-    const phrases = [
+    const fallbackPhrases = [
       'Building Real-Time AR Systems',
       'Exploring Computer Vision',
       'ML & Adversarial AI Research',
@@ -120,45 +120,59 @@
       'Always Learning.',
     ];
 
-    let phraseIdx  = 0;
-    let charIdx    = 0;
-    let deleting   = false;
-    let pauseTimer = null;
+    function start(phrases) {
+      let phraseIdx  = 0;
+      let charIdx    = 0;
+      let deleting   = false;
+      let pauseTimer = null;
 
-    function tick() {
-      const phrase = phrases[phraseIdx];
+      function tick() {
+        const phrase = phrases[phraseIdx];
 
-      if (deleting) {
-        charIdx--;
-        el.textContent = phrase.slice(0, charIdx);
-        if (charIdx === 0) {
-          deleting = false;
-          phraseIdx = (phraseIdx + 1) % phrases.length;
-          pauseTimer = setTimeout(tick, 400);
-          return;
+        if (deleting) {
+          charIdx--;
+          el.textContent = phrase.slice(0, charIdx);
+          if (charIdx === 0) {
+            deleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+            pauseTimer = setTimeout(tick, 400);
+            return;
+          }
+        } else {
+          charIdx++;
+          el.textContent = phrase.slice(0, charIdx);
+          if (charIdx === phrase.length) {
+            deleting = true;
+            pauseTimer = setTimeout(tick, 2200);
+            return;
+          }
         }
-      } else {
-        charIdx++;
-        el.textContent = phrase.slice(0, charIdx);
-        if (charIdx === phrase.length) {
-          deleting = true;
-          pauseTimer = setTimeout(tick, 2200);
-          return;
-        }
+
+        const speed = deleting ? 45 : 80;
+        pauseTimer = setTimeout(tick, speed);
       }
 
-      const speed = deleting ? 45 : 80;
-      pauseTimer = setTimeout(tick, speed);
+      pauseTimer = setTimeout(tick, 900);
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        clearTimeout(pauseTimer);
+        el.textContent = phrases[0];
+      }
     }
 
-    /* Initial pause before first phrase */
-    pauseTimer = setTimeout(tick, 900);
-
-    /* Respect reduced-motion preference */
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      clearTimeout(pauseTimer);
-      el.textContent = phrases[0];
-    }
+    /* Wait briefly for portfolio.json phrases, then fall back */
+    let started = false;
+    document.addEventListener('portfolio:rendered', () => {
+      if (started) return;
+      started = true;
+      start(window.__typewriterPhrases || fallbackPhrases);
+    });
+    /* Fallback if portfolio:rendered never fires */
+    setTimeout(() => {
+      if (started) return;
+      started = true;
+      start(window.__typewriterPhrases || fallbackPhrases);
+    }, 3000);
   })();
 
   /* =====================================================
@@ -361,54 +375,78 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =====================================================
-     CURSOR TRAIL — glowing dots that follow the mouse
+     CURSOR TRAIL — smooth canvas-based comet tail
      ===================================================== */
   (function cursorTrail() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if ('ontouchstart' in window) return; /* skip on touch devices */
+    if ('ontouchstart' in window) return;
 
-    const TRAIL_COUNT = 12;
-    const dots = [];
+    const canvas = document.createElement('canvas');
+    canvas.id = 'cursor-trail-canvas';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
 
-    for (let i = 0; i < TRAIL_COUNT; i++) {
-      const dot = document.createElement('div');
-      dot.className = 'cursor-trail-dot';
-      const scale = 1 - (i / TRAIL_COUNT) * 0.7;
-      const alpha = 0.55 - (i / TRAIL_COUNT) * 0.45;
-      dot.style.width = (8 * scale) + 'px';
-      dot.style.height = (8 * scale) + 'px';
-      dot.style.background = 'rgba(182, 96, 235, ' + alpha + ')';
-      document.body.appendChild(dot);
-      dots.push({ el: dot, x: 0, y: 0 });
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
 
-    let mouseX = 0, mouseY = 0, active = false;
+    const TRAIL_LENGTH = 50;
+    const trail = [];
+    let mouseX = -100, mouseY = -100, active = false;
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      if (!active) {
-        active = true;
-        dots.forEach(d => d.el.classList.add('active'));
-      }
+      active = true;
     }, { passive: true });
 
-    document.addEventListener('mouseleave', () => {
-      active = false;
-      dots.forEach(d => d.el.classList.remove('active'));
-    });
+    document.addEventListener('mouseleave', () => { active = false; });
 
     function animate() {
-      let prevX = mouseX, prevY = mouseY;
-      for (let i = 0; i < dots.length; i++) {
-        const d = dots[i];
-        const ease = 0.35 - (i * 0.018);
-        d.x += (prevX - d.x) * ease;
-        d.y += (prevY - d.y) * ease;
-        d.el.style.transform = 'translate(' + d.x + 'px, ' + d.y + 'px) translate(-50%, -50%)';
-        prevX = d.x;
-        prevY = d.y;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (active) {
+        trail.push({ x: mouseX, y: mouseY });
       }
+      if (trail.length > TRAIL_LENGTH) {
+        trail.splice(0, trail.length - TRAIL_LENGTH);
+      }
+
+      if (trail.length < 2) { requestAnimationFrame(animate); return; }
+
+      /* Draw a smooth tapered line with gradient opacity */
+      for (let i = 1; i < trail.length; i++) {
+        const t = i / trail.length;                      /* 0→1 from tail to head */
+        const alpha = t * t * 0.55;                      /* quadratic fade-in */
+        const width = t * 4.5;                           /* taper from thin to thick */
+
+        ctx.beginPath();
+        ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
+        ctx.lineTo(trail[i].x, trail[i].y);
+        ctx.strokeStyle = 'rgba(182, 96, 235, ' + alpha + ')';
+        ctx.lineWidth = width;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      /* Glowing dot at the head */
+      const head = trail[trail.length - 1];
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(210, 140, 255, 0.8)';
+      ctx.shadowColor = 'rgba(182, 96, 235, 0.6)';
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      /* Slowly shrink trail when mouse stops */
+      if (!active && trail.length > 0) {
+        trail.splice(0, 2);
+      }
+
       requestAnimationFrame(animate);
     }
     animate();

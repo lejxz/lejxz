@@ -111,6 +111,80 @@
       </article>`;
   }
 
+  /* ---- Render hero section from JSON ---- */
+  function renderHero(hero) {
+    if (!hero) return;
+
+    const badge       = $('#hero-badge');
+    const greeting    = $('#hero-greeting');
+    const name        = $('#hero-name');
+    const desc        = $('#hero-description');
+    const cta         = $('#hero-cta');
+    const chips       = $('#hero-chips');
+
+    if (badge && hero.badge) {
+      badge.innerHTML = '<span class="badge-dot" aria-hidden="true"></span>' + esc(hero.badge);
+    }
+    if (greeting && hero.greeting) greeting.textContent = hero.greeting;
+    if (name && hero.name)         name.textContent     = hero.name;
+    if (desc && hero.description)  desc.innerHTML       = hero.description;
+
+    if (cta && Array.isArray(hero.ctaButtons)) {
+      cta.innerHTML = hero.ctaButtons.map(btn => {
+        const cls = btn.style === 'primary' ? 'btn btn-primary' : 'btn btn-outline';
+        return `<a href="${esc(btn.href)}" class="${cls}">
+          <i class="${esc(btn.icon)}" aria-hidden="true"></i>
+          ${esc(btn.label)}
+        </a>`;
+      }).join('');
+    }
+
+    if (chips && Array.isArray(hero.chips)) {
+      chips.innerHTML = hero.chips.map(c =>
+        `<span class="chip"><i class="${esc(c.icon)}" aria-hidden="true"></i> ${esc(c.label)}</span>`
+      ).join('');
+    }
+
+    /* Expose typewriter phrases for main.js */
+    if (Array.isArray(hero.typewriterPhrases)) {
+      window.__typewriterPhrases = hero.typewriterPhrases;
+    }
+  }
+
+  /* ---- Render about bio card from JSON ---- */
+  function renderAbout(profile) {
+    if (!profile) return;
+
+    const nameEl     = $('#about-name');
+    const headline   = $('#about-headline');
+    const bioContent = $('#about-bio-content');
+    const social     = $('#about-social');
+    const avatarIcon = $('#about-avatar-icon');
+
+    if (nameEl && profile.name)       nameEl.textContent    = profile.name;
+    if (headline && profile.headline) headline.textContent   = profile.headline;
+    if (avatarIcon && profile.avatarIcon) avatarIcon.className = profile.avatarIcon;
+
+    if (bioContent && Array.isArray(profile.bio)) {
+      bioContent.innerHTML = profile.bio
+        .map(p => `<p class="about-bio-text">${p}</p>`)
+        .join('');
+    }
+
+    if (social) {
+      const links = [];
+      if (profile.github)  links.push({ href: profile.github,             icon: 'fab fa-github',   label: 'GitHub profile' });
+      if (profile.linkedin) links.push({ href: profile.linkedin,           icon: 'fab fa-linkedin', label: 'LinkedIn profile' });
+      if (profile.email)   links.push({ href: 'mailto:' + profile.email,  icon: 'fas fa-envelope', label: 'Send email' });
+
+      social.innerHTML = links.map(l =>
+        `<a href="${esc(l.href)}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="${esc(l.label)}">
+          <i class="${esc(l.icon)}" aria-hidden="true"></i>
+        </a>`
+      ).join('');
+    }
+  }
+
   /* ---- Render focus areas ---- */
   function renderFocusAreas(areas) {
     const container = $('#focus-areas-list');
@@ -199,6 +273,12 @@
         .map(p => buildResearchCard(p))
         .join('');
     }
+
+    /* Hero section */
+    if (data.hero) renderHero(data.hero);
+
+    /* About bio card */
+    if (data.profile) renderAbout(data.profile);
 
     /* About section */
     if (data.focusAreas) renderFocusAreas(data.focusAreas);
