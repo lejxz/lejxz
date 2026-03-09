@@ -408,6 +408,26 @@ a, button, [role="button"], .filter-btn, .social-link,
 .project-link, .research-link, .contact-method-link { cursor: pointer; }
 input[type="text"], input[type="email"], textarea { cursor: text; }
 
+/* ---------- Cursor trail ---------- */
+.cursor-trail-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(182, 96, 235, 0.6);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1);
+  transition: opacity 0.15s;
+  mix-blend-mode: screen;
+}
+.cursor-trail-dot.active {
+  opacity: 1;
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex;
@@ -913,13 +933,11 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
 }
 
 .skills-groups {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
 }
 .skills-groups > div {
-  flex: 1 1 140px;
   min-width: 0;
 }
 .skill-group-label {
@@ -1529,6 +1547,9 @@ input[type="text"], input[type="email"], textarea { cursor: text; }
     justify-content: center;
   }
   .focus-list {
+    grid-template-columns: 1fr;
+  }
+  .skills-groups {
     grid-template-columns: 1fr;
   }
   .contact-grid {

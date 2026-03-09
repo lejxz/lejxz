@@ -361,6 +361,60 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =====================================================
+     CURSOR TRAIL — glowing dots that follow the mouse
+     ===================================================== */
+  (function cursorTrail() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if ('ontouchstart' in window) return; /* skip on touch devices */
+
+    const TRAIL_COUNT = 12;
+    const dots = [];
+
+    for (let i = 0; i < TRAIL_COUNT; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail-dot';
+      const scale = 1 - (i / TRAIL_COUNT) * 0.7;
+      const alpha = 0.55 - (i / TRAIL_COUNT) * 0.45;
+      dot.style.width = (8 * scale) + 'px';
+      dot.style.height = (8 * scale) + 'px';
+      dot.style.background = 'rgba(182, 96, 235, ' + alpha + ')';
+      document.body.appendChild(dot);
+      dots.push({ el: dot, x: 0, y: 0 });
+    }
+
+    let mouseX = 0, mouseY = 0, active = false;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!active) {
+        active = true;
+        dots.forEach(d => d.el.classList.add('active'));
+      }
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => {
+      active = false;
+      dots.forEach(d => d.el.classList.remove('active'));
+    });
+
+    function animate() {
+      let prevX = mouseX, prevY = mouseY;
+      for (let i = 0; i < dots.length; i++) {
+        const d = dots[i];
+        const ease = 0.35 - (i * 0.018);
+        d.x += (prevX - d.x) * ease;
+        d.y += (prevY - d.y) * ease;
+        d.el.style.transform = 'translate(' + d.x + 'px, ' + d.y + 'px) translate(-50%, -50%)';
+        prevX = d.x;
+        prevY = d.y;
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
+
+  /* =====================================================
      SCROLL PROGRESS BAR
      ===================================================== */
   (function scrollProgress() {
