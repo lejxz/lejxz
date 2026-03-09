@@ -112,7 +112,8 @@
     const el = $('#typewriter');
     if (!el) return;
 
-    const phrases = [
+    /* Default phrases used if JSON hasn't loaded */
+    let phrases = [
       'Building Real-Time AR Systems',
       'Exploring Computer Vision',
       'ML & Adversarial AI Research',
@@ -124,6 +125,7 @@
     let charIdx    = 0;
     let deleting   = false;
     let pauseTimer = null;
+    let started    = false;
 
     function tick() {
       const phrase = phrases[phraseIdx];
@@ -151,14 +153,25 @@
       pauseTimer = setTimeout(tick, speed);
     }
 
-    /* Initial pause before first phrase */
-    pauseTimer = setTimeout(tick, 900);
+    function start(newPhrases) {
+      if (newPhrases && newPhrases.length) phrases = newPhrases;
+      if (started) return;
+      started = true;
 
-    /* Respect reduced-motion preference */
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      clearTimeout(pauseTimer);
-      el.textContent = phrases[0];
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = phrases[0];
+        return;
+      }
+      pauseTimer = setTimeout(tick, 900);
     }
+
+    /* Listen for phrases from portfolio JSON */
+    document.addEventListener('portfolio:typewriter', (e) => {
+      start(e.detail);
+    });
+
+    /* Fallback: start with defaults after a short delay if JSON is slow */
+    setTimeout(() => { if (!started) start(); }, 1500);
   })();
 
   /* =====================================================
@@ -361,57 +374,103 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =====================================================
-     CURSOR TRAIL — glowing dots that follow the mouse
+     CURSOR TRAIL — smooth ribbon via canvas
      ===================================================== */
   (function cursorTrail() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if ('ontouchstart' in window) return; /* skip on touch devices */
+    if ('ontouchstart' in window) return;
 
-    const TRAIL_COUNT = 12;
-    const dots = [];
+    const canvas = document.createElement('canvas');
+    canvas.id = 'cursor-trail-canvas';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
 
-    for (let i = 0; i < TRAIL_COUNT; i++) {
-      const dot = document.createElement('div');
-      dot.className = 'cursor-trail-dot';
-      const scale = 1 - (i / TRAIL_COUNT) * 0.7;
-      const alpha = 0.55 - (i / TRAIL_COUNT) * 0.45;
-      dot.style.width = (8 * scale) + 'px';
-      dot.style.height = (8 * scale) + 'px';
-      dot.style.background = 'rgba(182, 96, 235, ' + alpha + ')';
-      document.body.appendChild(dot);
-      dots.push({ el: dot, x: 0, y: 0 });
+    function resize() {
+      canvas.width = window.innerWidth * devicePixelRatio;
+      canvas.height = window.innerHeight * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
     }
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
 
-    let mouseX = 0, mouseY = 0, active = false;
+    const MAX_POINTS = 50;
+    const points = [];          /* { x, y, age } */
+    const MAX_AGE = 60;         /* frames before a point fades out */
+    let mouseX = -100, mouseY = -100;
+    let active = false;
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      if (!active) {
-        active = true;
-        dots.forEach(d => d.el.classList.add('active'));
-      }
+      active = true;
     }, { passive: true });
 
-    document.addEventListener('mouseleave', () => {
-      active = false;
-      dots.forEach(d => d.el.classList.remove('active'));
-    });
+    document.addEventListener('mouseleave', () => { active = false; });
 
-    function animate() {
-      let prevX = mouseX, prevY = mouseY;
-      for (let i = 0; i < dots.length; i++) {
-        const d = dots[i];
-        const ease = 0.35 - (i * 0.018);
-        d.x += (prevX - d.x) * ease;
-        d.y += (prevY - d.y) * ease;
-        d.el.style.transform = 'translate(' + d.x + 'px, ' + d.y + 'px) translate(-50%, -50%)';
-        prevX = d.x;
-        prevY = d.y;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width / devicePixelRatio, canvas.height / devicePixelRatio);
+
+      /* Add new point only if cursor moved enough */
+      if (active) {
+        const last = points[points.length - 1];
+        if (!last || Math.hypot(mouseX - last.x, mouseY - last.y) > 2) {
+          points.push({ x: mouseX, y: mouseY, age: 0 });
+        }
       }
-      requestAnimationFrame(animate);
+
+      /* Age points and prune */
+      for (let i = points.length - 1; i >= 0; i--) {
+        points[i].age++;
+        if (points[i].age > MAX_AGE) points.splice(i, 1);
+      }
+      if (points.length > MAX_POINTS) points.splice(0, points.length - MAX_POINTS);
+
+      if (points.length < 2) { requestAnimationFrame(draw); return; }
+
+      /* Draw smooth ribbon with Catmull-Rom → cubic bezier */
+      for (let i = 0; i < points.length - 1; i++) {
+        const p0 = points[Math.max(i - 1, 0)];
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const p3 = points[Math.min(i + 2, points.length - 1)];
+
+        const t = 1 - (p1.age / MAX_AGE);
+        const lineWidth = Math.max(0.5, 4 * t);
+        const alpha = t * 0.55;
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+
+        /* Catmull-Rom to cubic bezier control points */
+        const cp1x = p1.x + (p2.x - p0.x) / 6;
+        const cp1y = p1.y + (p2.y - p0.y) / 6;
+        const cp2x = p2.x - (p3.x - p1.x) / 6;
+        const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+
+        ctx.strokeStyle = 'rgba(182, 96, 235, ' + alpha + ')';
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+      }
+
+      /* Small glow dot at cursor tip */
+      if (active && points.length) {
+        const tip = points[points.length - 1];
+        const grad = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 8);
+        grad.addColorStop(0, 'rgba(182, 96, 235, 0.6)');
+        grad.addColorStop(1, 'rgba(182, 96, 235, 0)');
+        ctx.beginPath();
+        ctx.arc(tip.x, tip.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
     }
-    animate();
+    draw();
   })();
 
   /* =====================================================

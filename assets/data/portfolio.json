@@ -1,11 +1,33 @@
 {
   "profile": {
     "name": "Lejuene Delantar",
+    "firstName": "lejxz",
     "headline": "AI | ML | AR/VR",
     "shortBio": "Computer Science student working on computer vision, spatial computing, and secure AI systems.",
     "email": "delantarlejuene@gmail.com",
     "github": "https://github.com/lejxz",
-    "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/"
+    "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/",
+    "avatarIcon": "fas fa-user-astronaut",
+    "aboutBio": "I am a Computer Science student double-majoring in <strong>Artificial Intelligence</strong> and <strong>Cybersecurity</strong>. My passion and research are dedicated to <strong>Spatial Computing</strong> and <strong>Computer Vision</strong>.",
+    "currentProject": "Building a real-time AR detection system using OpenCV and YOLO.",
+    "goal": "Contribute to the next generation of intelligent AR/VR experiences."
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "badge": "Available for Dating",
+    "description": "Computer Science student at the intersection of <strong>Artificial Intelligence</strong>, <strong>Computer Vision</strong>, and <strong>Spatial Computing</strong> — building the next generation of intelligent AR/VR experiences.",
+    "typewriterPhrases": [
+      "Building Real-Time AR Systems",
+      "Exploring Computer Vision",
+      "ML & Adversarial AI Research",
+      "Spatial Computing Enthusiast",
+      "Always Learning."
+    ],
+    "chips": [
+      { "icon": "fas fa-brain", "label": "Machine Learning" },
+      { "icon": "fas fa-eye", "label": "Computer Vision" },
+      { "icon": "fas fa-vr-cardboard", "label": "AR / VR" }
+    ]
   },
   "focusAreas": [
     {

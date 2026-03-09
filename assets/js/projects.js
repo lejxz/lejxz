@@ -143,6 +143,85 @@
       </div>`).join('');
   }
 
+  /* ---- Render Hero section from JSON ---- */
+  function renderHero(data) {
+    const profile = data.profile || {};
+    const hero = data.hero || {};
+
+    const badge = $('#hero-badge');
+    if (badge) {
+      const dot = badge.querySelector('.badge-dot');
+      badge.textContent = '';
+      if (dot) badge.appendChild(dot);
+      badge.appendChild(document.createTextNode(hero.badge || ''));
+    }
+
+    const greeting = $('#hero-greeting');
+    if (greeting) greeting.textContent = hero.greeting || '';
+
+    const name = $('#hero-name');
+    if (name) name.textContent = profile.firstName || profile.name || '';
+
+    const desc = $('#hero-description');
+    if (desc) desc.innerHTML = hero.description || '';
+
+    const chips = $('#hero-chips');
+    if (chips && Array.isArray(hero.chips)) {
+      chips.innerHTML = hero.chips.map(c =>
+        `<span class="chip"><i class="${esc(c.icon)}" aria-hidden="true"></i> ${esc(c.label)}</span>`
+      ).join('');
+    }
+
+    /* Dispatch event so typewriter can pick up phrases */
+    if (Array.isArray(hero.typewriterPhrases)) {
+      document.dispatchEvent(new CustomEvent('portfolio:typewriter', {
+        detail: hero.typewriterPhrases
+      }));
+    }
+  }
+
+  /* ---- Render About bio from JSON ---- */
+  function renderAboutBio(profile) {
+    const nameEl = $('#about-name');
+    if (nameEl) nameEl.textContent = profile.name || '';
+
+    const headlineEl = $('#about-headline');
+    if (headlineEl) headlineEl.textContent = profile.headline || '';
+
+    const bioEl = $('#about-bio-text');
+    if (bioEl) bioEl.innerHTML = profile.aboutBio || '';
+
+    const pgEl = $('#about-project-goal');
+    if (pgEl) {
+      pgEl.innerHTML =
+        '\uD83D\uDD2D <strong>Current Project:</strong> ' + esc(profile.currentProject || '') +
+        '<br/>\uD83C\uDFAF <strong>Goal:</strong> ' + esc(profile.goal || '');
+    }
+
+    const iconEl = $('#about-avatar-icon');
+    if (iconEl && profile.avatarIcon) {
+      iconEl.className = profile.avatarIcon;
+    }
+
+    const socialEl = $('#about-social');
+    if (socialEl) {
+      let html = '';
+      if (profile.github) {
+        html += `<a href="${esc(profile.github)}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub profile">
+          <i class="fab fa-github" aria-hidden="true"></i></a>`;
+      }
+      if (profile.linkedin) {
+        html += `<a href="${esc(profile.linkedin)}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn profile">
+          <i class="fab fa-linkedin" aria-hidden="true"></i></a>`;
+      }
+      if (profile.email) {
+        html += `<a href="mailto:${esc(profile.email)}" class="social-link" aria-label="Send email">
+          <i class="fas fa-envelope" aria-hidden="true"></i></a>`;
+      }
+      socialEl.innerHTML = html;
+    }
+  }
+
   /* ---- Filter logic ---- */
   function setupFilters(cards) {
     const buttons = $$('.filter-btn');
@@ -199,6 +278,12 @@
         .map(p => buildResearchCard(p))
         .join('');
     }
+
+    /* Hero */
+    renderHero(data);
+
+    /* About bio */
+    if (data.profile) renderAboutBio(data.profile);
 
     /* About section */
     if (data.focusAreas) renderFocusAreas(data.focusAreas);
