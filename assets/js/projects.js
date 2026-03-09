@@ -202,6 +202,9 @@
     /* About section */
     if (data.focusAreas) renderFocusAreas(data.focusAreas);
     if (data.skills)     renderSkills(data.skills);
+
+    /* Notify other modules that dynamic cards are present in the DOM. */
+    document.dispatchEvent(new CustomEvent('portfolio:rendered'));
   }
 
   /* Run after DOM is ready */
