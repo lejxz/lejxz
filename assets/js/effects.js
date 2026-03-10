@@ -247,21 +247,33 @@
       const items = $$(selector);
       if (!items.length) return;
 
+      const DURATION = '0.5s';
+      const STAGGER_MS = 100;
+
+      function applyTransition(el, i) {
+        const delay = i * STAGGER_MS + 'ms';
+        el.style.transition = 'opacity ' + DURATION + ' ease ' + delay + ', transform ' + DURATION + ' ease ' + delay;
+      }
+
       items.forEach((el, i) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease ' + (i * 100) + 'ms, transform 0.5s ease ' + (i * 100) + 'ms';
+        applyTransition(el, i);
       });
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const children = $$(selector, entry.target);
-            children.forEach((el) => {
+            $$(selector, entry.target).forEach((el) => {
               el.style.opacity = '1';
               el.style.transform = 'translateY(0)';
             });
-            observer.unobserve(entry.target);
+          } else {
+            $$(selector, entry.target).forEach((el, i) => {
+              el.style.opacity = '0';
+              el.style.transform = 'translateY(20px)';
+              applyTransition(el, i);
+            });
           }
         });
       }, { threshold: 0.1 });
