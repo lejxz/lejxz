@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="All projects by Lejuene Delantar — AI, ML, Computer Vision, and AR/VR work." />
+  <meta name="theme-color" content="#0f0c29" />
+
+  <title>lejxz · Projects</title>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/sections.css" />
+</head>
+<body class="is-loading">
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div id="site-loader" class="site-loader" aria-live="polite" aria-label="Loading site">
+    <div class="loader-orb" aria-hidden="true"></div>
+    <p class="loader-title">Loading Projects</p>
+    <p class="loader-subtitle">Fetching project data...</p>
+    <div class="loader-progress" aria-hidden="true">
+      <span class="loader-progress-fill"></span>
+    </div>
+    <span class="loader-percent" aria-hidden="true">0%</span>
+  </div>
+
+  <!-- ========== NAVIGATION ========== -->
+  <header class="nav-header" role="banner">
+    <nav class="nav-container" aria-label="Primary navigation">
+      <a href="index.html" class="nav-logo" aria-label="lejxz home">
+        <span class="logo-bracket">&lt;</span>lejxz<span class="logo-bracket">/&gt;</span>
+      </a>
+
+      <!-- Mobile hamburger -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu" role="list">
+        <li><a href="index.html#hero"    class="nav-link" data-section="hero">Home</a></li>
+        <li><a href="index.html#about"   class="nav-link" data-section="about">About</a></li>
+        <li><a href="projects.html"      class="nav-link active" data-section="projects">Projects</a></li>
+        <li><a href="research.html"      class="nav-link" data-section="research">Research</a></li>
+        <li><a href="index.html#contact" class="nav-link" data-section="contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ========== SUBPAGE HEADER ========== -->
+    <div class="subpage-header" aria-label="Page header">
+      <a href="index.html" class="subpage-back">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Portfolio
+      </a>
+      <div class="section-header">
+        <span class="section-tag">// projects</span>
+        <h1 class="section-title">All Projects</h1>
+        <p class="section-subtitle">A complete collection of my work in AI, Computer Vision, and AR/VR.</p>
+      </div>
+    </div>
+
+    <!-- ========== PROJECTS SECTION ========== -->
+    <section id="projects" class="section projects-section" aria-label="Projects">
+      <canvas id="projects-canvas" class="section-canvas" aria-hidden="true"></canvas>
+      <div class="container">
+
+        <!-- Filter bar -->
+        <div class="filter-bar" role="group" aria-label="Filter projects by category">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="ai">AI / ML</button>
+          <button class="filter-btn" data-filter="vision">Vision</button>
+          <button class="filter-btn" data-filter="arvr">AR / VR</button>
+        </div>
+
+        <!-- Project cards rendered by JS -->
+        <div id="projects-grid" class="projects-grid" role="list" aria-label="Project list">
+          <!-- Populated dynamically -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" aria-label="Back to portfolio">
+          <span class="logo-bracket">&lt;</span>lejxz<span class="logo-bracket">/&gt;</span>
+        </a>
+        <p class="footer-tagline">Building at the intersection of AI &amp; Vision.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="index.html#hero"    class="footer-link">Home</a>
+        <a href="index.html#about"   class="footer-link">About</a>
+        <a href="projects.html"      class="footer-link">Projects</a>
+        <a href="research.html"      class="footer-link">Research</a>
+        <a href="index.html#contact" class="footer-link">Contact</a>
+      </nav>
+
+      <div class="footer-social" aria-label="Social links">
+        <a href="https://github.com/lejxz" target="_blank" rel="noopener noreferrer" class="footer-icon" aria-label="GitHub">
+          <i class="fab fa-github" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/" target="_blank" rel="noopener noreferrer" class="footer-icon" aria-label="LinkedIn">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+        <a href="mailto:delantarlejuene@gmail.com" class="footer-icon" aria-label="Email">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <p class="footer-copy">
+        &copy; <span id="footer-year"></span> Lejuene Delantar. Built with ♥ for AI and Vision.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Three.js (vendored locally for reliability and security) -->
+  <script src="assets/js/vendor/three.min.js"></script>
+
+  <!-- App scripts -->
+  <script src="assets/js/three-bg.js"  defer></script>
+  <script src="assets/js/projects.js"  defer></script>
+  <script src="assets/js/main.js"      defer></script>
+  <script src="assets/js/effects.js"   defer></script>
+
+</body>
+</html>

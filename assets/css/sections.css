@@ -511,3 +511,41 @@
     align-items: flex-start;
   }
 }
+
+/* =====================================================
+   SUBPAGE HEADER — compact page-title block for subpages
+   ===================================================== */
+.subpage-header {
+  padding: calc(var(--nav-height) + var(--space-16)) var(--space-6) var(--space-12);
+  text-align: center;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 0%, rgba(182, 96, 235, 0.08) 0%, transparent 70%),
+    linear-gradient(180deg, #0e0b1d 0%, #0d1117 100%);
+}
+
+.subpage-header .section-header {
+  margin-bottom: 0;
+}
+
+.subpage-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--clr-text-secondary);
+  margin-bottom: var(--space-8);
+  transition: color var(--transition-base);
+}
+
+.subpage-back:hover {
+  color: var(--clr-purple-bright);
+}
+
+/* =====================================================
+   VIEW-ALL CTA — bottom of section on index.html
+   ===================================================== */
+.section-view-all {
+  text-align: center;
+  margin-top: var(--space-10);
+}
