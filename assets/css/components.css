@@ -206,6 +206,7 @@
 .status-active-research { background: rgba(61, 220, 132, 0.2); color: var(--clr-success); border: 1px solid var(--clr-success); }
 .status-prototype       { background: rgba(249, 200, 70, 0.2);  color: var(--clr-warning);  border: 1px solid var(--clr-warning); }
 .status-in-progress     { background: rgba(182, 96, 235, 0.2);  color: var(--clr-purple-bright); border: 1px solid var(--clr-purple-bright); }
+.status-complete        { background: rgba(100, 180, 255, 0.2); color: #64b4ff; border: 1px solid #64b4ff; }
 
 .project-body {
   padding: var(--space-6);

@@ -173,15 +173,16 @@
 
     if (social) {
       const links = [];
-      if (profile.github)  links.push({ href: profile.github,             icon: 'fab fa-github',   label: 'GitHub profile' });
-      if (profile.linkedin) links.push({ href: profile.linkedin,           icon: 'fab fa-linkedin', label: 'LinkedIn profile' });
-      if (profile.email)   links.push({ href: 'mailto:' + profile.email,  icon: 'fas fa-envelope', label: 'Send email' });
+      if (profile.github)   links.push({ href: profile.github,                  icon: 'fab fa-github',   label: 'GitHub profile',  external: true });
+      if (profile.linkedin) links.push({ href: profile.linkedin,                 icon: 'fab fa-linkedin', label: 'LinkedIn profile', external: true });
+      if (profile.email)    links.push({ href: 'mailto:' + profile.email,        icon: 'fas fa-envelope', label: 'Send email',       external: false });
 
-      social.innerHTML = links.map(l =>
-        `<a href="${esc(l.href)}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="${esc(l.label)}">
+      social.innerHTML = links.map(l => {
+        const extAttrs = l.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${esc(l.href)}"${extAttrs} class="social-link" aria-label="${esc(l.label)}">
           <i class="${esc(l.icon)}" aria-hidden="true"></i>
-        </a>`
-      ).join('');
+        </a>`;
+      }).join('');
     }
   }
 
@@ -203,10 +204,11 @@
     if (!container) return;
 
     const groups = [
-      { label: 'Languages',  items: skills.languages || [] },
-      { label: 'AI / ML',    items: skills.ai_ml     || [] },
-      { label: 'Tools',      items: skills.tools      || [] },
-    ];
+      { label: 'Languages',    items: skills.languages || [] },
+      { label: 'AI / ML',      items: skills.ai_ml     || [] },
+      { label: 'Tools',        items: skills.tools      || [] },
+      { label: 'Security',     items: skills.security   || [] },
+    ].filter(g => g.items.length > 0);
 
     container.innerHTML = groups.map(g => `
       <div>

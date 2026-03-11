@@ -1,6 +1,6 @@
 {
   "hero": {
-    "badge": "Available for Dating",
+    "badge": "Open to Opportunities",
     "greeting": "Hi, I'm",
     "name": "lejxz",
     "typewriterPhrases": [
@@ -121,7 +121,8 @@
   ],
   "skills": {
     "languages": ["Python", "C", "C++", "Java"],
-    "ai_ml": ["PyTorch", "OpenCV", "TensorFlow"],
-    "tools": ["Git", "GitHub", "VS Code"]
+    "ai_ml": ["PyTorch", "OpenCV", "TensorFlow", "YOLO", "NumPy"],
+    "tools": ["Git", "GitHub", "VS Code", "Linux"],
+    "security": ["Cryptography", "Network Security", "Penetration Testing"]
   }
 }
