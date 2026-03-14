@@ -31,8 +31,8 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 
 | **Languages** | **AI / ML** | **Tools** |
 |:---:|:---:|:---:|
-| [![Languages](https://skillicons.dev/icons?i=python,c,cpp,java)](https://github.com/lejxz) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow,)](https://github.com/lejxz) | [![Tools](https://skillicons.dev/icons?i=git,github,vscode,gmail)](https://github.com/lejxz) |
-| [![Languages](https://skillicons.dev/icons?i=,,,)](https://github.com/lejxz) | [![AI / ML](https://skillicons.dev/icons?i=,,,)](https://github.com/lejxz) | [![Tools](https://skillicons.dev/icons?i=unreal,blender,,)](https://github.com/lejxz) |
+| [![Languages](https://skillicons.dev/icons?i=python,c,cpp)](https://github.com/lejxz) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow)](https://github.com/lejxz) | [![Tools](https://skillicons.dev/icons?i=git,github,vscode)](https://github.com/lejxz) |
+| [![Languages](https://skillicons.dev/icons?i=,)](https://github.com/lejxz) | [![AI / ML](https://skillicons.dev/icons?i=ai)](https://github.com/lejxz) | [![Tools](https://skillicons.dev/icons?i=unreal,blender)](https://github.com/lejxz) |
 
 </div>
 
