@@ -32,7 +32,7 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 | **Languages** | **AI / ML** | **Tools** |
 |:---:|:---:|:---:|
 | [![Languages](https://skillicons.dev/icons?i=python,c,cpp)](https://skillicons.dev) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow)](https://skillicons.dev) | [![Tools](https://skillicons.dev/icons?i=git,github,vscode)](https://skillicons.dev) |
-| [![Languages](https://skillicons.dev/icons?i=java)](https://skillicons.dev) | | [![Tools](https://skillicons.dev/icons?i=,unreal,blender)](https://skillicons.dev) |
+| [![Languages](https://skillicons.dev/icons?i=java)](https://skillicons.dev) | | [![Tools](https://skillicons.dev/icons?i=unreal,blender)](https://skillicons.dev) |
 
 </div>
 
