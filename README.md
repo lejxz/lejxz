@@ -45,7 +45,7 @@ A system designed to identify and track physical objects in 3D space using **Ope
 - **Status:** Active Research
 
 ### 🌐 [Lorem ipsum](https://github.com/lejxz/)
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. c
 
 - **Key Tech:** HTML5/CSS, JavaScript, 3D Logic
 
