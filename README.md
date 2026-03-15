@@ -49,7 +49,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 - **Key Tech:** HTML5/CSS, JavaScript, 3D Logic
 
-## 📊 GitHub Stats & 🔗 Connect With Me
+## 📊 GitHub Stats 🔗 Connect With Me
 
 <div align="center">
 
