@@ -10,8 +10,8 @@
 
 I am a Computer Science student double-majoring in **Artificial Intelligence** and **Cybersecurity**. My passion and research are dedicated to **Machine Learning** and **Computer Vision**.
 
-- 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO
-- 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences
+- 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
+- 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences.
 
 ## 🚀 Current Focus
 
