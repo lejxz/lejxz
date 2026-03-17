@@ -15,22 +15,13 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 
 ## 📁 Featured Projects
 
-### 😎 [Lorem ipsum](https://github.com/lejxz/)
-A system designed to identify and track physical objects in 3D space using **OpenCV** and **Python**.
+- 😎 [Lorem ipsum](https://github.com/lejxz/) - A system designed to identify and track physical objects in 3D space using **OpenCV** and **Python**.
 
-- **Key Tech:** YOLOv8, NumPy, OpenCV
-- **Status:** Active Research
-
-### 🌐 [Lorem ipsum](https://github.com/lejxz/)
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-- **Key Tech:** HTML5/CSS, JavaScript, 3D Logic
+- 🌐 [Lorem ipsum](https://github.com/lejxz/) - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## 📊 GitHub Stats 🔗 Connect With Me
 
 <div align="center">
-
-[![GitHub Streak](https://streak-stats.demolab.com?user=lejxz&theme=tokyonight&hide_border=true&background=0D1117&stroke=B660EB&ring=B660EB&fire=7800BF&currStreakLabel=B660EB)](https://git.io/streak-stats)
 
 [![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB)](https://github.com/lejxz)
 [![Top Languages](https://github-readme-stats-nine-lovat-17.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
