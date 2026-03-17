@@ -13,29 +13,6 @@ I am a Computer Science student double-majoring in **Artificial Intelligence** a
 - 🔭 **Current Project:** Building a real-time AR detection system using OpenCV and YOLO.
 - 🎯 **Goal:** Contribute to the next generation of intelligent AR/VR experiences. c
 
-## 🚀 Current Focus
-
-<div align="center">
-
-| Area | Topic |
-|:---:|:---|
-| 🧠 Machine Learning | Bayesian Networks, Adversarial ML, Federated Learning |
-| 👁️ Computer Vision | OpenCV, Real-Time AR Object Detection |
-| 🥽 AR / VR | Spatial Computing, Overlay Systems, Vision-AI Integration |
-
-</div>
-
-## 🛠️ Tools & Technologies
-
-<div align="center">
-
-| **Languages** | **AI / ML** | **Tools** |
-|:---:|:---:|:---:|
-| [![Languages](https://skillicons.dev/icons?i=python,c,cpp)](https://github.com/lejxz) | [![AI / ML](https://skillicons.dev/icons?i=pytorch,opencv,tensorflow)](https://github.com/lejxz) | [![Tools](https://skillicons.dev/icons?i=git,github,vscode)](https://github.com/lejxz) |
-| [![Languages](https://skillicons.dev/icons?i=,)](https://github.com/lejxz) | [![AI / ML](https://skillicons.dev/icons?i=,)](https://github.com/lejxz) | [![Tools](https://skillicons.dev/icons?i=unreal,blender)](https://github.com/lejxz) |
-
-</div>
-
 ## 📁 Featured Projects
 
 ### 😎 [Lorem ipsum](https://github.com/lejxz/)
