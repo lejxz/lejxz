@@ -50,17 +50,17 @@
   ],
   "projects": [
     {
-      "title": "Lorem Ipsum",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "title": "LoadSense",
+      "description": "An AI-powered occupancy monitoring and fleet management system for Philippine PUVs, using edge inference and predictive analytics to solve the commuter information gap in public transit.",
+      "problem": "Commuters and operators in Philippine public transit have no real-time visibility into vehicle occupancy, leading to inefficient boarding decisions, uneven fleet distribution, and poor demand forecasting.",
+      "solution": "LoadSense deploys a software-based edge inference pipeline using computer vision to detect occupancy, paired with a FastAPI backend running XGBoost for ETA prediction and Prophet for demand forecasting, surfaced through an operator dashboard and a commuter-facing app.",
+      "plainSummary": "A real-time AI system that counts passengers in Philippine jeepneys and buses, helps operators manage their fleet, and lets commuters check how full a ride is before boarding.",
       "thumbnail": "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1200&q=80",
-      "tags": ["YOLOv8", "OpenCV", "NumPy", "Python"],
-      "category": ["ai", "vision", "arvr"],
+      "tags": ["YOLOv8", "OpenCV", "FastAPI", "XGBoost", "Prophet", "Python"],
+      "category": ["ai", "vision", "govtech", "smart-cities"],
       "status": "active-research",
-      "repo": "https://github.com/lejxz/",
-      "demo": "https://github.com/lejxz/"
+      "repo": "https://github.com/lejxz/LoadSense",
+      "demo": "https://github.com/lejxz/LoadSense"
     },
     {
       "title": "Lorem Ipsum",
