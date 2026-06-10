@@ -88,6 +88,32 @@
       "repo": "https://github.com/lejxz/",
       "demo": "https://github.com/lejxz/"
     }
+    {
+      "title": "Lorem Ipsum",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1200&q=80",
+      "tags": ["PyTorch", "Computer Vision", "Adversarial ML"],
+      "category": ["ai", "vision"],
+      "status": "active-research",
+      "repo": "https://github.com/lejxz/",
+      "demo": "https://github.com/lejxz/"
+    },
+    {
+      "title": "Lorem Ipsum",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "problem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "solution": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "plainSummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "thumbnail": "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1200&q=80",
+      "tags": ["AR", "OpenCV", "Rendering"],
+      "category": ["vision", "arvr"],
+      "status": "prototype",
+      "repo": "https://github.com/lejxz/",
+      "demo": "https://github.com/lejxz/"
+    }
   ],
   "researchPapers": [
     {
