@@ -15,9 +15,8 @@ I am a Computer Science student majoring in **Artificial Intelligence** and **Cy
 
 ## 📁 Featured Projects
 
-- 😎 [LoadSense](https://github.com/lejxz/LoadSense) - A dual-layer intelligent transportation system that combines lightweight, edge-based computer vision, with GPS-based transit network intelligence. By monitoring real-time occupancy via deep learning and predicting route arrivals via AI, the system provides immediate, actionable feedback to drivers, waiting commuters, and transport operators targeting SDG's 9 and 11.
+- 🚌 [LoadSense](https://github.com/lejxz/LoadSense) - A dual-layer intelligent transportation system that combines lightweight, edge-based computer vision, with GPS-based transit network intelligence. By monitoring real-time occupancy via deep learning and predicting route arrivals via AI, the system provides immediate, actionable feedback to drivers, waiting commuters, and transport operators targeting SDG's 9 and 11.
 
-- 🌐 [Lorem ipsum](https://github.com/lejxz/) - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## 📊 GitHub Stats 🔗 Connect With Me
 
