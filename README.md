@@ -29,9 +29,9 @@ I am a Computer Science student majoring in **Artificial Intelligence**. My pass
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-B660EB?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
 [![Email](https://img.shields.io/badge/Email-lejxz-B660EB?style=flat&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-lejxz-B660EB?style=flat&logo=github&logoColor=white)](https://github.com/lejxz)
-
+<!--
 </div>
-
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=100&section=footer" />
 </div>
+ -->
