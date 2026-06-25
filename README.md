@@ -8,7 +8,7 @@
 
 ## 👤 About Me
 
-I am a Computer Science student majoring in **Artificial Intelligence** and **Cybersecurity**. My passion and research are dedicated to **Machine Learning** and **Computer Vision**.
+I am a Computer Science student majoring in **Artificial Intelligence**. My passion and research are dedicated to **Machine Learning** and **Computer Vision**.
 
 - 🔭 **Current Project:** 
 - 🎯 **Goal:** 
