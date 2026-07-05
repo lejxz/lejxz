@@ -5,6 +5,7 @@ import experienceData from "@/data/experience.json";
 import projectsData from "@/data/projects.json";
 import nowData from "@/data/now.json";
 import footerData from "@/data/footer.json";
+import siteData from "@/data/site.json";
 import usesData from "@/data/uses.json";
 import type {
   Profile,
@@ -14,6 +15,7 @@ import type {
   ProjectsData,
   NowData,
   FooterData,
+  SiteData,
   UsesData,
 } from "@/lib/types";
 
@@ -24,12 +26,17 @@ export const experience = experienceData as ExperienceData;
 export const projects = projectsData as ProjectsData;
 export const now = nowData as NowData;
 export const footerLinks = footerData as FooterData;
+export const site = siteData as SiteData;
 export const uses = usesData as UsesData;
 
 export const featuredProjects = projects.projects.filter((p) => p.featured);
 
 export function getProject(id: string) {
   return projects.projects.find((p) => p.id === id);
+}
+
+export function getExperience(id: string) {
+  return experience.items.find((e) => e.id === id);
 }
 
 export function getRelatedProjects(id: string, limit = 3) {
@@ -53,7 +60,18 @@ export const nav = [
   { label: "About", href: "/#about" },
   { label: "Skills", href: "/#skills" },
   { label: "Experience", href: "/#experience" },
-  { label: "Projects", href: "/#work" },
+  { label: "Work", href: "/#work" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export const recentExperience = experience.items.slice(0, 5);
+
+/** Categories derived from projects (for the command palette / filters). */
+export const projectCategories = Array.from(
+  new Set(projects.projects.map((p) => p.category))
+);
+
+/** Experience types present in the data. */
+export const experienceTypes = Array.from(
+  new Set(experience.items.map((e) => e.type ?? "work"))
+);

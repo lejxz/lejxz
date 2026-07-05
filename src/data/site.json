@@ -1,0 +1,15 @@
+{
+  "nav": [
+    { "label": "Home", "href": "/#top" },
+    { "label": "About", "href": "/#about" },
+    { "label": "Skills", "href": "/#skills" },
+    { "label": "Experience", "href": "/#experience" },
+    { "label": "Work", "href": "/#work" },
+    { "label": "Contact", "href": "/#contact" }
+  ],
+  "footer": {
+    "note": "Computer Science student majoring in Artificial Intelligence. Turning research into shipped, measurable systems.",
+    "builtWith": "Built with Next.js · R3F · Framer Motion",
+    "copyright": "Lejuene Delantar"
+  }
+}

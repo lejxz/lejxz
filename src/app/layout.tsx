@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { SkipLink } from "@/components/site/skip-link";
 import { CustomCursor } from "@/components/site/custom-cursor";
 import { BackToTop } from "@/components/site/back-to-top";
@@ -55,14 +55,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${spaceMono.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`dark ${inter.variable} ${spaceMono.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-background text-foreground antialiased">
         <SkipLink />
         <CustomCursor />
         <BackToTop />
         <ShortcutsHelp />
         {children}
-        <Toaster />
+        <Toaster theme="dark" position="bottom-right" />
       </body>
     </html>
   );

@@ -1,184 +1,169 @@
 "use client";
 
-import { Github, Instagram, Linkedin, Mail, ArrowUpRight, Terminal, CheckCircle2, MapPin, Clock } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Send, ArrowUpRight } from "lucide-react";
+import { toast } from "sonner";
 import { profile } from "@/lib/data";
+import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
-import { Magnetic } from "@/components/motion/magnetic";
-
-// Reverse-direction ticker phrases for the contact section (moves right-to-left,
-// opposite to the skills ticker on home which moves right).
-const TICKER_PHRASES = [
-  "let's build something",
-  "open to collaborations",
-  "research · projects · ideas",
-  "inbox always open",
-  "say hello",
-];
+import { asset } from "@/lib/asset";
 
 export function Contact() {
-  const socials = [
-    { icon: Github, href: profile.socials.github ?? "#", label: "GitHub" },
-    { icon: Instagram, href: profile.socials.instagram ?? "#", label: "Instagram" },
-    { icon: Linkedin, href: profile.socials.linkedin ?? "#", label: "LinkedIn" },
-  ];
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
 
-  const channels = [
-    { icon: Mail, label: "Email", value: profile.email, href: `mailto:${profile.email}` },
-    { icon: MapPin, label: "Location", value: profile.location },
-    { icon: Clock, label: "Reply", value: "1–2 business days" },
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) {
+      toast.error("Please write a message first");
+      return;
+    }
+    const subject = encodeURIComponent(`Portfolio message from ${name || "a visitor"}`);
+    const body = encodeURIComponent(
+      `${message}\n\n— ${name || "Anonymous"}${email ? `\nReply-to: ${email}` : ""}`
+    );
+    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+    toast.success("Opening your email client…");
+  };
+
+  const socials = profile.socialLinks ?? [
+    { label: "GitHub", icon: "github", url: profile.socials.github ?? "#" },
+    { label: "LinkedIn", icon: "linkedin", url: profile.socials.linkedin ?? "#" },
+    { label: "Instagram", icon: "instagram", url: profile.socials.instagram ?? "#" },
+    { label: "Email", icon: "mail", url: `mailto:${profile.email}` },
   ];
 
   return (
-    <section id="contact" className="relative scroll-mt-20 py-24 sm:py-32">
-      {/* ===== Reverse ticker (right-to-left, opposite to home skills ticker) ===== */}
-      <Reveal className="mb-16">
-        <div className="group relative overflow-hidden border-y border-line bg-surface/30 py-5">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
-          <div className="flex w-max animate-marquee items-center gap-8 group-hover:[animation-play-state:paused]" style={{ ["--marquee-duration" as string]: "40s" }}>
-            {[...TICKER_PHRASES, ...TICKER_PHRASES].map((phrase, i) => (
-              <span key={i} className="flex items-center gap-8">
-                <span className="font-mono text-2xl font-bold tracking-tight text-foreground/90 sm:text-3xl">
-                  {phrase}
-                </span>
-                <span className="text-violet/60">/</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </Reveal>
-
+    <section id="contact" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="06" kicker="Contact" title="Let's build" />
+        <div className="card-hover-glow relative overflow-hidden rounded-[2rem] border border-line bg-surface/40 p-6 sm:p-10 lg:p-14">
+          {/* glow blobs */}
+          <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-teal/15 blur-[100px]" />
+          <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-violet/15 blur-[100px]" />
 
-        <Reveal delay={0.05} className="mt-12">
-          <div className="grid gap-8 lg:grid-cols-12">
-            {/* Left: invitation + mailto CTA */}
-            <div className="lg:col-span-7">
-              <div className="relative overflow-hidden rounded-2xl border border-line bg-surface/40 p-8 transition-colors hover:border-teal/30 sm:p-12">
-                <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-teal/10 blur-[100px]" />
-                <div className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-violet/10 blur-[100px]" />
-                <div className="relative">
-                  <p className="font-mono text-sm text-teal">{"// let's talk"}</p>
-                  <h3 className="mt-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                    Have a project
-                    <br />
-                    <span className="text-gradient-shimmer">in mind?</span>
-                  </h3>
-                  <p className="mt-4 max-w-md text-pretty text-dim">
-                    {profile.availability}. Reach out — I read every message and
-                    reply within 1–2 business days.
+          <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+            {/* Left: pitch + email + socials */}
+            <div>
+              <SectionHeading index="06" kicker="Get in touch" title="Contact" />
+              <Reveal delay={0.08}>
+                <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-dim sm:text-lg">
+                  {profile.availabilityNote ?? profile.availability}. Whether it&apos;s an
+                  internship, a research collaboration, or a quick question — my inbox is open.
+                </p>
+              </Reveal>
+
+              <Reveal delay={0.14}>
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="group mt-6 flex items-center gap-4 rounded-2xl border border-line bg-surface/50 p-4 transition-colors hover:border-teal/30"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/15 text-teal">
+                    <Mail className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-mono text-[10px] uppercase tracking-wider text-dim">
+                      Email
+                    </span>
+                    <span className="block truncate font-mono text-sm font-medium text-foreground transition-colors group-hover:text-teal">
+                      {profile.email}
+                    </span>
+                  </span>
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-dim transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-teal" />
+                </a>
+              </Reveal>
+
+              <Reveal delay={0.2}>
+                <div className="mt-5">
+                  <p className="mb-2.5 font-mono text-[10px] uppercase tracking-wider text-dim">
+                    Elsewhere
                   </p>
-
-                  <div className="mt-8">
-                    <Magnetic strength={0.25}>
-                      <a
-                        href={`mailto:${profile.email}`}
-                        className="group inline-flex items-center gap-3 rounded-full bg-teal px-7 py-4 font-mono text-sm font-bold text-primary-foreground transition-all hover:glow-teal"
-                      >
-                        {profile.email}
-                        <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </a>
-                    </Magnetic>
-                  </div>
-
-                  <div className="mt-8 flex flex-wrap items-center gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {socials.map((s) => (
                       <a
                         key={s.label}
-                        href={s.href}
+                        href={s.url}
                         target="_blank"
                         rel="noreferrer"
                         aria-label={s.label}
-                        className="flex h-11 items-center gap-2 rounded-full border border-line pl-3 pr-4 text-dim transition-colors hover:border-teal/50 hover:text-teal"
+                        className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface/40 px-3.5 py-2 font-mono text-xs text-foreground/80 transition-all hover:-translate-y-0.5 hover:border-teal/40 hover:text-teal"
                       >
-                        <s.icon className="h-4 w-4" />
-                        <span className="font-mono text-xs uppercase tracking-wider">
-                          {s.label}
-                        </span>
+                        <Icon name={s.icon} className="h-3.5 w-3.5" />
+                        {s.label}
                       </a>
                     ))}
                   </div>
                 </div>
-              </div>
+              </Reveal>
             </div>
 
-            {/* Right: channels + terminal status */}
-            <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-line bg-surface/40 p-6">
-                <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal/15 ring-1 ring-teal/30">
-                    <Terminal className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h4 className="font-mono text-sm font-bold uppercase tracking-wider text-foreground">
-                      Channels
-                    </h4>
-                    <p className="font-mono text-xs text-dim">direct lines</p>
-                  </div>
-                </div>
-
-                <ul className="space-y-3">
-                  {channels.map((c) => (
-                    <li key={c.label} className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-line text-teal">
-                        <c.icon className="h-4 w-4" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-mono text-[10px] uppercase tracking-wider text-dim">
-                          {c.label}
-                        </div>
-                        {c.href ? (
-                          <a
-                            href={c.href}
-                            className="text-sm font-medium text-foreground transition-colors hover:text-teal"
-                          >
-                            {c.value}
-                          </a>
-                        ) : (
-                          <div className="text-sm font-medium text-foreground">
-                            {c.value}
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-5 flex items-start gap-2.5 border-t border-line pt-4">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal" />
-                  <p className="text-xs text-dim">
-                    Clicking the email button opens your default mail client with
-                    a fresh compose — no forms, no friction.
-                  </p>
-                </div>
-              </div>
-
-              {/* Mini terminal */}
-              <div className="mt-5 overflow-hidden rounded-xl border border-line bg-surface/40 p-4 font-mono text-xs leading-relaxed">
-                <div className="mb-2 flex items-center gap-2 text-dim">
-                  <Terminal className="h-3.5 w-3.5 text-teal" />
-                  <span className="text-[10px] uppercase tracking-wider">
-                    availability_check
+            {/* Right: mailto form */}
+            <Reveal delay={0.16}>
+              <form
+                onSubmit={onSubmit}
+                className="flex flex-col gap-4 rounded-2xl border border-line bg-surface/30 p-5 sm:p-6"
+              >
+                <Field label="Your name">
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Ada Lovelace"
+                    className="w-full rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                  />
+                </Field>
+                <Field label="Reply-to (optional)">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ada@example.com"
+                    className="w-full rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                  />
+                </Field>
+                <Field label="Message">
+                  <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    rows={5}
+                    maxLength={600}
+                    placeholder="Tell me about your project, role, or idea…"
+                    className="w-full resize-none rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                  />
+                </Field>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[10px] text-dim">
+                    {message.length}/600
                   </span>
+                  <motion.button
+                    type="submit"
+                    whileTap={{ scale: 0.98 }}
+                    className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 font-mono text-xs font-medium text-primary-foreground shadow-lg shadow-teal/20 transition-shadow hover:shadow-teal/30"
+                  >
+                    Send message
+                    <Send className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </motion.button>
                 </div>
-                <div className="text-foreground/85">
-                  <span className="text-teal">$</span> curl {profile.penname}/status
-                  <br />
-                  <span className="text-violet">{"{"}</span> accepting:{" "}
-                  <span className="text-teal">true</span>, status:{" "}
-                  <span className="text-teal">"{profile.availability}"</span>{" "}
-                  <span className="text-violet">{"}"}</span>
-                  <br />
-                  <span className="text-teal">$</span>{" "}
-                  <span className="animate-blink">_</span>
-                </div>
-              </div>
-            </div>
+                <p className="font-mono text-[10px] text-dim/70">
+                  Opens your email client — no data is stored.
+                </p>
+              </form>
+            </Reveal>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-dim">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }

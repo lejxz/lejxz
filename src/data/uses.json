@@ -1,43 +1,30 @@
 {
   "categories": [
     {
+      "title": "Hardware",
+      "key": "hardware",
+      "items": [
+        { "name": "MacBook Air M2", "detail": "Daily driver for dev & light training." },
+        { "name": "GPU server", "detail": "RTX-class box for model training." },
+        { "name": "Jetson Nano", "detail": "Edge inference experiments." }
+      ]
+    },
+    {
       "title": "Editor",
       "key": "editor",
       "items": [
-        { "name": "VS Code", "detail": "Primary editor with Vim bindings" },
-        { "name": "Neovim", "detail": "Terminal editing" },
-        { "name": "JetBrains PyCharm", "detail": "ML notebooks + refactoring" },
-        { "name": "Zed", "detail": "Fast pair programming" }
-      ]
-    },
-    {
-      "title": "Terminal",
-      "key": "terminal",
-      "items": [
-        { "name": "WezTerm", "detail": "GPU-accelerated, Lua config" },
-        { "name": "Zsh + Starship", "detail": "Prompt + plugins" },
-        { "name": "tmux", "detail": "Session management" },
-        { "name": "fzf + ripgrep", "detail": "Fuzzy find + search" }
-      ]
-    },
-    {
-      "title": "Compute",
-      "key": "compute",
-      "items": [
-        { "name": "RTX 4070", "detail": "Local training + inference" },
-        { "name": "Colab Pro", "detail": "Notebook GPU" },
-        { "name": "Vast.ai", "detail": "On-demand A100 rentals" },
-        { "name": "MacBook Pro M3", "detail": "Daily driver" }
+        { "name": "VS Code", "detail": "Primary editor with Vim keybindings." },
+        { "name": "Neovim", "detail": "For quick terminal edits." },
+        { "name": "Jupyter", "detail": "Notebooks for research." }
       ]
     },
     {
       "title": "Stack",
       "key": "stack",
       "items": [
-        { "name": "PyTorch", "detail": "Research + production" },
-        { "name": "Hugging Face", "detail": "Models + datasets" },
-        { "name": "Weights & Biases", "detail": "Experiment tracking" },
-        { "name": "Docker", "detail": "Reproducible environments" }
+        { "name": "Python · PyTorch", "detail": "Research & training." },
+        { "name": "TypeScript · Next.js", "detail": "Web & tooling." },
+        { "name": "Docker · Linux", "detail": "Environments & infra." }
       ]
     }
   ]

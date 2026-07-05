@@ -20,8 +20,10 @@ import {
   Mail,
   Folder,
   Hash,
+  Briefcase,
 } from "lucide-react";
-import { nav, profile, projects } from "@/lib/data";
+import { nav, profile, projects, experience } from "@/lib/data";
+import { useModals } from "@/lib/modals";
 
 type Action = {
   id: string;
@@ -36,12 +38,20 @@ type Action = {
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { openProject, openExperience } = useModals();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // ⌘K / Ctrl+K toggles
       if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((o) => !o);
+        return;
+      }
+      // `/` opens (when not typing in an input)
+      if (e.key === "/" && !isTyping(e)) {
+        e.preventDefault();
+        setOpen(true);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -50,7 +60,6 @@ export function CommandPalette() {
 
   const go = (href: string) => {
     setOpen(false);
-    // allow hash + route navigation after the dialog closes
     setTimeout(() => {
       if (href.startsWith("/#")) {
         const id = href.slice(2);
@@ -62,6 +71,20 @@ export function CommandPalette() {
       }
       router.push(href);
     }, 10);
+  };
+
+  const openProj = (id: string) => {
+    const p = projects.projects.find((x) => x.id === id);
+    if (!p) return;
+    setOpen(false);
+    setTimeout(() => openProject(p, projects.projects), 120);
+  };
+
+  const openExp = (id: string) => {
+    const e = experience.items.find((x) => x.id === id);
+    if (!e) return;
+    setOpen(false);
+    setTimeout(() => openExperience(e), 120);
   };
 
   const actions: Action[] = [
@@ -78,9 +101,18 @@ export function CommandPalette() {
       label: p.title,
       hint: `${p.category} · ${p.year}`,
       icon: Folder,
-      run: () => go(`/projects/#${p.id}`),
+      run: () => openProj(p.id),
       group: "Projects",
-      keywords: `${p.category} ${p.tags.join(" ")}`,
+      keywords: `${p.category} ${p.tags.join(" ")} ${p.tech?.join(" ") ?? ""}`,
+    })),
+    ...experience.items.map((e) => ({
+      id: `exp-${e.id}`,
+      label: `${e.role} — ${e.org ?? e.organization}`,
+      hint: e.period,
+      icon: Briefcase,
+      run: () => openExp(e.id),
+      group: "Experience",
+      keywords: `${e.type ?? "work"} ${e.tech.join(" ")} ${e.tags.join(" ")}`,
     })),
     {
       id: "social-github",
@@ -127,7 +159,7 @@ export function CommandPalette() {
       onOpenChange={setOpen}
       className="max-w-xl border-line bg-popover/95 backdrop-blur-xl"
     >
-      <CommandInput placeholder="Search sections, projects, links…" />
+      <CommandInput placeholder="Search sections, projects, experience, links…" />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         {Object.entries(grouped).map(([group, items], i) => (
@@ -162,5 +194,17 @@ export function CommandPalette() {
         ))}
       </CommandList>
     </CommandDialog>
+  );
+}
+
+function isTyping(e: KeyboardEvent): boolean {
+  const t = e.target as HTMLElement | null;
+  if (!t) return false;
+  const tag = t.tagName;
+  return (
+    tag === "INPUT" ||
+    tag === "TEXTAREA" ||
+    tag === "SELECT" ||
+    t.isContentEditable
   );
 }

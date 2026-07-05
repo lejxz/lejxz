@@ -3,365 +3,284 @@
     {
       "id": "neural-canvas",
       "title": "Neural Canvas",
+      "subtitle": "Real-time generative art engine",
       "category": "Generative AI",
       "year": "2025",
       "status": "shipped",
       "role": "Lead Engineer",
-      "timeline": "Jan 2025 \u2014 Apr 2025",
-      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "duration": "Jan 2025 — Apr 2025",
+      "timeline": "Jan 2025 — Apr 2025",
+      "summary": "A diffusion-based generative art engine with a real-time, interactive canvas and a FastAPI inference backend.",
       "description": [
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "Neural Canvas is a real-time generative art engine built around a distilled diffusion model. It streams latents to an interactive WebGL canvas so creators can steer generation live.",
+        "The serving layer uses a FastAPI backend with continuous batching and a quantized model, hitting 120ms p95 latency while serving 3.2× the throughput of the previous implementation."
       ],
       "highlights": [
-        {
-          "label": "Throughput",
-          "value": "3.2\u00d7 faster"
-        },
-        {
-          "label": "Latency",
-          "value": "120ms p95"
-        },
-        {
-          "label": "Resolution",
-          "value": "1024\u00b2"
-        },
-        {
-          "label": "Stack",
-          "value": "PyTorch \u00b7 FastAPI"
-        }
+        { "label": "Throughput", "value": "3.2× faster" },
+        { "label": "Latency", "value": "120ms p95" },
+        { "label": "Resolution", "value": "1024²" },
+        { "label": "Stack", "value": "PyTorch · FastAPI" }
       ],
-      "tags": [
-        "Diffusion",
-        "PyTorch",
-        "FastAPI"
+      "highlightList": [
+        "3.2× throughput over the previous system",
+        "120ms p95 latency with continuous batching",
+        "Live WebGL canvas steering during generation",
+        "Quantized model for edge-friendly deployment"
       ],
+      "tech": ["PyTorch", "FastAPI", "WebGL", "Docker"],
+      "tags": ["Diffusion", "PyTorch", "FastAPI"],
       "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz"
-        },
-        {
-          "label": "Demo",
-          "url": "https://github.com/lejxz"
-        }
+        { "label": "Source", "url": "https://github.com/lejxz" },
+        { "label": "Demo", "url": "https://github.com/lejxz" }
       ],
       "featured": true,
       "accent": "teal",
       "cover": "/assets/projects/neural-canvas.png",
+      "thumbnail": "/assets/projects/neural-canvas.png",
       "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/neural-canvas.png"
-        },
-        {
-          "caption": "Architecture",
-          "src": "/assets/projects/neural-canvas.png"
-        },
-        {
-          "caption": "Output",
-          "src": "/assets/projects/neural-canvas.png"
-        }
+        { "caption": "Cover", "src": "/assets/projects/neural-canvas.png" },
+        { "caption": "Architecture", "src": "/assets/projects/neural-canvas.png" },
+        { "caption": "Output", "src": "/assets/projects/neural-canvas.png" }
+      ],
+      "galleryImages": [
+        "/assets/projects/neural-canvas.png",
+        "/assets/projects/neural-canvas.png",
+        "/assets/projects/neural-canvas.png"
       ]
     },
     {
       "id": "edge-vision",
       "title": "Edge Vision",
+      "subtitle": "On-device real-time object detection",
       "category": "Computer Vision",
       "year": "2025",
       "status": "wip",
       "role": "Researcher",
-      "timeline": "Mar 2025 \u2014 Present",
-      "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+      "duration": "Mar 2025 — Present",
+      "timeline": "Mar 2025 — Present",
+      "summary": "An 8.4 MB detection model optimized for Jetson edge devices, hitting 48 FPS with 0.71 mAP@0.5.",
       "description": [
-        "Deserunt mollit anim id est laborum. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
-        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."
+        "Edge Vision is a lightweight detection pipeline distilled and quantized to run on NVIDIA Jetson hardware. It pairs a TensorRT-optimized backbone with classical OpenCV preprocessing for robust real-time inference.",
+        "The model ships at 8.4 MB and sustains 48 FPS on Jetson Nano while maintaining 0.71 mAP@0.5 on the evaluation set — making it viable for occupancy and safety monitoring."
       ],
       "highlights": [
-        {
-          "label": "Model size",
-          "value": "8.4 MB"
-        },
-        {
-          "label": "mAP@0.5",
-          "value": "0.71"
-        },
-        {
-          "label": "FPS (Jetson)",
-          "value": "48"
-        },
-        {
-          "label": "Stack",
-          "value": "OpenCV \u00b7 TensorRT"
-        }
+        { "label": "Model size", "value": "8.4 MB" },
+        { "label": "mAP@0.5", "value": "0.71" },
+        { "label": "FPS (Jetson)", "value": "48" },
+        { "label": "Stack", "value": "OpenCV · TensorRT" }
       ],
-      "tags": [
-        "OpenCV",
-        "TensorRT",
-        "C++"
+      "highlightList": [
+        "8.4 MB quantized model footprint",
+        "0.71 mAP@0.5 on the evaluation set",
+        "48 FPS sustained on Jetson Nano",
+        "TensorRT + OpenCV preprocessing pipeline"
       ],
+      "tech": ["OpenCV", "TensorRT", "C++", "PyTorch"],
+      "tags": ["OpenCV", "TensorRT", "C++"],
       "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz"
-        }
+        { "label": "Source", "url": "https://github.com/lejxz" }
       ],
       "featured": true,
       "accent": "violet",
       "cover": "/assets/projects/edge-vision.png",
+      "thumbnail": "/assets/projects/edge-vision.png",
       "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/edge-vision.png"
-        },
-        {
-          "caption": "Architecture",
-          "src": "/assets/projects/edge-vision.png"
-        },
-        {
-          "caption": "Output",
-          "src": "/assets/projects/edge-vision.png"
-        }
+        { "caption": "Cover", "src": "/assets/projects/edge-vision.png" },
+        { "caption": "Architecture", "src": "/assets/projects/edge-vision.png" },
+        { "caption": "Output", "src": "/assets/projects/edge-vision.png" }
+      ],
+      "galleryImages": [
+        "/assets/projects/edge-vision.png",
+        "/assets/projects/edge-vision.png",
+        "/assets/projects/edge-vision.png"
       ]
     },
     {
       "id": "lex-graph",
       "title": "Lex Graph",
+      "subtitle": "Semantic retrieval over 1.2M documents",
       "category": "NLP",
       "year": "2024",
       "status": "shipped",
       "role": "Engineer",
-      "timeline": "Sep 2024 \u2014 Dec 2024",
-      "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "duration": "Sep 2024 — Dec 2024",
+      "timeline": "Sep 2024 — Dec 2024",
+      "summary": "A hybrid vector + graph retrieval engine answering legal queries in 18ms p99 across 1.2M documents.",
       "description": [
-        "Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est.",
-        "Dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt."
+        "Lex Graph is a hybrid retrieval system combining dense vector search with a document graph for legal research. It indexes 1.2M documents and returns ranked, citation-linked results in 18ms p99.",
+        "A transformer encoder powers embeddings, while a vector DB handles approximate nearest neighbor search. The graph layer adds citation-aware reranking, lifting Recall@10 to 0.88."
       ],
       "highlights": [
-        {
-          "label": "Recall@10",
-          "value": "0.88"
-        },
-        {
-          "label": "Index size",
-          "value": "1.2M docs"
-        },
-        {
-          "label": "Query",
-          "value": "18ms p99"
-        },
-        {
-          "label": "Stack",
-          "value": "Transformers \u00b7 Vector DB"
-        }
+        { "label": "Recall@10", "value": "0.88" },
+        { "label": "Index size", "value": "1.2M docs" },
+        { "label": "Query", "value": "18ms p99" },
+        { "label": "Stack", "value": "Transformers · Vector DB" }
       ],
-      "tags": [
-        "Transformers",
-        "LangChain",
-        "Vector DB"
+      "highlightList": [
+        "1.2M documents indexed",
+        "18ms p99 query latency",
+        "Recall@10 of 0.88 with citation reranking",
+        "Hybrid dense + graph retrieval"
       ],
+      "tech": ["Transformers", "LangChain", "Vector DB", "Python"],
+      "tags": ["Transformers", "LangChain", "Vector DB"],
       "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz"
-        }
+        { "label": "Source", "url": "https://github.com/lejxz" }
       ],
       "featured": true,
       "accent": "teal",
       "cover": "/assets/projects/lex-graph.png",
+      "thumbnail": "/assets/projects/lex-graph.png",
       "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/lex-graph.png"
-        },
-        {
-          "caption": "Architecture",
-          "src": "/assets/projects/lex-graph.png"
-        },
-        {
-          "caption": "Output",
-          "src": "/assets/projects/lex-graph.png"
-        }
+        { "caption": "Cover", "src": "/assets/projects/lex-graph.png" },
+        { "caption": "Architecture", "src": "/assets/projects/lex-graph.png" },
+        { "caption": "Output", "src": "/assets/projects/lex-graph.png" }
+      ],
+      "galleryImages": [
+        "/assets/projects/lex-graph.png",
+        "/assets/projects/lex-graph.png",
+        "/assets/projects/lex-graph.png"
       ]
     },
     {
       "id": "rl-maze",
       "title": "RL Maze",
+      "subtitle": "PPO agents learning to solve mazes",
       "category": "Reinforcement Learning",
       "year": "2024",
       "status": "archived",
       "role": "Solo",
-      "timeline": "May 2024 \u2014 Jul 2024",
-      "summary": "Quis autem vel eum iure reprehenderit qui in ea voluptate.",
+      "duration": "May 2024 — Jul 2024",
+      "timeline": "May 2024 — Jul 2024",
+      "summary": "A PPO training harness for grid-world maze solving, reaching a 94% solve rate over 10k episodes.",
       "description": [
-        "Velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.",
-        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum."
+        "RL Maze is a training harness for Proximal Policy Optimization agents learning to navigate procedurally generated mazes. It includes a vectorized Gym environment and a logging dashboard.",
+        "Over 10k episodes the agent reaches a 94% solve rate, with curriculum difficulty scaling that keeps learning stable as mazes grow."
       ],
       "highlights": [
-        {
-          "label": "Algorithm",
-          "value": "PPO"
-        },
-        {
-          "label": "Episodes",
-          "value": "10k"
-        },
-        {
-          "label": "Solve rate",
-          "value": "94%"
-        },
-        {
-          "label": "Stack",
-          "value": "Gym \u00b7 Python"
-        }
+        { "label": "Algorithm", "value": "PPO" },
+        { "label": "Episodes", "value": "10k" },
+        { "label": "Solve rate", "value": "94%" },
+        { "label": "Stack", "value": "Gym · Python" }
       ],
-      "tags": [
-        "PPO",
-        "Gym",
-        "Python"
+      "highlightList": [
+        "PPO implementation with GAE",
+        "10k training episodes",
+        "94% maze solve rate",
+        "Curriculum difficulty scaling"
       ],
+      "tech": ["Python", "PyTorch", "Gym", "PPO"],
+      "tags": ["PPO", "Gym", "Python"],
       "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz"
-        }
+        { "label": "Source", "url": "https://github.com/lejxz" }
       ],
       "featured": false,
       "accent": "violet",
       "cover": "/assets/projects/rl-maze.png",
+      "thumbnail": "/assets/projects/rl-maze.png",
       "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/rl-maze.png"
-        },
-        {
-          "caption": "Architecture",
-          "src": "/assets/projects/rl-maze.png"
-        },
-        {
-          "caption": "Output",
-          "src": "/assets/projects/rl-maze.png"
-        }
+        { "caption": "Cover", "src": "/assets/projects/rl-maze.png" },
+        { "caption": "Architecture", "src": "/assets/projects/rl-maze.png" },
+        { "caption": "Output", "src": "/assets/projects/rl-maze.png" }
+      ],
+      "galleryImages": [
+        "/assets/projects/rl-maze.png",
+        "/assets/projects/rl-maze.png",
+        "/assets/projects/rl-maze.png"
       ]
     },
     {
       "id": "data-forge",
       "title": "Data Forge",
+      "subtitle": "MLOps pipeline orchestrator",
       "category": "MLOps",
       "year": "2023",
       "status": "shipped",
       "role": "Infrastructure",
-      "timeline": "Aug 2023 \u2014 Nov 2023",
-      "summary": "Temporibus autem quibusdam et aut officiis debitis aut rerum.",
+      "duration": "Aug 2023 — Nov 2023",
+      "timeline": "Aug 2023 — Nov 2023",
+      "summary": "An orchestrator running 40+ data pipelines with 99.9% uptime, processing 2.4 TB/day.",
       "description": [
-        "Necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.",
-        "Itaque earum rerum hic tenetur sapiente delectus, ut aut reiciendis voluptatibus maiores alias."
+        "Data Forge is an MLOps orchestrator built on Airflow and Docker that schedules and monitors 40+ data pipelines.",
+        "It ships with alerting, retries, and lineage tracking, sustaining 99.9% uptime while processing 2.4 TB of data per day."
       ],
       "highlights": [
-        {
-          "label": "Pipelines",
-          "value": "40+"
-        },
-        {
-          "label": "Uptime",
-          "value": "99.9%"
-        },
-        {
-          "label": "Data/day",
-          "value": "2.4 TB"
-        },
-        {
-          "label": "Stack",
-          "value": "Docker \u00b7 Airflow"
-        }
+        { "label": "Pipelines", "value": "40+" },
+        { "label": "Uptime", "value": "99.9%" },
+        { "label": "Data/day", "value": "2.4 TB" },
+        { "label": "Stack", "value": "Docker · Airflow" }
       ],
-      "tags": [
-        "Docker",
-        "Airflow",
-        "PostgreSQL"
+      "highlightList": [
+        "40+ orchestrated data pipelines",
+        "99.9% uptime with retries and alerting",
+        "2.4 TB processed per day",
+        "Lineage tracking across stages"
       ],
+      "tech": ["Docker", "Airflow", "PostgreSQL", "Python"],
+      "tags": ["Docker", "Airflow", "PostgreSQL"],
       "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz"
-        }
+        { "label": "Source", "url": "https://github.com/lejxz" }
       ],
       "featured": false,
       "accent": "teal",
       "cover": "/assets/projects/data-forge.png",
+      "thumbnail": "/assets/projects/data-forge.png",
       "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/data-forge.png"
-        },
-        {
-          "caption": "Architecture",
-          "src": "/assets/projects/data-forge.png"
-        },
-        {
-          "caption": "Output",
-          "src": "/assets/projects/data-forge.png"
-        }
+        { "caption": "Cover", "src": "/assets/projects/data-forge.png" },
+        { "caption": "Architecture", "src": "/assets/projects/data-forge.png" },
+        { "caption": "Output", "src": "/assets/projects/data-forge.png" }
+      ],
+      "galleryImages": [
+        "/assets/projects/data-forge.png",
+        "/assets/projects/data-forge.png",
+        "/assets/projects/data-forge.png"
       ]
     },
     {
       "id": "synth-ui",
       "title": "Synth UI",
+      "subtitle": "Lightweight WebGL component kit",
       "category": "Frontend",
       "year": "2023",
       "status": "shipped",
       "role": "Design Engineer",
-      "timeline": "Feb 2023 \u2014 Jun 2023",
-      "summary": "Delectus, ut aut reiciendis voluptatibus maiores alias consequatur.",
+      "duration": "Feb 2023 — Jun 2023",
+      "timeline": "Feb 2023 — Jun 2023",
+      "summary": "A 94 KB WebGL-accelerated UI kit scoring 98 on Lighthouse and holding a steady 60 FPS.",
       "description": [
-        "Aut perferendis doloribus asperiores repellat temporibus quibusdam et aut officiis debitis.",
-        "Aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae."
+        "Synth UI is a lightweight component kit pairing React ergonomics with WebGL-accelerated effects.",
+        "The full bundle ships at 94 KB, scores 98 on Lighthouse, and holds 60 FPS even with multiple animated surfaces on screen."
       ],
       "highlights": [
-        {
-          "label": "Bundle",
-          "value": "94 KB"
-        },
-        {
-          "label": "Lighthouse",
-          "value": "98"
-        },
-        {
-          "label": "FPS",
-          "value": "60"
-        },
-        {
-          "label": "Stack",
-          "value": "React \u00b7 Three.js"
-        }
+        { "label": "Bundle", "value": "94 KB" },
+        { "label": "Lighthouse", "value": "98" },
+        { "label": "FPS", "value": "60" },
+        { "label": "Stack", "value": "React · Three.js" }
       ],
-      "tags": [
-        "React",
-        "Three.js",
-        "WebGL"
+      "highlightList": [
+        "94 KB gzipped bundle",
+        "Lighthouse score of 98",
+        "Steady 60 FPS with animated surfaces",
+        "React + Three.js hybrid rendering"
       ],
+      "tech": ["React", "Three.js", "TypeScript", "WebGL"],
+      "tags": ["React", "Three.js", "WebGL"],
       "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz"
-        }
+        { "label": "Source", "url": "https://github.com/lejxz" }
       ],
       "featured": false,
       "accent": "violet",
       "cover": "/assets/projects/synth-ui.png",
+      "thumbnail": "/assets/projects/synth-ui.png",
       "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/synth-ui.png"
-        },
-        {
-          "caption": "Architecture",
-          "src": "/assets/projects/synth-ui.png"
-        },
-        {
-          "caption": "Output",
-          "src": "/assets/projects/synth-ui.png"
-        }
+        { "caption": "Cover", "src": "/assets/projects/synth-ui.png" },
+        { "caption": "Architecture", "src": "/assets/projects/synth-ui.png" },
+        { "caption": "Output", "src": "/assets/projects/synth-ui.png" }
+      ],
+      "galleryImages": [
+        "/assets/projects/synth-ui.png",
+        "/assets/projects/synth-ui.png",
+        "/assets/projects/synth-ui.png"
       ]
     }
   ]

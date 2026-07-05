@@ -2,45 +2,144 @@
   "items": [
     {
       "id": "exp-1",
-      "role": "Lorem Ipsum Developer",
+      "type": "work",
+      "role": "Machine Learning Engineer",
       "org": "Acme Labs",
+      "organization": "Acme Labs",
+      "orgUrl": "https://github.com/lejxz",
       "period": "2024 — Present",
       "location": "Remote",
-      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "bullets": [
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum."
+      "current": true,
+      "summary": "Building production ML pipelines for real-time inference and computer vision at scale.",
+      "description": [
+        "Leading the design and deployment of real-time inference pipelines serving low-latency vision models. Owning the path from research prototypes to monitored production systems.",
+        "Established evaluation harnesses and CI for model quality, cutting regression-ship time from days to hours."
       ],
-      "tags": ["Python", "PyTorch", "MLOps"]
+      "bullets": [
+        "Shipped a real-time inference pipeline with 120ms p95 latency serving 3.2× throughput over the previous system.",
+        "Built an automated evaluation and CI harness that cut model regression ship time from days to hours.",
+        "Mentored two interns on MLOps best practices and reproducible training environments."
+      ],
+      "achievements": [
+        "Shipped a real-time inference pipeline with 120ms p95 latency serving 3.2× throughput.",
+        "Built an automated evaluation harness cutting regression ship time from days to hours.",
+        "Mentored two interns on MLOps and reproducible training."
+      ],
+      "tech": ["Python", "PyTorch", "FastAPI", "Docker", "MLOps"],
+      "tags": ["Python", "PyTorch", "MLOps"],
+      "logo": "/assets/experiences/exp-01.svg"
     },
     {
       "id": "exp-2",
+      "type": "research",
       "role": "Research Assistant",
       "org": "University AI Lab",
+      "organization": "University AI Lab",
       "period": "2023 — 2024",
       "location": "On-campus",
-      "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
-      "bullets": [
-        "Deserunt mollit anim id est laborum.",
-        "Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
-        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet."
+      "current": false,
+      "summary": "Researched transformer architectures and efficient fine-tuning for low-resource NLP.",
+      "description": [
+        "Investigated parameter-efficient fine-tuning methods for transformer models on low-resource language tasks.",
+        "Co-authored an internal technical report and presented findings at a university research symposium."
       ],
-      "tags": ["Research", "NLP", "Transformers"]
+      "bullets": [
+        "Researched parameter-efficient fine-tuning, reducing trainable params by 94% with minimal accuracy loss.",
+        "Co-authored a technical report on efficient adaptation of transformers for low-resource NLP.",
+        "Presented findings at the university research symposium."
+      ],
+      "achievements": [
+        "Reduced trainable parameters by 94% via LoRA-style adaptation with minimal accuracy loss.",
+        "Co-authored a technical report on efficient transformer adaptation.",
+        "Presented at the university research symposium."
+      ],
+      "tech": ["Python", "PyTorch", "Transformers", "NLP"],
+      "tags": ["Research", "NLP", "Transformers"],
+      "logo": "/assets/experiences/exp-02.svg"
     },
     {
       "id": "exp-3",
+      "type": "work",
       "role": "Frontend Intern",
       "org": "Studio Vert",
+      "organization": "Studio Vert",
       "period": "2023",
       "location": "Remote",
-      "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
-      "bullets": [
-        "Sed quia consequuntur magni dolores eos qui ratione.",
-        "Neque porro quisquam est, dolorem ipsum.",
-        "Quis autem vel eum iure reprehenderit qui in ea voluptate."
+      "current": false,
+      "summary": "Built accessible, animated web interfaces and a design-system component library.",
+      "description": [
+        "Developed accessible, animated interfaces and contributed to a shared component library used across client projects.",
+        "Improved Lighthouse performance scores from the low 70s to 98+ through code-splitting and image optimization."
       ],
-      "tags": ["React", "TypeScript", "UI"]
+      "bullets": [
+        "Shipped accessible, animated interfaces for client projects.",
+        "Contributed to a shared design-system component library.",
+        "Raised Lighthouse performance scores from 72 to 98 via optimization."
+      ],
+      "achievements": [
+        "Shipped accessible, animated client interfaces.",
+        "Contributed to a shared design-system library.",
+        "Raised Lighthouse performance scores from 72 to 98."
+      ],
+      "tech": ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+      "tags": ["React", "TypeScript", "UI"],
+      "logo": "/assets/experiences/exp-03.svg"
+    },
+    {
+      "id": "exp-4",
+      "type": "education",
+      "role": "B.S. Computer Science — AI Track",
+      "org": "University",
+      "organization": "University",
+      "period": "2022 — Present",
+      "location": "Philippines",
+      "current": true,
+      "summary": "Undergraduate studies focused on artificial intelligence, ML systems, and algorithms.",
+      "description": [
+        "Coursework spanning algorithms, operating systems, machine learning, and computer vision with an AI specialization.",
+        "Leading a student AI interest group running weekly paper-reading sessions."
+      ],
+      "bullets": [
+        "AI specialization with coursework in ML, CV, NLP, and systems.",
+        "Lead a student AI interest group with weekly paper-reading sessions.",
+        "Dean's list for academic performance."
+      ],
+      "achievements": [
+        "AI specialization across ML, CV, NLP, and systems.",
+        "Lead a student AI interest group with weekly paper readings.",
+        "Dean's list honoree."
+      ],
+      "tech": ["Python", "C++", "Algorithms", "Math"],
+      "tags": ["Education", "AI"],
+      "logo": "/assets/experiences/exp-04.svg"
+    },
+    {
+      "id": "exp-5",
+      "type": "award",
+      "role": "Hackathon Winner",
+      "org": "National AI Hackathon",
+      "organization": "National AI Hackathon",
+      "period": "2024",
+      "location": "Philippines",
+      "current": false,
+      "summary": "First place for an edge-vision occupancy monitoring system with AI route prediction.",
+      "description": [
+        "Won first place with a team building an edge-vision + GPS platform fusing deep-learning occupancy monitoring with AI route prediction.",
+        "The project advanced UN Sustainable Development Goals 9 and 11 around smart infrastructure and sustainable cities."
+      ],
+      "bullets": [
+        "First place at the National AI Hackathon.",
+        "Built edge-vision occupancy monitoring with AI route prediction.",
+        "Advanced UN SDGs 9 (infrastructure) and 11 (sustainable cities)."
+      ],
+      "achievements": [
+        "First place — National AI Hackathon.",
+        "Edge-vision occupancy monitoring with AI route prediction.",
+        "Advanced UN SDGs 9 & 11."
+      ],
+      "tech": ["Python", "OpenCV", "TensorRT", "Edge AI"],
+      "tags": ["Award", "Computer Vision"],
+      "logo": "/assets/experiences/exp-05.svg"
     }
   ]
 }

@@ -5,6 +5,8 @@ import { CommandPalette } from "@/components/site/command-palette";
 import { SideRail } from "@/components/site/side-rail";
 import { BootOverlay } from "@/components/site/boot-overlay";
 import { GrainOverlay } from "@/components/site/grain-overlay";
+import { DeepLinkHandler } from "@/components/site/deep-link-handler";
+import { ModalsProvider } from "@/lib/modals";
 import { SkewDivider } from "@/components/motion/skew-divider";
 import { Hero } from "@/components/sections/hero";
 import { HomeTicker } from "@/components/sections/home-ticker";
@@ -12,6 +14,7 @@ import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
 import { Work } from "@/components/sections/work";
+import { NowSection } from "@/components/sections/now";
 import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
@@ -21,22 +24,26 @@ export default function Home() {
       <BootOverlay />
       <Background />
       <Navbar />
-      <CommandPalette />
-      <SideRail />
-      <main className="relative z-10 flex min-h-screen flex-col">
-        <Hero />
-        <HomeTicker />
-        <About />
-        <SkewDivider />
-        <Skills />
-        <SkewDivider flip />
-        <Experience />
-        <SkewDivider />
-        <Work />
-        <SkewDivider flip />
-        <Contact />
-        <Footer />
-      </main>
+      <ModalsProvider>
+        <CommandPalette />
+        <DeepLinkHandler />
+        <SideRail />
+        <main className="relative z-10 flex min-h-screen flex-col">
+          <Hero />
+          <HomeTicker />
+          <About />
+          <SkewDivider />
+          <Skills />
+          <SkewDivider flip />
+          <Experience />
+          <SkewDivider />
+          <Work />
+          <SkewDivider flip />
+          <NowSection />
+          <Contact />
+          <Footer />
+        </main>
+      </ModalsProvider>
     </>
   );
 }

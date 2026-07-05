@@ -1,8 +1,20 @@
+// Unified content types for the lejxz portfolio.
+// These mirror the JSON files in src/data/ and are the single source of
+// truth for the dashboard editor too.
+
+export type IconName = string;
+
 export interface Socials {
   github?: string;
   instagram?: string;
   linkedin?: string;
   email?: string;
+}
+
+export interface SocialLink {
+  label: string;
+  icon: IconName;
+  url: string;
 }
 
 export interface Stat {
@@ -15,24 +27,6 @@ export interface NumericStat {
   value: number;
   suffix?: string;
   prefix?: string;
-}
-
-export interface Profile {
-  name: string;
-  penname: string;
-  role: string;
-  field: string;
-  location: string;
-  availability: string;
-  email: string;
-  socials: Socials;
-  tagline: string;
-  bio: string[];
-  quote?: string;
-  facts?: Fact[];
-  codeBlock?: CodeBlock;
-  stats: Stat[];
-  numericStats?: NumericStat[];
 }
 
 export interface Fact {
@@ -52,6 +46,29 @@ export interface CodeBlock {
   closing: string;
 }
 
+export interface Profile {
+  name: string;
+  penname: string;
+  alias?: string;
+  role: string;
+  field: string;
+  location: string;
+  availability: string;
+  available?: boolean;
+  availabilityNote?: string;
+  email: string;
+  socials: Socials;
+  socialLinks?: SocialLink[];
+  tagline: string;
+  bio: string[];
+  quote?: string;
+  facts?: Fact[];
+  codeBlock?: CodeBlock;
+  stats: Stat[];
+  numericStats?: NumericStat[];
+  avatar?: string;
+}
+
 export interface MarqueeData {
   rows: MarqueeRow[];
 }
@@ -62,27 +79,47 @@ export interface MarqueeRow {
   items: string[];
 }
 
-export interface SkillGroup {
-  title: string;
-  key: string;
-  items: SkillItem[];
-}
-
 export interface SkillItem {
   name: string;
-  level?: number;
+  level: number;
+  description?: string;
   note?: string;
 }
 
+export interface SkillGroup {
+  title: string;
+  key: string;
+  icon: IconName;
+  blurb?: string;
+  items: SkillItem[];
+}
+
+export interface SkillsData {
+  heading?: string;
+  subtitle?: string;
+  groups: SkillGroup[];
+  marquee?: string[];
+}
+
+export type ExperienceType = "work" | "education" | "research" | "award";
+
 export interface ExperienceItem {
   id: string;
+  type?: ExperienceType;
   role: string;
   org: string;
+  organization?: string;
+  orgUrl?: string;
   period: string;
   location: string;
+  current?: boolean;
   summary: string;
+  description?: string[];
   bullets: string[];
+  achievements?: string[];
+  tech: string[];
   tags: string[];
+  logo?: string;
 }
 
 export interface ProjectLink {
@@ -100,27 +137,31 @@ export interface ProjectGalleryItem {
   src: string;
 }
 
+export type ProjectStatus = "shipped" | "wip" | "archived";
+
 export interface Project {
   id: string;
   title: string;
+  subtitle?: string;
   category: string;
   year: string;
-  status: "shipped" | "wip" | "archived";
+  status: ProjectStatus;
   summary: string;
   description: string[];
-  highlights?: ProjectHighlight[];
+  highlights: ProjectHighlight[];
+  highlightList?: string[];
   role?: string;
+  duration?: string;
   timeline?: string;
+  tech?: string[];
   tags: string[];
   links: ProjectLink[];
   featured: boolean;
   accent: "teal" | "violet";
-  gallery?: ProjectGalleryItem[];
   cover?: string;
-}
-
-export interface SkillsData {
-  groups: SkillGroup[];
+  thumbnail?: string;
+  gallery?: ProjectGalleryItem[];
+  galleryImages?: string[];
 }
 
 export interface ExperienceData {
@@ -135,6 +176,8 @@ export interface NowItem {
   label: string;
   value: string;
   detail?: string;
+  href?: string;
+  icon?: IconName;
 }
 
 export interface NowData {
@@ -154,7 +197,24 @@ export interface FooterColumn {
 }
 
 export interface FooterData {
+  note?: string;
+  builtWith?: string;
+  copyright?: string;
   columns: FooterColumn[];
+}
+
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
+export interface SiteData {
+  nav: NavItem[];
+  footer: {
+    note?: string;
+    builtWith?: string;
+    copyright?: string;
+  };
 }
 
 export interface UsesItem {

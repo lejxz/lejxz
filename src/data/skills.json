@@ -1,49 +1,63 @@
 {
+  "heading": "Skills & Tooling",
+  "subtitle": "A practical stack for research, training, and shipping models to production.",
   "groups": [
     {
       "title": "Languages",
       "key": "languages",
+      "icon": "code",
+      "blurb": "Core languages for research and systems work.",
       "items": [
-        { "name": "Python", "level": 90 },
-        { "name": "TypeScript", "level": 82 },
-        { "name": "C++", "level": 68 },
-        { "name": "Rust", "level": 55 },
-        { "name": "SQL", "level": 74 }
+        { "name": "Python", "level": 90, "description": "Primary language for ML research, training pipelines, and backend services." },
+        { "name": "TypeScript", "level": 82, "description": "Frontend and full-stack web work with React & Next.js." },
+        { "name": "C++", "level": 68, "description": "Performance-critical inference and edge deployment." },
+        { "name": "Rust", "level": 55, "description": "Exploring systems-level tooling and safe performance." },
+        { "name": "SQL", "level": 74, "description": "PostgreSQL, SQLite, and analytics queries." }
       ]
     },
     {
       "title": "AI / ML",
       "key": "ai",
+      "icon": "brain",
+      "blurb": "Training, fine-tuning, and deploying deep learning models.",
       "items": [
-        { "name": "PyTorch", "level": 86 },
-        { "name": "TensorFlow", "level": 70 },
-        { "name": "scikit-learn", "level": 84 },
-        { "name": "Hugging Face", "level": 78 },
-        { "name": "OpenCV", "level": 72 },
-        { "name": "LangChain", "level": 66 }
+        { "name": "PyTorch", "level": 86, "description": "Main framework for research and custom architectures." },
+        { "name": "TensorFlow", "level": 70, "description": "Production graphs and TFLite edge export." },
+        { "name": "scikit-learn", "level": 84, "description": "Baselines, feature engineering, and evaluation." },
+        { "name": "Hugging Face", "level": 78, "description": "Transformers, datasets, and model hubs." },
+        { "name": "OpenCV", "level": 72, "description": "Classical vision pipelines and preprocessing." },
+        { "name": "LangChain", "level": 66, "description": "LLM orchestration and retrieval-augmented apps." }
       ]
     },
     {
       "title": "Frontend",
       "key": "frontend",
+      "icon": "layout",
+      "blurb": "Interfaces, data viz, and interactive experiences.",
       "items": [
-        { "name": "React", "level": 85 },
-        { "name": "Next.js", "level": 82 },
-        { "name": "Three.js / R3F", "level": 64 },
-        { "name": "Tailwind CSS", "level": 88 },
-        { "name": "Framer Motion", "level": 76 }
+        { "name": "React", "level": 85, "description": "Component-driven UIs with hooks and suspense." },
+        { "name": "Next.js", "level": 82, "description": "App Router, static export, and API design." },
+        { "name": "Three.js / R3F", "level": 64, "description": "WebGL scenes and 3D data visualization." },
+        { "name": "Tailwind CSS", "level": 88, "description": "Design systems and rapid styling." },
+        { "name": "Framer Motion", "level": 76, "description": "Animation, gestures, and layout transitions." }
       ]
     },
     {
       "title": "Tooling",
       "key": "tooling",
+      "icon": "wrench",
+      "blurb": "Infrastructure, DevOps, and developer experience.",
       "items": [
-        { "name": "Docker", "level": 72 },
-        { "name": "Git", "level": 90 },
-        { "name": "Linux", "level": 80 },
-        { "name": "FastAPI", "level": 78 },
-        { "name": "PostgreSQL", "level": 68 }
+        { "name": "Docker", "level": 72, "description": "Reproducible training and deployment environments." },
+        { "name": "Git", "level": 90, "description": "Trunk-based workflows and code review." },
+        { "name": "Linux", "level": 80, "description": "Daily-driver for development and servers." },
+        { "name": "FastAPI", "level": 78, "description": "Python APIs for model serving." },
+        { "name": "PostgreSQL", "level": 68, "description": "Relational storage and indexing." }
       ]
     }
+  ],
+  "marquee": [
+    "Python", "PyTorch", "TypeScript", "React", "Next.js", "OpenCV",
+    "Docker", "Linux", "FastAPI", "Hugging Face", "scikit-learn", "LangChain"
   ]
 }

@@ -1,54 +1,63 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # dependencies
-node_modules/
+node_modules
 /.pnp
 .pnp.*
+
+# testing
+/coverage
 
 # next.js
 /.next/
 /out/
-/build/
 
-# testing
-/coverage
+# production
+/build
 
 # misc
 .DS_Store
 *.pem
 
-# debug logs
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-*.log
 
-# env
+# env files (can opt-in for committing if needed)
 .env*
-!.env.example
+
+# vercel
+.vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# vercel
-.vercel
+# logs
+*.log
+dev.log
+server.log
 
-# editor / os
-.idea/
-.vscode/
-*.swp
-
-# ── sandbox / infra (not part of the portfolio) ──
-.zscripts/
-.z-ai-config/
-.claude/
+# sandbox / dev tooling (NOT part of the deployed portfolio)
+.claude
+.z-ai-config
+/skills/
+/.zscripts/
+/upload/
+/examples/
+/download/
+/db/
 Caddyfile
-db/
-prisma/
-examples/
-mini-services/
-download/
-skills/
-src/lib/db.ts
 worklog.md
-upload/
+screenshot-*.png
+local-*
+
+# mini-services: the dashboard-api is part of the project; ignore only its deps + other sandbox services
+/mini-services/*/node_modules/
+/mini-services/.gitkeep
+
+# unused sandbox scaffold (portfolio has no database)
+/prisma/
+/src/lib/db.ts

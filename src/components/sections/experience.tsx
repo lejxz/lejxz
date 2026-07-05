@@ -2,183 +2,95 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, MapPin } from "lucide-react";
-import Link from "next/link";
-import { recentExperience, experience } from "@/lib/data";
-import type { ExperienceItem as ExperienceItemType } from "@/lib/types";
+import { ArrowRight } from "lucide-react";
+import { experience } from "@/lib/data";
+import type { ExperienceType } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { ExperienceCard } from "@/components/cards/experience-card";
 import { cn } from "@/lib/utils";
 
-function ExperienceEntry({
-  item,
-  index,
-}: {
-  item: ExperienceItemType;
-  index: number;
-}) {
-  const [open, setOpen] = useState(false);
-  const isLeft = index % 2 === 0;
-
-  return (
-    <>
-      <Reveal delay={0.04 * index}>
-        <div className="relative grid md:grid-cols-2">
-          {/* Dot — sits exactly on the center line, at the card's vertical top */}
-          <div className="absolute left-3 top-6 z-10 -translate-x-1/2 md:left-1/2 md:top-6">
-            <span className="relative flex h-3 w-3 items-center justify-center">
-              <span
-                className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/30"
-                style={{ animationDuration: "2.5s" }}
-              />
-              <span className="relative h-2.5 w-2.5 rounded-full bg-teal ring-4 ring-background" />
-            </span>
-          </div>
-
-          {/* Card — crosses OVER the center line by ~20% on desktop.
-              Left card: occupies col 1, extends 20% into col 2 (over the line).
-              Right card: starts 20% before the line, occupies col 2. */}
-          <div
-            className={cn(
-              "relative pl-10 md:pl-0",
-              isLeft
-                ? "md:col-start-1 md:-mr-[20%] md:pr-8"
-                : "md:col-start-2 md:-ml-[20%] md:pl-8"
-            )}
-          >
-            <motion.div
-              whileHover={{ y: -3 }}
-              transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              className="rounded-xl border border-line bg-surface/50 p-5 transition-colors hover:border-teal/30"
-            >
-              <div className="mb-2">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-teal">
-                  {item.period}
-                </span>
-              </div>
-              <h3 className="font-mono text-lg font-bold text-foreground">
-                {item.role}
-              </h3>
-              <div className="mb-3 flex items-center gap-2 text-sm">
-                <span className="font-medium text-teal">{item.org}</span>
-                <span className="text-dim">·</span>
-                <span className="flex items-center gap-1 text-dim">
-                  <MapPin className="h-3 w-3" />
-                  {item.location}
-                </span>
-              </div>
-              <p className="text-sm leading-relaxed text-foreground/80">
-                {item.summary}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {item.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded border border-line px-2 py-0.5 font-mono text-[10px] text-dim"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-4">
-                <button
-                  onClick={() => setOpen(true)}
-                  className="group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:border-teal/50 hover:text-teal"
-                >
-                  Details
-                  <ArrowUpRight className="h-3 w-3" />
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </Reveal>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[88vh] overflow-y-auto border-line bg-background p-0 sm:max-w-xl">
-          <div className="h-1 w-full bg-teal" />
-          <DialogHeader className="space-y-0 border-b border-line p-6">
-            <DialogTitle className="font-mono text-xl font-bold tracking-tight">
-              {item.role}
-              <span className="text-dim"> @ </span>
-              <span className="text-teal">{item.org}</span>
-            </DialogTitle>
-            <DialogDescription className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider">
-              <span>{item.period}</span>
-              <span className="text-dim">·</span>
-              <span>{item.location}</span>
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-5 p-6">
-            <p className="text-sm leading-relaxed text-foreground/90">
-              {item.summary}
-            </p>
-            <ul className="space-y-2.5">
-              {item.bullets.map((bullet, i) => (
-                <li key={i} className="flex gap-3 text-sm text-foreground/85">
-                  <span className="mt-1 text-teal">▹</span>
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-wrap gap-1.5 border-t border-line pt-4">
-              {item.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="rounded border-line font-mono text-xs text-dim"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-}
+const FILTERS: { key: ExperienceType | "all"; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "work", label: "Work" },
+  { key: "education", label: "Education" },
+  { key: "research", label: "Research" },
+  { key: "award", label: "Awards" },
+];
 
 export function Experience() {
-  const hasMore = experience.items.length > recentExperience.length;
+  const [filter, setFilter] = useState<ExperienceType | "all">("all");
+
+  const items = experience.items.filter(
+    (e) => filter === "all" || (e.type ?? "work") === filter
+  );
 
   return (
-    <section id="experience" className="relative scroll-mt-20 py-24 sm:py-32">
+    <section id="experience" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
+      <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/8 blur-[150px]" />
+
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading index="03" kicker="Timeline" title="Experience" />
 
-        <div className="mt-12">
-          <div className="relative">
-            {/* Center vertical line (desktop) / left line (mobile) */}
-            <div className="absolute left-3 top-0 h-full w-px bg-line md:left-1/2 md:-translate-x-1/2" />
+        <Reveal delay={0.06}>
+          <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
+            A timeline of roles, research, and recognition. Click any entry to see the full
+            breakdown — achievements, stack, and context.
+          </p>
+        </Reveal>
 
-            <div className="space-y-8 py-2">
-              {recentExperience.map((item, i) => (
-                <ExperienceEntry key={item.id} item={item} index={i} />
-              ))}
-            </div>
-          </div>
-
-          {hasMore && (
-            <Reveal delay={0.1} className="mt-10 flex justify-center">
-              <Link
-                href="/experience"
-                className="group inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:border-teal/50 hover:text-teal"
+        {/* Filters */}
+        <Reveal delay={0.1}>
+          <div className="mt-8 flex flex-wrap gap-2">
+            {FILTERS.map((f) => (
+              <button
+                key={f.key}
+                type="button"
+                onClick={() => setFilter(f.key)}
+                className={cn(
+                  "relative rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
+                  filter === f.key
+                    ? "border-teal/40 text-teal"
+                    : "border-line text-dim hover:border-teal/30 hover:text-foreground"
+                )}
               >
-                View all {experience.items.length} entries
-                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-            </Reveal>
-          )}
+                {filter === f.key && (
+                  <motion.span
+                    layoutId="exp-filter-active"
+                    className="absolute inset-0 -z-10 rounded-full bg-teal/10"
+                    transition={{ type: "spring", stiffness: 300, damping: 26 }}
+                  />
+                )}
+                {f.label}
+                <span className="ml-1.5 text-dim/60">
+                  {f.key === "all"
+                    ? experience.items.length
+                    : experience.items.filter((e) => (e.type ?? "work") === f.key).length}
+                </span>
+              </button>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Timeline */}
+        <div className="mt-10 relative">
+          {/* vertical gradient line */}
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-teal/50 via-line to-transparent sm:left-[9px]" />
+
+          <motion.div layout className="relative space-y-3">
+            {items.map((item, i) => (
+              <div key={item.id} className="relative sm:pl-0">
+                <ExperienceCard experience={item} index={i} variant="row" />
+              </div>
+            ))}
+          </motion.div>
         </div>
+
+        {items.length === 0 && (
+          <div className="mt-10 rounded-2xl border border-dashed border-line p-10 text-center text-sm text-dim">
+            No entries in this category yet.
+          </div>
+        )}
       </div>
     </section>
   );

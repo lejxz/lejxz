@@ -1,4 +1,7 @@
 {
+  "note": "Computer Science student majoring in Artificial Intelligence. Turning research into shipped, measurable systems.",
+  "builtWith": "Built with Next.js · R3F · Framer Motion",
+  "copyright": "Lejuene Delantar",
   "columns": [
     {
       "title": "Navigate",
@@ -6,17 +9,9 @@
         { "label": "Home", "href": "/#top" },
         { "label": "About", "href": "/#about" },
         { "label": "Skills", "href": "/#skills" },
+        { "label": "Experience", "href": "/#experience" },
         { "label": "Work", "href": "/#work" },
         { "label": "Contact", "href": "/#contact" }
-      ]
-    },
-    {
-      "title": "Projects",
-      "links": [
-        { "label": "All Projects", "href": "/projects" },
-        { "label": "Neural Canvas", "href": "/projects/neural-canvas" },
-        { "label": "Edge Vision", "href": "/projects/edge-vision" },
-        { "label": "Lex Graph", "href": "/projects/lex-graph" }
       ]
     },
     {
