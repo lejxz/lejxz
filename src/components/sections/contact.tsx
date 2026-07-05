@@ -47,7 +47,7 @@ export function Contact() {
           <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Left: pitch + email + socials */}
             <div>
-              <SectionHeading index="05" kicker="Get in touch" title="Contact" />
+              <SectionHeading index="06" kicker="Get in touch" title="Contact" />
               <Reveal delay={0.08}>
                 <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-dim sm:text-lg">
                   {profile.availabilityNote ?? profile.availability}. Lorem ipsum dolor sit amet,

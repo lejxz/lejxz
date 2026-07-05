@@ -11,6 +11,7 @@ import {
   Activity,
   ExternalLink,
   CheckCircle2,
+  ArrowUpRight,
 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import {
@@ -21,6 +22,8 @@ import {
 } from "@/components/ui/dialog";
 import { Gallery } from "@/components/site/gallery";
 import { useCopy } from "@/hooks/use-copy";
+import { useModals } from "@/lib/modals";
+import { getRelatedProjects } from "@/lib/data";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
@@ -254,6 +257,28 @@ export function ProjectModal({
                         ))}
                       </div>
                     )}
+
+                    {/* related projects */}
+                    <RelatedProjects project={project} />
+
+                    {/* keyboard hint footer */}
+                    {hasMultiple && (
+                      <div className="mt-6 flex items-center justify-center gap-3 border-t border-line pt-4 font-mono text-[10px] text-dim">
+                        <span className="inline-flex items-center gap-1.5">
+                          <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">
+                            <ChevronLeft className="inline h-3 w-3" />
+                          </kbd>
+                          prev
+                        </span>
+                        <span className="text-dim/40">·</span>
+                        <span className="inline-flex items-center gap-1.5">
+                          next
+                          <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">
+                            <ChevronRight className="inline h-3 w-3" />
+                          </kbd>
+                        </span>
+                      </div>
+                    )}
                   </motion.div>
                 </div>
               </motion.div>
@@ -288,5 +313,45 @@ export function ProjectModal({
         </>
       )}
     </>
+  );
+}
+
+function RelatedProjects({ project }: { project: Project }) {
+  const { openProject, projectList } = useModals();
+  const related = getRelatedProjects(project.id, 3);
+
+  if (related.length === 0) return null;
+
+  return (
+    <div className="mt-6">
+      <h3 className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-dim">
+        <span className="h-px w-6 bg-line" />
+        Related projects
+      </h3>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {related.map((p) => {
+          const accentText = p.accent === "violet" ? "text-violet" : "text-teal";
+          return (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => openProject(p, projectList.length ? projectList : undefined)}
+              className="card-hover-glow group flex flex-col gap-1.5 rounded-xl border border-line bg-surface/40 p-3 text-left transition-colors hover:border-teal/30"
+            >
+              <div className="flex items-center justify-between">
+                <span className="truncate font-mono text-xs font-bold text-foreground transition-colors group-hover:text-teal">
+                  {p.title}
+                </span>
+                <ArrowUpRight className="h-3 w-3 shrink-0 text-dim transition-all group-hover:-translate-y-0.5 group-hover:text-teal" />
+              </div>
+              <span className="line-clamp-1 text-[11px] text-dim">{p.subtitle ?? p.summary}</span>
+              <span className={cn("font-mono text-[10px] uppercase tracking-wider", accentText)}>
+                {p.category} · {p.year}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

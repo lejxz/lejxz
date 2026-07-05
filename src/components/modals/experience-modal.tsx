@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ExternalLink, MapPin, Calendar, Briefcase } from "lucide-react";
+import { CheckCircle2, ExternalLink, MapPin, Calendar, Briefcase, Share2 } from "lucide-react";
 import type { ExperienceItem, ExperienceType } from "@/lib/types";
 import {
   Dialog,
@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { useCopy } from "@/hooks/use-copy";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
@@ -76,6 +77,7 @@ export function ExperienceModal({
             {/* Gradient header */}
             <div className="relative overflow-hidden bg-gradient-to-br from-teal/10 via-transparent to-violet/10 p-5 sm:p-6">
               <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-teal/10 blur-3xl" />
+              <ShareButton experienceId={experience.id} />
               <div className="relative flex items-start gap-4">
                 {experience.logo && (
                   <img
@@ -193,5 +195,24 @@ export function ExperienceModal({
         </AnimatePresence>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ShareButton({ experienceId }: { experienceId: string }) {
+  const { copy } = useCopy();
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        copy(
+          `${window.location.origin}${window.location.pathname}#experience=${experienceId}`,
+          "Experience link copied"
+        )
+      }
+      aria-label="Copy experience link"
+      className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface/70 text-foreground/70 backdrop-blur transition-colors hover:border-teal/40 hover:text-teal"
+    >
+      <Share2 className="h-3.5 w-3.5" />
+    </button>
   );
 }
