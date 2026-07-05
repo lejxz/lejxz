@@ -34,10 +34,29 @@ export function Skills() {
               </div>
 
               <ul className="mt-4 space-y-3">
-                {group.items.map((item) => (
-                  <li key={item.name}>
+                {group.items.map((item) => {
+                  const tier =
+                    typeof item.level === "number"
+                      ? item.level >= 85
+                        ? "expert"
+                        : item.level >= 70
+                          ? "proficient"
+                          : "familiar"
+                      : null;
+                  return (
+                  <li
+                    key={item.name}
+                    className="group/skill rounded-md p-1.5 -m-1.5 transition-colors hover:bg-background/40"
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-foreground/90">{item.name}</span>
+                      <span className="flex items-center gap-2 text-sm text-foreground/90">
+                        {item.name}
+                        {tier && (
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-dim opacity-0 transition-opacity group-hover/skill:opacity-100">
+                            {tier}
+                          </span>
+                        )}
+                      </span>
                       {typeof item.level === "number" && (
                         <span className="font-mono text-[10px] text-dim">
                           {item.level}
@@ -56,7 +75,8 @@ export function Skills() {
                       </div>
                     )}
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </motion.div>
           ))}

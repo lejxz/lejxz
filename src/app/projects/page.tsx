@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import { projects } from "@/lib/data";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
@@ -12,17 +12,40 @@ import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 export default function ProjectsPage() {
-  const [filter, setFilter] = useState<string>("All");
+  const [category, setCategory] = useState<string>("All");
+  const [activeTags, setActiveTags] = useState<string[]>([]);
 
   const categories = useMemo(() => {
     const set = new Set(projects.projects.map((p) => p.category));
     return ["All", ...Array.from(set)];
   }, []);
 
+  const allTags = useMemo(() => {
+    const set = new Set<string>();
+    projects.projects.forEach((p) => p.tags.forEach((t) => set.add(t)));
+    return Array.from(set).sort();
+  }, []);
+
   const filtered = useMemo(() => {
-    if (filter === "All") return projects.projects;
-    return projects.projects.filter((p) => p.category === filter);
-  }, [filter]);
+    return projects.projects.filter((p) => {
+      const catOk = category === "All" || p.category === category;
+      const tagOk =
+        activeTags.length === 0 ||
+        activeTags.every((t) => p.tags.includes(t));
+      return catOk && tagOk;
+    });
+  }, [category, activeTags]);
+
+  function toggleTag(tag: string) {
+    setActiveTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  }
+
+  function clearFilters() {
+    setCategory("All");
+    setActiveTags([]);
+  }
 
   // Scroll to a project anchor when arriving via hash (e.g. from the command palette).
   useEffect(() => {
@@ -35,7 +58,9 @@ export default function ProjectsPage() {
         el.scrollIntoView({ behavior: "smooth", block: "center" })
       );
     }
-  }, [filter]);
+  }, [category, activeTags]);
+
+  const hasFilters = category !== "All" || activeTags.length > 0;
 
   return (
     <>
@@ -62,20 +87,26 @@ export default function ProjectsPage() {
               All Projects
             </h1>
             <p className="mt-4 max-w-xl text-dim">
-              {projects.projects.length} entries across {categories.length - 1}{" "}
-              categories.
+              <span className="font-mono text-foreground">
+                {filtered.length}
+              </span>{" "}
+              of {projects.projects.length} entries ·{" "}
+              {categories.length - 1} categories · {allTags.length} tags
             </p>
           </Reveal>
 
-          <Reveal delay={0.1} className="mt-10">
-            <div className="flex flex-wrap gap-2 border-b border-line pb-5">
+          <Reveal delay={0.1} className="mt-10 space-y-5 border-b border-line pb-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="mr-1 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                Category
+              </span>
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setFilter(cat)}
+                  onClick={() => setCategory(cat)}
                   className={cn(
-                    "rounded-full border px-4 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors",
-                    filter === cat
+                    "rounded-full border px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors",
+                    category === cat
                       ? "border-teal/60 bg-teal/10 text-teal"
                       : "border-line text-dim hover:border-teal/40 hover:text-foreground"
                   )}
@@ -84,15 +115,63 @@ export default function ProjectsPage() {
                 </button>
               ))}
             </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="mr-1 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                Tags
+              </span>
+              {allTags.map((tag) => {
+                const active = activeTags.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 font-mono text-[11px] tracking-wider transition-colors",
+                      active
+                        ? "border-violet/60 bg-violet/10 text-violet"
+                        : "border-line text-dim hover:border-violet/40 hover:text-foreground"
+                    )}
+                  >
+                    {active && <X className="h-3 w-3" />}
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
+
+            {hasFilters && (
+              <button
+                onClick={clearFilters}
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:text-teal"
+              >
+                <X className="h-3 w-3" />
+                Clear filters
+              </button>
+            )}
           </Reveal>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((project, i) => (
-              <Reveal key={project.id} delay={i * 0.04}>
-                <ProjectCard project={project} index={i} />
-              </Reveal>
-            ))}
-          </div>
+          {filtered.length > 0 ? (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((project, i) => (
+                <Reveal key={project.id} delay={i * 0.04}>
+                  <ProjectCard project={project} index={i} />
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-16 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-line py-20 text-center">
+              <p className="font-mono text-sm text-dim">
+                No projects match these filters.
+              </p>
+              <button
+                onClick={clearFilters}
+                className="font-mono text-xs uppercase tracking-wider text-teal transition-colors hover:text-violet"
+              >
+                Reset
+              </button>
+            </div>
+          )}
         </section>
 
         <Footer />

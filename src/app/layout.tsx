@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SkipLink } from "@/components/site/skip-link";
 import { CustomCursor } from "@/components/site/custom-cursor";
 import { BackToTop } from "@/components/site/back-to-top";
+import { ShortcutsHelp } from "@/components/site/shortcuts-help";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -59,6 +60,7 @@ export default function RootLayout({
         <SkipLink />
         <CustomCursor />
         <BackToTop />
+        <ShortcutsHelp />
         {children}
         <Toaster />
       </body>

@@ -20,6 +20,15 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-line bg-background">
       <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
+        <p className="mb-8 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-dim/60 md:block">
+          <span className="text-teal/60">[tip]</span> press{" "}
+          <kbd className="rounded border border-line px-1.5 py-0.5 text-foreground/70">⌘K</kbd>{" "}
+          to search ·{" "}
+          <kbd className="rounded border border-line px-1.5 py-0.5 text-foreground/70">?</kbd>{" "}
+          for shortcuts ·{" "}
+          <kbd className="rounded border border-line px-1.5 py-0.5 text-foreground/70">g</kbd>{" "}
+          then a letter to jump
+        </p>
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div>
             <p className="font-mono text-sm font-bold tracking-tight">

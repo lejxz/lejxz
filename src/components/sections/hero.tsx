@@ -52,6 +52,15 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
           className="mt-6"
         >
+          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-dim">
+            <span className="text-teal">~</span>
+            <span>cs.ai</span>
+            <span className="text-dim/50">/</span>
+            <span>student</span>
+            <span className="text-dim/50">/</span>
+            <span className="text-violet">{profile.location}</span>
+            <span className="ml-1 inline-block h-3.5 w-2 animate-blink bg-teal align-middle" />
+          </div>
           <p className="font-mono text-sm text-teal">{"// "}{profile.penname}</p>
           <h1 className="mt-2 font-mono text-[15vw] font-bold leading-[0.9] tracking-tighter sm:text-[12vw] md:text-[9rem] lg:text-[11rem]">
             <span className="text-gradient">Lejuene</span>

@@ -8,6 +8,7 @@ import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { GrainOverlay } from "@/components/site/grain-overlay";
 import { ReadingProgress } from "@/components/site/reading-progress";
+import { CaseStudyToc } from "@/components/site/case-study-toc";
 import { Reveal } from "@/components/motion/reveal";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -62,6 +63,17 @@ export default async function ProjectCaseStudy({
   const next = projects.projects[(idx + 1) % projects.projects.length];
   const related = getRelatedProjects(id, 3);
 
+  const wordCount = project.description.join(" ").split(/\s+/).length;
+  const readingTime = Math.max(1, Math.round(wordCount / 200));
+
+  const tocItems = [
+    ...(project.highlights?.length ? [{ id: "highlights", label: "Highlights" }] : []),
+    { id: "overview", label: "Overview" },
+    { id: "stack", label: "Stack" },
+    ...(project.gallery?.length ? [{ id: "gallery", label: "Gallery" }] : []),
+    ...(related.length ? [{ id: "related", label: "Related" }] : []),
+  ];
+
   return (
     <>
       <GrainOverlay />
@@ -70,7 +82,9 @@ export default async function ProjectCaseStudy({
       <main className="relative z-10 flex min-h-screen flex-col">
         <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-30" />
 
-        <article className="mx-auto w-full max-w-4xl flex-1 px-5 pt-28 sm:px-8 sm:pt-32">
+        <div className="mx-auto flex w-full max-w-6xl flex-1 gap-12 px-5 pt-28 sm:px-8 sm:pt-32">
+          <CaseStudyToc items={tocItems} />
+          <article className="min-w-0 flex-1">
           <Reveal>
             <Link
               href="/projects"
@@ -93,6 +107,8 @@ export default async function ProjectCaseStudy({
                 <span className={cn("h-1.5 w-1.5 rounded-full", accentBar[project.accent])} />
                 {statusLabel[project.status]}
               </span>
+              <span className="text-dim">·</span>
+              <span className="text-dim">{readingTime} min read</span>
             </div>
             <h1 className="mt-4 font-mono text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               {project.title}
@@ -161,7 +177,7 @@ export default async function ProjectCaseStudy({
           )}
 
           {project.highlights && project.highlights.length > 0 && (
-            <Reveal delay={0.12} className="mt-10">
+            <Reveal delay={0.12} className="mt-10 scroll-mt-24" id="highlights">
               <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
                 Highlights
               </p>
@@ -188,7 +204,7 @@ export default async function ProjectCaseStudy({
             </Reveal>
           )}
 
-          <Reveal delay={0.14} className="mt-12">
+          <Reveal delay={0.14} className="mt-12 scroll-mt-24" id="overview">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
               Overview
             </p>
@@ -204,7 +220,7 @@ export default async function ProjectCaseStudy({
             </div>
           </Reveal>
 
-          <Reveal delay={0.16} className="mt-10">
+          <Reveal delay={0.16} className="mt-10 scroll-mt-24" id="stack">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
               Stack
             </p>
@@ -244,7 +260,7 @@ export default async function ProjectCaseStudy({
           )}
 
           {project.gallery && project.gallery.length > 0 && (
-            <Reveal delay={0.18} className="mt-12">
+            <Reveal delay={0.18} className="mt-12 scroll-mt-24" id="gallery">
               <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
                 Gallery
               </p>
@@ -272,7 +288,7 @@ export default async function ProjectCaseStudy({
           )}
 
           {related.length > 0 && (
-            <Reveal delay={0.2} className="mt-16">
+            <Reveal delay={0.2} className="mt-16 scroll-mt-24" id="related">
               <div className="border-t border-line pt-8">
                 <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
                   Related
@@ -341,6 +357,7 @@ export default async function ProjectCaseStudy({
             </Link>
           </Reveal>
         </article>
+        </div>
 
         <Footer />
       </main>
