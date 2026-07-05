@@ -22,5 +22,11 @@
     { "label": "Status", "value": "Student" },
     { "label": "Stack", "value": "Python · TS" },
     { "label": "Based", "value": "PH" }
+  ],
+  "numericStats": [
+    { "label": "Projects", "value": 24, "suffix": "+" },
+    { "label": "Years coding", "value": 5 },
+    { "label": "Models trained", "value": 18, "suffix": "+" },
+    { "label": "Coffees / week", "value": 12 }
   ]
 }

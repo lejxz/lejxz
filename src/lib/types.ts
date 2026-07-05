@@ -10,6 +10,13 @@ export interface Stat {
   value: string;
 }
 
+export interface NumericStat {
+  label: string;
+  value: number;
+  suffix?: string;
+  prefix?: string;
+}
+
 export interface Profile {
   name: string;
   penname: string;
@@ -22,6 +29,7 @@ export interface Profile {
   tagline: string;
   bio: string[];
   stats: Stat[];
+  numericStats?: NumericStat[];
 }
 
 export interface MarqueeData {
@@ -112,4 +120,15 @@ export interface NowItem {
 export interface NowData {
   updated: string;
   items: NowItem[];
+}
+
+export interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+  accent: "teal" | "violet";
+}
+
+export interface TestimonialsData {
+  items: Testimonial[];
 }

@@ -37,6 +37,13 @@ export function Footer() {
             <p className="mt-1 font-mono text-xs text-dim">
               © {year} {profile.name}. All rights reserved.
             </p>
+            <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-dim/70">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/60" style={{ animationDuration: "2s" }} />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal" />
+              </span>
+              all systems operational
+            </p>
           </div>
 
           <div className="flex items-center gap-2">

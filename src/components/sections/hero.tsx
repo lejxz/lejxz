@@ -7,6 +7,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { profile } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
+import { CountUp } from "@/components/motion/count-up";
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -125,6 +126,33 @@ export function Hero() {
             </div>
           ))}
         </motion.div>
+
+        {profile.numericStats && profile.numericStats.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.36, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            {profile.numericStats.map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-lg border border-line bg-surface/30 p-4"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                  {stat.label}
+                </p>
+                <p className="mt-1.5 font-mono text-2xl font-bold text-teal sm:text-3xl">
+                  <CountUp
+                    to={stat.value}
+                    prefix={stat.prefix ?? ""}
+                    suffix={stat.suffix ?? ""}
+                  />
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        )}
       </motion.div>
 
       <motion.div

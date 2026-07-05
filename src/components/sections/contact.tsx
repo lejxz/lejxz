@@ -24,7 +24,7 @@ export function Contact() {
   return (
     <section id="contact" className="relative scroll-mt-20 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="05" kicker="Contact" title="Get in touch" />
+        <SectionHeading index="08" kicker="Contact" title="Get in touch" />
 
         <Reveal delay={0.05} className="mt-12">
           <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface/40 p-8 transition-colors hover:border-teal/30 sm:p-12">

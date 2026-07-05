@@ -13,6 +13,7 @@ import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
 import { Work } from "@/components/sections/work";
 import { NowSection } from "@/components/sections/now-section";
+import { Testimonials } from "@/components/sections/testimonials";
 import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
@@ -35,6 +36,8 @@ export default function Home() {
         <SkewDivider />
         <Work />
         <NowSection />
+        <SkewDivider />
+        <Testimonials />
         <SkewDivider flip />
         <Contact />
         <Footer />

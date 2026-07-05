@@ -62,6 +62,10 @@ export default async function ProjectCaseStudy({
 
   const idx = projects.projects.findIndex((p) => p.id === id);
   const next = projects.projects[(idx + 1) % projects.projects.length];
+  const prev =
+    projects.projects[
+      (idx - 1 + projects.projects.length) % projects.projects.length
+    ];
   const related = getRelatedProjects(id, 3);
 
   const wordCount = project.description.join(" ").split(/\s+/).length;
@@ -331,21 +335,49 @@ export default async function ProjectCaseStudy({
           )}
 
           <Reveal delay={0.2} className="mt-16">
-            <div className="flex items-center justify-between border-t border-line pt-8">
-              <Link
-                href="/projects"
-                className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:text-teal"
-              >
-                <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-                All Projects
-              </Link>
-              <Link
-                href={`/projects/${next.id}`}
-                className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:text-teal"
-              >
-                Next: {next.title}
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
+            <div className="border-t border-line pt-8">
+              <div className="mb-4 flex items-center justify-between">
+                <Link
+                  href="/projects"
+                  className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:text-teal"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+                  All Projects
+                </Link>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                  {String(idx + 1).padStart(2, "0")} / {String(projects.projects.length).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Link
+                  href={`/projects/${prev.id}`}
+                  className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-line bg-surface/40 p-5 transition-all hover:-translate-y-0.5 hover:border-teal/40"
+                >
+                  <ArrowLeft className="h-5 w-5 shrink-0 text-dim transition-all group-hover:-translate-x-0.5 group-hover:text-teal" />
+                  <div className="min-w-0">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                      Previous
+                    </p>
+                    <p className="mt-0.5 truncate font-mono text-sm font-bold text-foreground transition-colors group-hover:text-teal">
+                      {prev.title}
+                    </p>
+                  </div>
+                </Link>
+                <Link
+                  href={`/projects/${next.id}`}
+                  className="group relative flex items-center justify-end gap-4 overflow-hidden rounded-xl border border-line bg-surface/40 p-5 text-right transition-all hover:-translate-y-0.5 hover:border-teal/40"
+                >
+                  <div className="min-w-0">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                      Next
+                    </p>
+                    <p className="mt-0.5 truncate font-mono text-sm font-bold text-foreground transition-colors group-hover:text-teal">
+                      {next.title}
+                    </p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 shrink-0 text-dim transition-all group-hover:translate-x-0.5 group-hover:text-teal" />
+                </Link>
+              </div>
             </div>
           </Reveal>
 
