@@ -147,6 +147,34 @@ export function Hero() {
               </a>
             ))}
           </motion.div>
+
+          {/* Quick profile stats — surfaces profile.stats data */}
+          {profile.stats.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex flex-wrap items-center gap-2 pt-3"
+            >
+              {profile.stats.map((stat, i) => (
+                <span
+                  key={stat.label}
+                  className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface/40 px-3 py-1.5 backdrop-blur-sm transition-colors hover:border-teal/40"
+                >
+                  <span
+                    className="font-mono text-[10px] uppercase tracking-wider text-dim"
+                    style={{ color: i % 2 === 0 ? "var(--color-teal)" : "var(--color-violet)" }}
+                  >
+                    {stat.label}
+                  </span>
+                  <span className="h-3 w-px bg-line" />
+                  <span className="font-mono text-xs font-medium text-foreground/90">
+                    {stat.value}
+                  </span>
+                </span>
+              ))}
+            </motion.div>
+          )}
         </div>
 
         {/* Right: 3D diorama */}

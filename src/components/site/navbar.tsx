@@ -178,7 +178,7 @@ export function Navbar() {
                   </span>
                 </Link>
                 <nav className="flex flex-col gap-1">
-                  {[...nav, { label: "All Projects", href: "/projects" }].map(
+                  {[...nav, { label: "All Projects", href: "/#work" }].map(
                     (item, i) => (
                       <SheetClose asChild key={item.href}>
                         <Link

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -129,7 +129,8 @@ export function ProjectModal({
                 </div>
 
                 {/* Scrollable body */}
-                <div className="max-h-[calc(92svh-12rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+                <div className="relative max-h-[calc(92svh-12rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+                  <ScrollProgress />
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -353,5 +354,36 @@ function RelatedProjects({ project }: { project: Project }) {
         })}
       </div>
     </div>
+  );
+}
+
+function ScrollProgress() {
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    const container = bar.parentElement;
+    if (!container) return;
+
+    const onScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const max = scrollHeight - clientHeight;
+      const pct = max > 0 ? scrollTop / max : 0;
+      bar.style.transform = `scaleX(${pct})`;
+      bar.style.opacity = scrollTop > 40 ? "1" : "0";
+    };
+    onScroll();
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div
+      aria-hidden
+      ref={barRef}
+      className="sticky top-0 left-0 z-20 mb-2 h-0.5 origin-left scale-x-0 rounded-full bg-gradient-to-r from-teal via-teal to-violet opacity-0 transition-opacity duration-300"
+      style={{ willChange: "transform, opacity" }}
+    />
   );
 }
