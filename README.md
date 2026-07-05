@@ -24,11 +24,11 @@ I am a Computer Science student majoring in **Artificial Intelligence**. My pass
 [![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB&hide_title=false&hide=prs)](https://github.com/lejxz)
 [![Top Languages](https://github-readme-stats-nine-lovat-17.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
 
-[![Website](https://img.shields.io/badge/Website-Tesing-B660EB?style=flat&logo=html5&logoColor=white)](https://lejxz.github.io/lejxz/)
-[![Instagram](https://img.shields.io/badge/Instagram-lingwinee-B660EB?style=flat&logo=Instagram&logoColor=white)](https://www.instagram.com/lingwinee/)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-lejxz-B660EB?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
-[![Email](https://img.shields.io/badge/Email-lejxz-B660EB?style=flat&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
-[![GitHub](https://img.shields.io/badge/GitHub-lejxz-B660EB?style=flat&logo=github&logoColor=white)](https://github.com/lejxz)
+[![Website](https://img.shields.io/badge/Website-🔗-B660EB?style=flat&logo=html5&logoColor=white)](https://lejxz.github.io/lejxz/)
+[![Instagram](https://img.shields.io/badge/Instagram-🔗-B660EB?style=flat&logo=Instagram&logoColor=white)](https://www.instagram.com/lejxz/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-🔗-B660EB?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/)
+[![Email](https://img.shields.io/badge/Email-🔗-B660EB?style=flat&logo=gmail&logoColor=white)](mailto:delantarlejuene@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-🔗-B660EB?style=flat&logo=github&logoColor=white)](https://github.com/lejxz)
 <!--
 </div>
 <div align="center">
