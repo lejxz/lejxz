@@ -5,6 +5,7 @@ import experienceData from "@/data/experience.json";
 import projectsData from "@/data/projects.json";
 import nowData from "@/data/now.json";
 import testimonialsData from "@/data/testimonials.json";
+import footerData from "@/data/footer.json";
 import type {
   Profile,
   MarqueeData,
@@ -13,6 +14,7 @@ import type {
   ProjectsData,
   NowData,
   TestimonialsData,
+  FooterData,
 } from "@/lib/types";
 
 export const profile = profileData as Profile;
@@ -22,6 +24,7 @@ export const experience = experienceData as ExperienceData;
 export const projects = projectsData as ProjectsData;
 export const now = nowData as NowData;
 export const testimonials = testimonialsData as TestimonialsData;
+export const footerLinks = footerData as FooterData;
 
 export const featuredProjects = projects.projects.filter((p) => p.featured);
 

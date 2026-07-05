@@ -1,0 +1,32 @@
+{
+  "columns": [
+    {
+      "title": "Navigate",
+      "links": [
+        { "label": "Home", "href": "/#top" },
+        { "label": "About", "href": "/#about" },
+        { "label": "Skills", "href": "/#skills" },
+        { "label": "Work", "href": "/#work" },
+        { "label": "Contact", "href": "/#contact" }
+      ]
+    },
+    {
+      "title": "Projects",
+      "links": [
+        { "label": "All Projects", "href": "/projects" },
+        { "label": "Neural Canvas", "href": "/projects/neural-canvas" },
+        { "label": "Edge Vision", "href": "/projects/edge-vision" },
+        { "label": "Lex Graph", "href": "/projects/lex-graph" }
+      ]
+    },
+    {
+      "title": "Elsewhere",
+      "links": [
+        { "label": "GitHub", "href": "https://github.com/lejxz", "external": true },
+        { "label": "LinkedIn", "href": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/", "external": true },
+        { "label": "Instagram", "href": "https://www.instagram.com/lejxz.exe/", "external": true },
+        { "label": "Email", "href": "mailto:lejxz.dev@gmail.com", "external": true }
+      ]
+    }
+  ]
+}

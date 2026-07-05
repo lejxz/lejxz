@@ -206,6 +206,21 @@
     background-clip: text;
     color: transparent;
   }
+  .text-gradient-shimmer {
+    background: linear-gradient(
+      100deg,
+      #d8dee6 0%,
+      #5eead4 30%,
+      #a78bfa 50%,
+      #5eead4 70%,
+      #d8dee6 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
   .mask-fade-x {
     -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
@@ -226,6 +241,11 @@
 }
 .animate-orb-1 { animation: orb-drift-1 18s ease-in-out infinite; }
 .animate-orb-2 { animation: orb-drift-2 22s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
 
 @keyframes marquee-x {
   from { transform: translate3d(0, 0, 0); }

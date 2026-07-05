@@ -64,7 +64,7 @@ export function Hero() {
           </div>
           <p className="font-mono text-sm text-teal">{"// "}{profile.penname}</p>
           <h1 className="mt-2 font-mono text-[15vw] font-bold leading-[0.9] tracking-tighter sm:text-[12vw] md:text-[9rem] lg:text-[11rem]">
-            <span className="text-gradient">Lejuene</span>
+            <span className="text-gradient-shimmer">Lejuene</span>
             <br />
             <span className="text-foreground">Delantar</span>
           </h1>

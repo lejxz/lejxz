@@ -1,9 +1,17 @@
 "use client";
 
+import { Code2, BrainCircuit, Layout, Wrench } from "lucide-react";
 import { skills } from "@/lib/data";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal, staggerContainer, staggerItem } from "@/components/motion/reveal";
 import { motion } from "framer-motion";
+
+const groupIcon: Record<string, React.ComponentType<{ className?: string }>> = {
+  languages: Code2,
+  ai: BrainCircuit,
+  frontend: Layout,
+  tooling: Wrench,
+};
 
 export function Skills() {
   return (
@@ -25,7 +33,13 @@ export function Skills() {
               className="flex flex-col rounded-xl border border-line bg-surface/50 p-5 transition-colors hover:border-teal/30"
             >
               <div className="flex items-center justify-between border-b border-line pb-3">
-                <h3 className="font-mono text-sm font-bold uppercase tracking-wider text-foreground">
+                <h3 className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-wider text-foreground">
+                  {(() => {
+                    const Icon = groupIcon[group.key];
+                    return Icon ? (
+                      <Icon className="h-4 w-4 text-teal" />
+                    ) : null;
+                  })()}
                   {group.title}
                 </h3>
                 <span className="font-mono text-[10px] text-dim">

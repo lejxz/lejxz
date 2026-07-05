@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Instagram, Linkedin, Mail, ArrowUp } from "lucide-react";
-import { profile } from "@/lib/data";
+import { Github, Instagram, Linkedin, Mail, ArrowUp, ArrowUpRight } from "lucide-react";
+import { profile, footerLinks } from "@/lib/data";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -19,8 +19,8 @@ export function Footer() {
 
   return (
     <footer className="mt-auto border-t border-line bg-background">
-      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
-        <p className="mb-8 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-dim/60 md:block">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8">
+        <p className="mb-10 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-dim/60 md:block">
           <span className="text-teal/60">[tip]</span> press{" "}
           <kbd className="rounded border border-line px-1.5 py-0.5 text-foreground/70">⌘K</kbd>{" "}
           to search ·{" "}
@@ -29,15 +29,16 @@ export function Footer() {
           <kbd className="rounded border border-line px-1.5 py-0.5 text-foreground/70">g</kbd>{" "}
           then a letter to jump
         </p>
-        <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+
+        <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(3,1fr)]">
           <div>
             <p className="font-mono text-sm font-bold tracking-tight">
               lejxz<span className="text-dim">.dev</span>
             </p>
-            <p className="mt-1 font-mono text-xs text-dim">
-              © {year} {profile.name}. All rights reserved.
+            <p className="mt-2 max-w-xs text-pretty text-xs text-dim">
+              {profile.tagline}
             </p>
-            <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-dim/70">
+            <p className="mt-4 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-dim/70">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/60" style={{ animationDuration: "2s" }} />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal" />
@@ -45,6 +46,44 @@ export function Footer() {
               all systems operational
             </p>
           </div>
+
+          {footerLinks.columns.map((col) => (
+            <div key={col.title}>
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                {col.title}
+              </p>
+              <ul className="space-y-2">
+                {col.links.map((link) => (
+                  <li key={`${col.title}-${link.label}`}>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group inline-flex items-center gap-1 text-sm text-foreground/80 transition-colors hover:text-teal"
+                      >
+                        {link.label}
+                        <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-foreground/80 transition-colors hover:text-teal"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-col items-start justify-between gap-6 border-t border-line pt-6 md:flex-row md:items-center">
+          <p className="font-mono text-xs text-dim">
+            © {year} {profile.name}. All rights reserved.
+          </p>
 
           <div className="flex items-center gap-2">
             {socials.map((s) => (

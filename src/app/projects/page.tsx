@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, Search, X } from "lucide-react";
 import { projects } from "@/lib/data";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 export default function ProjectsPage() {
   const [category, setCategory] = useState<string>("All");
   const [activeTags, setActiveTags] = useState<string[]>([]);
+  const [query, setQuery] = useState<string>("");
 
   const categories = useMemo(() => {
     const set = new Set(projects.projects.map((p) => p.category));
@@ -27,14 +28,21 @@ export default function ProjectsPage() {
   }, []);
 
   const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
     return projects.projects.filter((p) => {
       const catOk = category === "All" || p.category === category;
       const tagOk =
         activeTags.length === 0 ||
         activeTags.every((t) => p.tags.includes(t));
-      return catOk && tagOk;
+      const qOk =
+        q === "" ||
+        p.title.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.summary.toLowerCase().includes(q) ||
+        p.tags.some((t) => t.toLowerCase().includes(q));
+      return catOk && tagOk && qOk;
     });
-  }, [category, activeTags]);
+  }, [category, activeTags, query]);
 
   function toggleTag(tag: string) {
     setActiveTags((prev) =>
@@ -45,6 +53,7 @@ export default function ProjectsPage() {
   function clearFilters() {
     setCategory("All");
     setActiveTags([]);
+    setQuery("");
   }
 
   // Scroll to a project anchor when arriving via hash (e.g. from the command palette).
@@ -60,7 +69,7 @@ export default function ProjectsPage() {
     }
   }, [category, activeTags]);
 
-  const hasFilters = category !== "All" || activeTags.length > 0;
+  const hasFilters = category !== "All" || activeTags.length > 0 || query.trim() !== "";
 
   return (
     <>
@@ -140,6 +149,27 @@ export default function ProjectsPage() {
           </Reveal>
 
           <Reveal delay={0.1} className="mt-10 space-y-5 border-b border-line pb-6">
+            <div className="relative max-w-sm">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search projects, tags, categories…"
+                aria-label="Search projects"
+                className="w-full rounded-lg border border-line bg-surface/40 py-2.5 pl-10 pr-9 font-mono text-sm text-foreground placeholder:text-dim/70 focus:border-teal/50 focus:outline-none focus:ring-1 focus:ring-teal/30"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-dim transition-colors hover:text-teal"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
             <div className="flex flex-wrap items-center gap-2">
               <span className="mr-1 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
                 Category
