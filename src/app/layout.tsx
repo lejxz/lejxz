@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SkipLink } from "@/components/site/skip-link";
 import { CustomCursor } from "@/components/site/custom-cursor";
+import { BackToTop } from "@/components/site/back-to-top";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -57,6 +58,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground antialiased">
         <SkipLink />
         <CustomCursor />
+        <BackToTop />
         {children}
         <Toaster />
       </body>

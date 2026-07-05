@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
-import { projects, getProject, profile } from "@/lib/data";
+import { projects, getProject, getRelatedProjects, profile } from "@/lib/data";
+import { asset } from "@/lib/asset";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { GrainOverlay } from "@/components/site/grain-overlay";
+import { ReadingProgress } from "@/components/site/reading-progress";
 import { Reveal } from "@/components/motion/reveal";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -58,10 +60,12 @@ export default async function ProjectCaseStudy({
 
   const idx = projects.projects.findIndex((p) => p.id === id);
   const next = projects.projects[(idx + 1) % projects.projects.length];
+  const related = getRelatedProjects(id, 3);
 
   return (
     <>
       <GrainOverlay />
+      <ReadingProgress />
       <Navbar />
       <main className="relative z-10 flex min-h-screen flex-col">
         <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-30" />
@@ -97,6 +101,21 @@ export default async function ProjectCaseStudy({
               {project.summary}
             </p>
           </Reveal>
+
+          {project.cover && (
+            <Reveal delay={0.08} className="mt-8">
+              <div className="group relative overflow-hidden rounded-xl border border-line">
+                <div className={cn("absolute inset-x-0 top-0 h-px z-10", accentBar[project.accent])} />
+                <img
+                  src={asset(project.cover)}
+                  alt={`${project.title} cover`}
+                  className="aspect-[16/9] w-full object-cover opacity-80 transition-all duration-700 group-hover:opacity-100 group-hover:scale-[1.02]"
+                  loading="eager"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+              </div>
+            </Reveal>
+          )}
 
           {(project.role || project.timeline) && (
             <Reveal delay={0.1} className="mt-8">
@@ -220,6 +239,73 @@ export default async function ProjectCaseStudy({
                     {link.label}
                   </a>
                 ))}
+              </div>
+            </Reveal>
+          )}
+
+          {project.gallery && project.gallery.length > 0 && (
+            <Reveal delay={0.18} className="mt-12">
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                Gallery
+              </p>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {project.gallery.map((g, i) => (
+                  <figure
+                    key={`${g.caption}-${i}`}
+                    className="group relative overflow-hidden rounded-lg border border-line bg-surface/40"
+                  >
+                    <img
+                      src={asset(g.src)}
+                      alt={g.caption}
+                      loading="lazy"
+                      className="aspect-[4/3] w-full object-cover opacity-70 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105"
+                    />
+                    <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent p-2.5">
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/80">
+                        {g.caption}
+                      </span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </Reveal>
+          )}
+
+          {related.length > 0 && (
+            <Reveal delay={0.2} className="mt-16">
+              <div className="border-t border-line pt-8">
+                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                  Related
+                </p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {related.map((r) => (
+                    <Link
+                      key={r.id}
+                      href={`/projects/${r.id}`}
+                      className="group relative flex flex-col justify-between rounded-xl border border-line bg-surface/40 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-teal/40"
+                    >
+                      <div>
+                        <p
+                          className={cn(
+                            "font-mono text-[10px] uppercase tracking-wider",
+                            accentText[r.accent]
+                          )}
+                        >
+                          {r.category}
+                        </p>
+                        <h3 className="mt-1.5 font-mono text-base font-bold text-foreground transition-colors group-hover:text-teal">
+                          {r.title}
+                        </h3>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="font-mono text-[10px] text-dim">
+                          {r.year}
+                        </span>
+                        <ArrowRight className="h-3.5 w-3.5 text-dim transition-all group-hover:translate-x-0.5 group-hover:text-teal" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </Reveal>
           )}

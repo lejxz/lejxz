@@ -20,6 +20,7 @@ import { ThemeToggle } from "@/components/site/theme-toggle";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
@@ -29,16 +30,35 @@ export function Navbar() {
   });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    let last = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(y > 16);
+          // hide on scroll-down (past threshold), show on scroll-up
+          if (y > last && y > 240 && !open) {
+            setHidden(true);
+          } else {
+            setHidden(false);
+          }
+          last = y;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [open]);
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        hidden && "-translate-y-full",
         scrolled
           ? "border-b border-line bg-background/70 backdrop-blur-xl"
           : "border-b border-transparent"

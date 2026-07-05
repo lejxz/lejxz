@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ExternalLink, ArrowRight } from "lucide-react";
 import type { Project } from "@/lib/types";
+import { asset } from "@/lib/asset";
 import {
   Dialog,
   DialogContent,
@@ -64,6 +65,18 @@ export function ProjectCard({
             accentBar[project.accent]
           )}
         />
+        {project.cover && (
+          <div className="relative -mx-6 -mt-6 mb-5 h-32 overflow-hidden border-b border-line">
+            <img
+              src={asset(project.cover)}
+              alt=""
+              aria-hidden
+              loading="lazy"
+              className="h-full w-full object-cover opacity-50 transition-all duration-500 group-hover:opacity-70 group-hover:scale-105"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <span className="font-mono text-xs text-dim">
             {String(index + 1).padStart(2, "0")}

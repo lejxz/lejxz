@@ -26,6 +26,22 @@ export function getProject(id: string) {
   return projects.projects.find((p) => p.id === id);
 }
 
+export function getRelatedProjects(id: string, limit = 3) {
+  const current = getProject(id);
+  if (!current) return [];
+  const others = projects.projects.filter((p) => p.id !== id);
+  const sameCategory = others.filter((p) => p.category === current.category);
+  const sameTag = others.filter(
+    (p) =>
+      p.category !== current.category &&
+      p.tags.some((t) => current.tags.includes(t))
+  );
+  const rest = others.filter(
+    (p) => p.category !== current.category && !sameTag.includes(p)
+  );
+  return [...sameCategory, ...sameTag, ...rest].slice(0, limit);
+}
+
 export const nav = [
   { label: "Home", href: "/#top" },
   { label: "About", href: "/#about" },

@@ -67,6 +67,11 @@ export interface ProjectHighlight {
   value: string;
 }
 
+export interface ProjectGalleryItem {
+  caption: string;
+  src: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -82,6 +87,8 @@ export interface Project {
   links: ProjectLink[];
   featured: boolean;
   accent: "teal" | "violet";
+  gallery?: ProjectGalleryItem[];
+  cover?: string;
 }
 
 export interface SkillsData {
