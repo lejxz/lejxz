@@ -1,0 +1,26 @@
+{
+  "name": "Lejuene Delantar",
+  "penname": "lejxz",
+  "role": "Computer Science Student",
+  "field": "Artificial Intelligence",
+  "location": "Philippines",
+  "availability": "Open to opportunities",
+  "email": "lejxz.dev@gmail.com",
+  "socials": {
+    "github": "https://github.com/lejxz",
+    "instagram": "https://www.instagram.com/lejxz.exe/",
+    "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/",
+    "email": "mailto:lejxz.dev@gmail.com"
+  },
+  "tagline": "Building intelligent systems at the edge of code and cognition.",
+  "bio": [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  ],
+  "stats": [
+    { "label": "Focus", "value": "AI / ML" },
+    { "label": "Status", "value": "Student" },
+    { "label": "Stack", "value": "Python · TS" },
+    { "label": "Based", "value": "PH" }
+  ]
+}

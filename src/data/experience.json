@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "id": "exp-1",
+      "role": "Lorem Ipsum Developer",
+      "org": "Acme Labs",
+      "period": "2024 — Present",
+      "location": "Remote",
+      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "bullets": [
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum."
+      ],
+      "tags": ["Python", "PyTorch", "MLOps"]
+    },
+    {
+      "id": "exp-2",
+      "role": "Research Assistant",
+      "org": "University AI Lab",
+      "period": "2023 — 2024",
+      "location": "On-campus",
+      "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+      "bullets": [
+        "Deserunt mollit anim id est laborum.",
+        "Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet."
+      ],
+      "tags": ["Research", "NLP", "Transformers"]
+    },
+    {
+      "id": "exp-3",
+      "role": "Frontend Intern",
+      "org": "Studio Vert",
+      "period": "2023",
+      "location": "Remote",
+      "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "bullets": [
+        "Sed quia consequuntur magni dolores eos qui ratione.",
+        "Neque porro quisquam est, dolorem ipsum.",
+        "Quis autem vel eum iure reprehenderit qui in ea voluptate."
+      ],
+      "tags": ["React", "TypeScript", "UI"]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<svg width="168" height="40" viewBox="0 0 168 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0.5" y="4.5" width="31" height="31" rx="7" fill="#0b0d10" stroke="#5eead4" stroke-opacity="0.35"/>
+  <path d="M9 13 L9 25 L17 25" stroke="#5eead4" stroke-width="2.2" stroke-linecap="square" fill="none"/>
+  <path d="M19 17 L24 25 L14 25" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+  <circle cx="23" cy="13" r="1.6" fill="#5eead4"/>
+  <text x="42" y="27" font-family="'Space Mono', ui-monospace, monospace" font-size="18" font-weight="700" fill="#d8dee6" letter-spacing="0.5">lejxz</text>
+  <text x="112" y="27" font-family="'Space Mono', ui-monospace, monospace" font-size="18" font-weight="400" fill="#6b7480" letter-spacing="0.5">.dev</text>
+</svg>

@@ -1,0 +1,89 @@
+export interface Socials {
+  github?: string;
+  instagram?: string;
+  linkedin?: string;
+  email?: string;
+}
+
+export interface Stat {
+  label: string;
+  value: string;
+}
+
+export interface Profile {
+  name: string;
+  penname: string;
+  role: string;
+  field: string;
+  location: string;
+  availability: string;
+  email: string;
+  socials: Socials;
+  tagline: string;
+  bio: string[];
+  stats: Stat[];
+}
+
+export interface MarqueeData {
+  rows: MarqueeRow[];
+}
+
+export interface MarqueeRow {
+  direction: "left" | "right";
+  duration: number;
+  items: string[];
+}
+
+export interface SkillGroup {
+  title: string;
+  key: string;
+  items: SkillItem[];
+}
+
+export interface SkillItem {
+  name: string;
+  level?: number;
+  note?: string;
+}
+
+export interface ExperienceItem {
+  id: string;
+  role: string;
+  org: string;
+  period: string;
+  location: string;
+  summary: string;
+  bullets: string[];
+  tags: string[];
+}
+
+export interface ProjectLink {
+  label: string;
+  url: string;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  category: string;
+  year: string;
+  status: "shipped" | "wip" | "archived";
+  summary: string;
+  description: string[];
+  tags: string[];
+  links: ProjectLink[];
+  featured: boolean;
+  accent: "teal" | "violet";
+}
+
+export interface SkillsData {
+  groups: SkillGroup[];
+}
+
+export interface ExperienceData {
+  items: ExperienceItem[];
+}
+
+export interface ProjectsData {
+  projects: Project[];
+}

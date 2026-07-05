@@ -1,0 +1,49 @@
+{
+  "groups": [
+    {
+      "title": "Languages",
+      "key": "languages",
+      "items": [
+        { "name": "Python", "level": 90 },
+        { "name": "TypeScript", "level": 82 },
+        { "name": "C++", "level": 68 },
+        { "name": "Rust", "level": 55 },
+        { "name": "SQL", "level": 74 }
+      ]
+    },
+    {
+      "title": "AI / ML",
+      "key": "ai",
+      "items": [
+        { "name": "PyTorch", "level": 86 },
+        { "name": "TensorFlow", "level": 70 },
+        { "name": "scikit-learn", "level": 84 },
+        { "name": "Hugging Face", "level": 78 },
+        { "name": "OpenCV", "level": 72 },
+        { "name": "LangChain", "level": 66 }
+      ]
+    },
+    {
+      "title": "Frontend",
+      "key": "frontend",
+      "items": [
+        { "name": "React", "level": 85 },
+        { "name": "Next.js", "level": 82 },
+        { "name": "Three.js / R3F", "level": 64 },
+        { "name": "Tailwind CSS", "level": 88 },
+        { "name": "Framer Motion", "level": 76 }
+      ]
+    },
+    {
+      "title": "Tooling",
+      "key": "tooling",
+      "items": [
+        { "name": "Docker", "level": 72 },
+        { "name": "Git", "level": 90 },
+        { "name": "Linux", "level": 80 },
+        { "name": "FastAPI", "level": 78 },
+        { "name": "PostgreSQL", "level": 68 }
+      ]
+    }
+  ]
+}

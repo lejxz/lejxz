@@ -1,0 +1,16 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0b0d10"/>
+  <g opacity="0.06">
+    <path d="M0 0 H1200 V630 H0 Z" stroke="#d8dee6" stroke-width="1" fill="none"/>
+    <path d="M0 78.75 H1200 M0 157.5 H1200 M0 236.25 H1200 M0 315 H1200 M0 393.75 H1200 M0 472.5 H1200 M0 551.25 H1200" stroke="#d8dee6" stroke-width="1"/>
+    <path d="M150 0 V630 M300 0 V630 M450 0 V630 M600 0 V630 M750 0 V630 M900 0 V630 M1050 0 V630" stroke="#d8dee6" stroke-width="1"/>
+  </g>
+  <rect x="100" y="120" width="80" height="80" rx="16" fill="#0b0d10" stroke="#5eead4" stroke-opacity="0.5" stroke-width="2"/>
+  <path d="M122 146 L122 178 L142 178" stroke="#5eead4" stroke-width="5" stroke-linecap="square" fill="none"/>
+  <path d="M148 156 L160 178 L136 178" stroke="#a78bfa" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+  <circle cx="158" cy="146" r="4" fill="#5eead4"/>
+  <text x="100" y="320" font-family="'Space Mono', monospace" font-size="84" font-weight="700" fill="#d8dee6" letter-spacing="-2">lejxz</text>
+  <text x="100" y="380" font-family="'Space Mono', monospace" font-size="28" font-weight="400" fill="#6b7480" letter-spacing="2">LEJUENE DELANTAR</text>
+  <text x="100" y="450" font-family="'Inter', sans-serif" font-size="30" font-weight="400" fill="#5eead4">Computer Science — Artificial Intelligence</text>
+  <text x="100" y="540" font-family="'Space Mono', monospace" font-size="20" fill="#6b7480" letter-spacing="3">// PORTFOLIO</text>
+</svg>

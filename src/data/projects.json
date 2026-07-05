@@ -1,0 +1,113 @@
+{
+  "projects": [
+    {
+      "id": "neural-canvas",
+      "title": "Neural Canvas",
+      "category": "Generative AI",
+      "year": "2025",
+      "status": "shipped",
+      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "description": [
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."
+      ],
+      "tags": ["Diffusion", "PyTorch", "FastAPI"],
+      "links": [
+        { "label": "Source", "url": "https://github.com/lejxz" },
+        { "label": "Demo", "url": "https://github.com/lejxz" }
+      ],
+      "featured": true,
+      "accent": "teal"
+    },
+    {
+      "id": "edge-vision",
+      "title": "Edge Vision",
+      "category": "Computer Vision",
+      "year": "2025",
+      "status": "wip",
+      "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+      "description": [
+        "Deserunt mollit anim id est laborum. Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur."
+      ],
+      "tags": ["OpenCV", "TensorRT", "C++"],
+      "links": [
+        { "label": "Source", "url": "https://github.com/lejxz" }
+      ],
+      "featured": true,
+      "accent": "violet"
+    },
+    {
+      "id": "lex-graph",
+      "title": "Lex Graph",
+      "category": "NLP",
+      "year": "2024",
+      "status": "shipped",
+      "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+      "description": [
+        "Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
+        "Neque porro quisquam est, dolorem ipsum quia dolor sit amet."
+      ],
+      "tags": ["Transformers", "LangChain", "Vector DB"],
+      "links": [
+        { "label": "Source", "url": "https://github.com/lejxz" }
+      ],
+      "featured": true,
+      "accent": "teal"
+    },
+    {
+      "id": "rl-maze",
+      "title": "RL Maze",
+      "category": "Reinforcement Learning",
+      "year": "2024",
+      "status": "archived",
+      "summary": "Quis autem vel eum iure reprehenderit qui in ea voluptate.",
+      "description": [
+        "Velit esse quam nihil molestiae consequatur, vel illum qui dolorem.",
+        "Eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus."
+      ],
+      "tags": ["PPO", "Gym", "Python"],
+      "links": [
+        { "label": "Source", "url": "https://github.com/lejxz" }
+      ],
+      "featured": false,
+      "accent": "violet"
+    },
+    {
+      "id": "data-forge",
+      "title": "Data Forge",
+      "category": "MLOps",
+      "year": "2023",
+      "status": "shipped",
+      "summary": "Temporibus autem quibusdam et aut officiis debitis aut rerum.",
+      "description": [
+        "Necessitatibus saepe eveniet ut et voluptates repudiandae sint.",
+        "Et molestiae non recusandae. Itaque earum rerum hic tenetur sapiente."
+      ],
+      "tags": ["Docker", "Airflow", "PostgreSQL"],
+      "links": [
+        { "label": "Source", "url": "https://github.com/lejxz" }
+      ],
+      "featured": false,
+      "accent": "teal"
+    },
+    {
+      "id": "synth-ui",
+      "title": "Synth UI",
+      "category": "Frontend",
+      "year": "2023",
+      "status": "shipped",
+      "summary": "Delectus, ut aut reiciendis voluptatibus maiores alias consequatur.",
+      "description": [
+        "Aut perferendis doloribus asperiores repellat. Temporibus quibusdam.",
+        "Officiis debitis aut rerum necessitatibus saepe eveniet."
+      ],
+      "tags": ["React", "Three.js", "WebGL"],
+      "links": [
+        { "label": "Source", "url": "https://github.com/lejxz" }
+      ],
+      "featured": false,
+      "accent": "violet"
+    }
+  ]
+}

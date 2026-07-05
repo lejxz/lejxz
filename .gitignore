@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+/build/
+
+# testing
+/coverage
+
+# misc
+.DS_Store
+*.pem
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# env
+.env*
+!.env.example
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# vercel
+.vercel
+
+# editor / os
+.idea/
+.vscode/
+*.swp
+
+# ── sandbox / infra (not part of the portfolio) ──
+.zscripts/
+.z-ai-config/
+.claude/
+Caddyfile
+db/
+prisma/
+examples/
+mini-services/
+download/
+skills/
+src/lib/db.ts
+worklog.md
