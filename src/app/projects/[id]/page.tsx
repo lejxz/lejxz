@@ -9,6 +9,7 @@ import { Footer } from "@/components/site/footer";
 import { GrainOverlay } from "@/components/site/grain-overlay";
 import { ReadingProgress } from "@/components/site/reading-progress";
 import { CaseStudyToc } from "@/components/site/case-study-toc";
+import { CopyLinkButton } from "@/components/site/copy-link";
 import { Reveal } from "@/components/motion/reveal";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -86,13 +87,16 @@ export default async function ProjectCaseStudy({
           <CaseStudyToc items={tocItems} />
           <article className="min-w-0 flex-1">
           <Reveal>
-            <Link
-              href="/projects"
-              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:text-teal"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              All Projects
-            </Link>
+            <div className="flex items-center justify-between gap-4">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:text-teal"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                All Projects
+              </Link>
+              <CopyLinkButton />
+            </div>
           </Reveal>
 
           <Reveal delay={0.05} className="mt-10">

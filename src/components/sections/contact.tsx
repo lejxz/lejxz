@@ -27,8 +27,10 @@ export function Contact() {
         <SectionHeading index="05" kicker="Contact" title="Get in touch" />
 
         <Reveal delay={0.05} className="mt-12">
-          <div className="relative overflow-hidden rounded-2xl border border-line bg-surface/40 p-8 sm:p-12">
+          <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface/40 p-8 transition-colors hover:border-teal/30 sm:p-12">
             <div className="pointer-events-none absolute inset-0 bg-dots opacity-40" />
+            <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-teal/10 blur-[100px] transition-opacity duration-500 group-hover:opacity-70" />
+            <div className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-violet/10 blur-[100px] transition-opacity duration-500 group-hover:opacity-70" />
             <div className="relative flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-xl">
                 <p className="font-mono text-sm text-teal">{"// let's talk"}</p>
@@ -46,14 +48,14 @@ export function Contact() {
                 <Magnetic strength={0.25}>
                   <a
                     href={`mailto:${profile.email}`}
-                    className="group inline-flex items-center gap-3 rounded-full bg-teal px-7 py-4 font-mono text-sm font-bold text-primary-foreground transition-all hover:glow-teal"
+                    className="group/btn inline-flex items-center gap-3 rounded-full bg-teal px-7 py-4 font-mono text-sm font-bold text-primary-foreground transition-all hover:glow-teal"
                   >
                     {profile.email}
-                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                   </a>
                 </Magnetic>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {socials.map((s) => (
                     <a
                       key={s.label}
@@ -61,9 +63,12 @@ export function Contact() {
                       target="_blank"
                       rel="noreferrer"
                       aria-label={s.label}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-dim transition-colors hover:border-teal/50 hover:text-teal"
+                      className="group/soc flex h-11 items-center gap-2 rounded-full border border-line pl-3 pr-4 text-dim transition-colors hover:border-teal/50 hover:text-teal"
                     >
                       <s.icon className="h-4 w-4" />
+                      <span className="font-mono text-xs uppercase tracking-wider">
+                        {s.label}
+                      </span>
                     </a>
                   ))}
                 </div>

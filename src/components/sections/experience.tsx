@@ -28,8 +28,9 @@ function ExperienceRow({ item, index }: { item: ExperienceItemType; index: numbe
         className="relative grid gap-4 border-line py-7 md:grid-cols-[180px_1fr_auto] md:gap-8"
       >
         <div className="flex items-start gap-3">
-          <span className="mt-1 flex h-2 w-2 shrink-0 items-center justify-center">
-            <span className="h-2 w-2 rounded-full bg-teal" />
+          <span className="relative mt-1 flex h-3 w-3 shrink-0 items-center justify-center">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/30" style={{ animationDuration: "2.5s" }} />
+            <span className="relative h-2 w-2 rounded-full bg-teal ring-4 ring-teal/10" />
           </span>
           <span className="font-mono text-xs uppercase tracking-wider text-dim">
             {item.period}

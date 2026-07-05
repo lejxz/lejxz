@@ -93,6 +93,50 @@ export default function ProjectsPage() {
               of {projects.projects.length} entries ·{" "}
               {categories.length - 1} categories · {allTags.length} tags
             </p>
+
+            <div className="mt-5 flex items-center gap-4">
+              <div className="flex h-1.5 w-40 overflow-hidden rounded-full bg-line">
+                {(["shipped", "wip", "archived"] as const).map((s) => {
+                  const count = projects.projects.filter(
+                    (p) => p.status === s
+                  ).length;
+                  const pct = (count / projects.projects.length) * 100;
+                  const color =
+                    s === "shipped"
+                      ? "bg-teal"
+                      : s === "wip"
+                        ? "bg-violet"
+                        : "bg-dim/50";
+                  return pct > 0 ? (
+                    <div
+                      key={s}
+                      className={color}
+                      style={{ width: `${pct}%` }}
+                      title={`${s}: ${count}`}
+                    />
+                  ) : null;
+                })}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-wider text-dim">
+                {(["shipped", "wip", "archived"] as const).map((s) => {
+                  const count = projects.projects.filter(
+                    (p) => p.status === s
+                  ).length;
+                  const dot =
+                    s === "shipped"
+                      ? "bg-teal"
+                      : s === "wip"
+                        ? "bg-violet"
+                        : "bg-dim/50";
+                  return (
+                    <span key={s} className="flex items-center gap-1.5">
+                      <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                      {s} {count}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
           </Reveal>
 
           <Reveal delay={0.1} className="mt-10 space-y-5 border-b border-line pb-6">
