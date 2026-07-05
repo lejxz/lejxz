@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowUpRight, MapPin } from "lucide-react";
 import Link from "next/link";
-import { recentExperience, experience } from "@/lib/data";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowUpRight, MapPin } from "lucide-react";
+import { experience } from "@/lib/data";
 import type { ExperienceItem as ExperienceItemType } from "@/lib/types";
-import { SectionHeading } from "@/components/motion/section-heading";
+import { Navbar } from "@/components/site/navbar";
+import { Footer } from "@/components/site/footer";
+import { GrainOverlay } from "@/components/site/grain-overlay";
 import { Reveal } from "@/components/motion/reveal";
 import {
   Dialog,
@@ -32,7 +34,6 @@ function ExperienceEntry({
     <>
       <Reveal delay={0.04 * index}>
         <div className="relative grid md:grid-cols-2">
-          {/* Card — overlaps the center line by ~20% on desktop */}
           <div
             className={cn(
               "relative pl-10 md:pl-0",
@@ -41,7 +42,6 @@ function ExperienceEntry({
                 : "md:col-start-1 md:col-end-3 md:ml-[50%] md:pl-[10%]"
             )}
           >
-            {/* Dot — sits on the center line, connects to card border */}
             <div className="absolute left-3 top-6 z-10 -translate-x-1/2 md:left-[50%] md:top-6">
               <span className="relative flex h-3 w-3 items-center justify-center">
                 <span
@@ -145,39 +145,50 @@ function ExperienceEntry({
   );
 }
 
-export function Experience() {
-  const hasMore = experience.items.length > recentExperience.length;
-
+export default function ExperiencePage() {
   return (
-    <section id="experience" className="relative scroll-mt-20 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="03" kicker="Timeline" title="Experience" />
+    <>
+      <GrainOverlay />
+      <Navbar />
+      <main className="relative z-10 flex min-h-screen flex-col">
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-30" />
 
-        <div className="mt-12">
-          <div className="relative">
-            {/* Center vertical line (desktop) / left line (mobile) */}
-            <div className="absolute left-3 top-0 h-full w-px bg-line md:left-1/2 md:-translate-x-1/2" />
+        <section className="mx-auto w-full max-w-7xl flex-1 px-5 pt-28 sm:px-8 sm:pt-32">
+          <Reveal>
+            <Link
+              href="/#experience"
+              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:text-teal"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back
+            </Link>
 
-            <div className="space-y-8 py-2">
-              {recentExperience.map((item, i) => (
-                <ExperienceEntry key={item.id} item={item} index={i} />
-              ))}
+            <div className="mt-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-dim">
+              <span className="text-teal">/</span>
+              <span>Archive</span>
+            </div>
+            <h1 className="mt-3 font-mono text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              All Experience
+            </h1>
+            <p className="mt-4 max-w-xl text-dim">
+              {experience.items.length} entries — full timeline.
+            </p>
+          </Reveal>
+
+          <div className="mt-12">
+            <div className="relative">
+              <div className="absolute left-3 top-0 h-full w-px bg-line md:left-1/2 md:-translate-x-1/2" />
+              <div className="space-y-8 py-2">
+                {experience.items.map((item, i) => (
+                  <ExperienceEntry key={item.id} item={item} index={i} />
+                ))}
+              </div>
             </div>
           </div>
+        </section>
 
-          {hasMore && (
-            <Reveal delay={0.1} className="mt-10 flex justify-center">
-              <Link
-                href="/experience"
-                className="group inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-dim transition-colors hover:border-teal/50 hover:text-teal"
-              >
-                View all {experience.items.length} entries
-                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-            </Reveal>
-          )}
-        </div>
-      </div>
-    </section>
+        <Footer />
+      </main>
+    </>
   );
 }

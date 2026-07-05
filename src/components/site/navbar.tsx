@@ -56,25 +56,27 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "py-2" : "py-4"
-      )}
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div
-          className={cn(
-            "flex items-center justify-between transition-all duration-300",
-            scrolled
-              ? "rounded-2xl border border-line bg-background/70 px-4 py-2.5 shadow-lg shadow-black/20 backdrop-blur-xl"
-              : "rounded-none border border-transparent px-1 py-1"
-          )}
-        >
-        <motion.div
-          className="absolute inset-x-0 bottom-0 h-px origin-left bg-teal"
-          style={{ scaleX: progress }}
-        />
+    <>
+      {/* Scroll progress bar — decoupled from navbar container, full-width, above navbar */}
+      <motion.div
+        className="fixed inset-x-0 top-0 z-[55] h-0.5 origin-left bg-gradient-to-r from-teal via-teal to-violet"
+        style={{ scaleX: progress }}
+      />
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 transition-all duration-500",
+          scrolled ? "py-2" : "py-4"
+        )}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div
+            className={cn(
+              "flex items-center justify-between transition-all duration-500",
+              scrolled
+                ? "rounded-2xl border border-line bg-background/70 px-4 py-2.5 shadow-lg shadow-black/20 backdrop-blur-xl"
+                : "rounded-none border border-transparent px-1 py-1"
+            )}
+          >
         <div className="flex items-center gap-2.5">
           <Link href="/#top" className="group flex items-center gap-2.5">
             <img
@@ -210,5 +212,6 @@ export function Navbar() {
         </div>
       </div>
     </header>
+    </>
   );
 }

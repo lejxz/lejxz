@@ -142,17 +142,6 @@ export interface NowData {
   items: NowItem[];
 }
 
-export interface Testimonial {
-  quote: string;
-  author: string;
-  role: string;
-  accent: "teal" | "violet";
-}
-
-export interface TestimonialsData {
-  items: Testimonial[];
-}
-
 export interface FooterLink {
   label: string;
   href: string;
@@ -181,16 +170,4 @@ export interface UsesCategory {
 
 export interface UsesData {
   categories: UsesCategory[];
-}
-
-export interface ChangelogEntry {
-  version: string;
-  date: string;
-  title: string;
-  changes: string[];
-  accent: "teal" | "violet";
-}
-
-export interface ChangelogData {
-  entries: ChangelogEntry[];
 }

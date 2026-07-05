@@ -4,10 +4,8 @@ import skillsData from "@/data/skills.json";
 import experienceData from "@/data/experience.json";
 import projectsData from "@/data/projects.json";
 import nowData from "@/data/now.json";
-import testimonialsData from "@/data/testimonials.json";
 import footerData from "@/data/footer.json";
 import usesData from "@/data/uses.json";
-import changelogData from "@/data/changelog.json";
 import type {
   Profile,
   MarqueeData,
@@ -15,10 +13,8 @@ import type {
   ExperienceData,
   ProjectsData,
   NowData,
-  TestimonialsData,
   FooterData,
   UsesData,
-  ChangelogData,
 } from "@/lib/types";
 
 export const profile = profileData as Profile;
@@ -27,10 +23,8 @@ export const skills = skillsData as SkillsData;
 export const experience = experienceData as ExperienceData;
 export const projects = projectsData as ProjectsData;
 export const now = nowData as NowData;
-export const testimonials = testimonialsData as TestimonialsData;
 export const footerLinks = footerData as FooterData;
 export const uses = usesData as UsesData;
-export const changelog = changelogData as ChangelogData;
 
 export const featuredProjects = projects.projects.filter((p) => p.featured);
 
@@ -61,3 +55,5 @@ export const nav = [
   { label: "Experience", href: "/#experience" },
   { label: "Projects", href: "/#work" },
 ];
+
+export const recentExperience = experience.items.slice(0, 5);

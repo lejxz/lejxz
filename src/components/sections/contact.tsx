@@ -36,8 +36,8 @@ export function Contact() {
         <div className="group relative overflow-hidden border-y border-line bg-surface/30 py-5">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
-          <div className="flex w-max animate-marquee items-center gap-8 group-hover:[animation-play-state:paused]" style={{ ["--marquee-duration" as string]: "45s" }}>
-            {[...TICKER_PHRASES, ...TICKER_PHRASES, ...TICKER_PHRASES].map((phrase, i) => (
+          <div className="flex w-max animate-marquee items-center gap-8 group-hover:[animation-play-state:paused]" style={{ ["--marquee-duration" as string]: "40s" }}>
+            {[...TICKER_PHRASES, ...TICKER_PHRASES].map((phrase, i) => (
               <span key={i} className="flex items-center gap-8">
                 <span className="font-mono text-2xl font-bold tracking-tight text-foreground/90 sm:text-3xl">
                   {phrase}
