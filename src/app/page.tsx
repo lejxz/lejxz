@@ -11,6 +11,7 @@ import { MarqueeBand } from "@/components/sections/marquee-band";
 import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
+import { Uses } from "@/components/sections/uses";
 import { Work } from "@/components/sections/work";
 import { NowSection } from "@/components/sections/now-section";
 import { Testimonials } from "@/components/sections/testimonials";
@@ -34,6 +35,8 @@ export default function Home() {
         <SkewDivider flip />
         <Experience />
         <SkewDivider />
+        <Uses />
+        <SkewDivider flip />
         <Work />
         <NowSection />
         <SkewDivider />

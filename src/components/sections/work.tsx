@@ -12,7 +12,7 @@ export function Work() {
     <section id="work" className="relative scroll-mt-20 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <SectionHeading index="04" kicker="Selected Work" title="Projects" />
+          <SectionHeading index="05" kicker="Selected Work" title="Projects" />
           <Reveal delay={0.1}>
             <Link
               href="/projects"

@@ -78,7 +78,7 @@ export function ProjectCard({
           </div>
         )}
         <div className="flex items-center justify-between">
-          <span className="font-mono text-xs text-dim">
+          <span className="inline-flex h-6 items-center rounded-md border border-line px-1.5 font-mono text-[10px] font-bold text-dim transition-colors group-hover:border-teal/40 group-hover:text-teal">
             {String(index + 1).padStart(2, "0")}
           </span>
           <div className="flex items-center gap-3">

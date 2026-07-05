@@ -147,3 +147,18 @@ export interface FooterColumn {
 export interface FooterData {
   columns: FooterColumn[];
 }
+
+export interface UsesItem {
+  name: string;
+  detail?: string;
+}
+
+export interface UsesCategory {
+  title: string;
+  key: string;
+  items: UsesItem[];
+}
+
+export interface UsesData {
+  categories: UsesCategory[];
+}

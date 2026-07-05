@@ -42,6 +42,10 @@ export function About() {
                 <span className="ml-3 font-mono text-[11px] text-dim">
                   ~/lejxz/profile
                 </span>
+                <span className="ml-auto flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-dim/60">
+                  <span className="h-1.5 w-1.5 rounded-full bg-teal" />
+                  connected
+                </span>
               </div>
               <div className="p-5 font-mono text-sm">
                 {specs.map((spec) => (
