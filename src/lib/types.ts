@@ -87,3 +87,14 @@ export interface ExperienceData {
 export interface ProjectsData {
   projects: Project[];
 }
+
+export interface NowItem {
+  label: string;
+  value: string;
+  detail?: string;
+}
+
+export interface NowData {
+  updated: string;
+  items: NowItem[];
+}

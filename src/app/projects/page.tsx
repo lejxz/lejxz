@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { projects } from "@/lib/data";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
+import { GrainOverlay } from "@/components/site/grain-overlay";
 import { ProjectCard } from "@/components/project/project-card";
 import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
@@ -23,8 +24,22 @@ export default function ProjectsPage() {
     return projects.projects.filter((p) => p.category === filter);
   }, [filter]);
 
+  // Scroll to a project anchor when arriving via hash (e.g. from the command palette).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const id = window.location.hash.replace("#", "");
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) {
+      requestAnimationFrame(() =>
+        el.scrollIntoView({ behavior: "smooth", block: "center" })
+      );
+    }
+  }, [filter]);
+
   return (
     <>
+      <GrainOverlay />
       <Navbar />
       <main className="relative z-10 flex min-h-screen flex-col">
         <div className="pointer-events-none fixed inset-0 -z-10 bg-grid opacity-40" />

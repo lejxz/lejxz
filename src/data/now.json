@@ -1,0 +1,9 @@
+{
+  "updated": "2025-07",
+  "items": [
+    { "label": "Learning", "value": "Distributed training systems", "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+    { "label": "Building", "value": "Real-time inference pipeline", "detail": "Sed do eiusmod tempor incididunt ut labore et dolore magna." },
+    { "label": "Reading", "value": "Designing ML Systems", "detail": "Ut enim ad minim veniam, quis nostrud exercitation." },
+    { "label": "Exploring", "value": "Diffusion + 3D scene synthesis", "detail": "Duis aute irure dolor in reprehenderit in voluptate." }
+  ]
+}

@@ -72,6 +72,22 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              window.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", metaKey: true })
+              );
+            }}
+            className="hidden items-center gap-2 rounded-md border border-line px-2.5 py-1.5 font-mono text-[11px] text-dim transition-colors hover:border-teal/50 hover:text-teal md:flex"
+            aria-label="Open command palette"
+          >
+            <span>Search</span>
+            <kbd className="rounded bg-surface px-1.5 py-0.5 text-[10px] tracking-wider">
+              ⌘K
+            </kbd>
+          </button>
+
           <Link href="/projects" className="hidden sm:block">
             <Button
               variant="outline"

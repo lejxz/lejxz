@@ -11,6 +11,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { TiltCard } from "@/components/motion/tilt-card";
 import { cn } from "@/lib/utils";
 
 const statusLabel: Record<Project["status"], string> = {
@@ -45,13 +46,17 @@ export function ProjectCard({
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className={cn(
-          "group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-line bg-surface/50 p-6 text-left transition-all duration-300 hover:-translate-y-1",
-          accentRing[project.accent]
-        )}
+      <TiltCard
+        id={project.id}
+        className="group relative h-full w-full [transform-style:preserve-3d]"
       >
+        <button
+          onClick={() => setOpen(true)}
+          className={cn(
+            "relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-line bg-surface/50 p-6 text-left transition-[border,transform] duration-300 hover:-translate-y-1",
+            accentRing[project.accent]
+          )}
+        >
         <div
           className={cn(
             "absolute inset-x-0 top-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
@@ -102,6 +107,7 @@ export function ProjectCard({
           </span>
         </div>
       </button>
+      </TiltCard>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[88vh] overflow-y-auto border-line bg-background p-0 sm:max-w-2xl">
