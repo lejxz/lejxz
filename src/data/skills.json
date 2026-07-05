@@ -1,58 +1,58 @@
 {
   "heading": "Skills & Tooling",
-  "subtitle": "A practical stack for research, training, and shipping models to production.",
+  "subtitle": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   "groups": [
     {
       "title": "Languages",
       "key": "languages",
       "icon": "code",
-      "blurb": "Core languages for research and systems work.",
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "items": [
-        { "name": "Python", "level": 90, "description": "Primary language for ML research, training pipelines, and backend services." },
-        { "name": "TypeScript", "level": 82, "description": "Frontend and full-stack web work with React & Next.js." },
-        { "name": "C++", "level": 68, "description": "Performance-critical inference and edge deployment." },
-        { "name": "Rust", "level": 55, "description": "Exploring systems-level tooling and safe performance." },
-        { "name": "SQL", "level": 74, "description": "PostgreSQL, SQLite, and analytics queries." }
+        { "name": "Python", "level": 90, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+        { "name": "TypeScript", "level": 82, "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." },
+        { "name": "C++", "level": 68, "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." },
+        { "name": "Rust", "level": 55, "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
+        { "name": "SQL", "level": 74, "description": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium." }
       ]
     },
     {
       "title": "AI / ML",
       "key": "ai",
       "icon": "brain",
-      "blurb": "Training, fine-tuning, and deploying deep learning models.",
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "items": [
-        { "name": "PyTorch", "level": 86, "description": "Main framework for research and custom architectures." },
-        { "name": "TensorFlow", "level": 70, "description": "Production graphs and TFLite edge export." },
-        { "name": "scikit-learn", "level": 84, "description": "Baselines, feature engineering, and evaluation." },
-        { "name": "Hugging Face", "level": 78, "description": "Transformers, datasets, and model hubs." },
-        { "name": "OpenCV", "level": 72, "description": "Classical vision pipelines and preprocessing." },
-        { "name": "LangChain", "level": 66, "description": "LLM orchestration and retrieval-augmented apps." }
+        { "name": "PyTorch", "level": 86, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna." },
+        { "name": "TensorFlow", "level": 70, "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo." },
+        { "name": "scikit-learn", "level": 84, "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." },
+        { "name": "Hugging Face", "level": 78, "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim." },
+        { "name": "OpenCV", "level": 72, "description": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur." },
+        { "name": "LangChain", "level": 66, "description": "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit." }
       ]
     },
     {
       "title": "Frontend",
       "key": "frontend",
       "icon": "layout",
-      "blurb": "Interfaces, data viz, and interactive experiences.",
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "items": [
-        { "name": "React", "level": 85, "description": "Component-driven UIs with hooks and suspense." },
-        { "name": "Next.js", "level": 82, "description": "App Router, static export, and API design." },
-        { "name": "Three.js / R3F", "level": 64, "description": "WebGL scenes and 3D data visualization." },
-        { "name": "Tailwind CSS", "level": 88, "description": "Design systems and rapid styling." },
-        { "name": "Framer Motion", "level": 76, "description": "Animation, gestures, and layout transitions." }
+        { "name": "React", "level": 85, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt." },
+        { "name": "Next.js", "level": 82, "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea." },
+        { "name": "Three.js / R3F", "level": 64, "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat." },
+        { "name": "Tailwind CSS", "level": 88, "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit." },
+        { "name": "Framer Motion", "level": 76, "description": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque." }
       ]
     },
     {
       "title": "Tooling",
       "key": "tooling",
       "icon": "wrench",
-      "blurb": "Infrastructure, DevOps, and developer experience.",
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "items": [
-        { "name": "Docker", "level": 72, "description": "Reproducible training and deployment environments." },
-        { "name": "Git", "level": 90, "description": "Trunk-based workflows and code review." },
-        { "name": "Linux", "level": 80, "description": "Daily-driver for development and servers." },
-        { "name": "FastAPI", "level": 78, "description": "Python APIs for model serving." },
-        { "name": "PostgreSQL", "level": 68, "description": "Relational storage and indexing." }
+        { "name": "Docker", "level": 72, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor." },
+        { "name": "Git", "level": 90, "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip." },
+        { "name": "Linux", "level": 80, "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore." },
+        { "name": "FastAPI", "level": 78, "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia." },
+        { "name": "PostgreSQL", "level": 68, "description": "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur." }
       ]
     }
   ],

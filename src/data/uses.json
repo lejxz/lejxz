@@ -4,27 +4,27 @@
       "title": "Hardware",
       "key": "hardware",
       "items": [
-        { "name": "MacBook Air M2", "detail": "Daily driver for dev & light training." },
-        { "name": "GPU server", "detail": "RTX-class box for model training." },
-        { "name": "Jetson Nano", "detail": "Edge inference experiments." }
+        { "name": "Lorem ipsum", "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+        { "name": "Lorem ipsum", "detail": "Sed do eiusmod tempor incididunt ut labore et dolore." },
+        { "name": "Lorem ipsum", "detail": "Ut enim ad minim veniam, quis nostrud exercitation." }
       ]
     },
     {
       "title": "Editor",
       "key": "editor",
       "items": [
-        { "name": "VS Code", "detail": "Primary editor with Vim keybindings." },
-        { "name": "Neovim", "detail": "For quick terminal edits." },
-        { "name": "Jupyter", "detail": "Notebooks for research." }
+        { "name": "Lorem ipsum", "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing." },
+        { "name": "Lorem ipsum", "detail": "Sed do eiusmod tempor incididunt ut labore." },
+        { "name": "Lorem ipsum", "detail": "Ut enim ad minim veniam, quis nostrud." }
       ]
     },
     {
       "title": "Stack",
       "key": "stack",
       "items": [
-        { "name": "Python · PyTorch", "detail": "Research & training." },
-        { "name": "TypeScript · Next.js", "detail": "Web & tooling." },
-        { "name": "Docker · Linux", "detail": "Environments & infra." }
+        { "name": "Lorem ipsum", "detail": "Lorem ipsum dolor sit amet, consectetur." },
+        { "name": "Lorem ipsum", "detail": "Sed do eiusmod tempor incididunt ut labore." },
+        { "name": "Lorem ipsum", "detail": "Ut enim ad minim veniam, quis nostrud." }
       ]
     }
   ]

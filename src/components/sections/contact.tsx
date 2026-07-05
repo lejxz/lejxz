@@ -47,11 +47,12 @@ export function Contact() {
           <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Left: pitch + email + socials */}
             <div>
-              <SectionHeading index="06" kicker="Get in touch" title="Contact" />
+              <SectionHeading index="05" kicker="Get in touch" title="Contact" />
               <Reveal delay={0.08}>
                 <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-dim sm:text-lg">
-                  {profile.availabilityNote ?? profile.availability}. Whether it&apos;s an
-                  internship, a research collaboration, or a quick question — my inbox is open.
+                  {profile.availabilityNote ?? profile.availability}. Lorem ipsum dolor sit amet,
+                  consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                  magna aliqua.
                 </p>
               </Reveal>
 

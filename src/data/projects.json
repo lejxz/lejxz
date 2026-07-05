@@ -3,17 +3,17 @@
     {
       "id": "neural-canvas",
       "title": "Neural Canvas",
-      "subtitle": "Real-time generative art engine",
+      "subtitle": "Lorem ipsum dolor sit amet",
       "category": "Generative AI",
       "year": "2025",
       "status": "shipped",
       "role": "Lead Engineer",
       "duration": "Jan 2025 — Apr 2025",
       "timeline": "Jan 2025 — Apr 2025",
-      "summary": "A diffusion-based generative art engine with a real-time, interactive canvas and a FastAPI inference backend.",
+      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "description": [
-        "Neural Canvas is a real-time generative art engine built around a distilled diffusion model. It streams latents to an interactive WebGL canvas so creators can steer generation live.",
-        "The serving layer uses a FastAPI backend with continuous batching and a quantized model, hitting 120ms p95 latency while serving 3.2× the throughput of the previous implementation."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
       ],
       "highlights": [
         { "label": "Throughput", "value": "3.2× faster" },
@@ -22,10 +22,10 @@
         { "label": "Stack", "value": "PyTorch · FastAPI" }
       ],
       "highlightList": [
-        "3.2× throughput over the previous system",
-        "120ms p95 latency with continuous batching",
-        "Live WebGL canvas steering during generation",
-        "Quantized model for edge-friendly deployment"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit."
       ],
       "tech": ["PyTorch", "FastAPI", "WebGL", "Docker"],
       "tags": ["Diffusion", "PyTorch", "FastAPI"],
@@ -51,17 +51,17 @@
     {
       "id": "edge-vision",
       "title": "Edge Vision",
-      "subtitle": "On-device real-time object detection",
+      "subtitle": "Lorem ipsum dolor sit amet",
       "category": "Computer Vision",
       "year": "2025",
       "status": "wip",
       "role": "Researcher",
       "duration": "Mar 2025 — Present",
       "timeline": "Mar 2025 — Present",
-      "summary": "An 8.4 MB detection model optimized for Jetson edge devices, hitting 48 FPS with 0.71 mAP@0.5.",
+      "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       "description": [
-        "Edge Vision is a lightweight detection pipeline distilled and quantized to run on NVIDIA Jetson hardware. It pairs a TensorRT-optimized backbone with classical OpenCV preprocessing for robust real-time inference.",
-        "The model ships at 8.4 MB and sustains 48 FPS on Jetson Nano while maintaining 0.71 mAP@0.5 on the evaluation set — making it viable for occupancy and safety monitoring."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+        "Nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
       ],
       "highlights": [
         { "label": "Model size", "value": "8.4 MB" },
@@ -70,10 +70,10 @@
         { "label": "Stack", "value": "OpenCV · TensorRT" }
       ],
       "highlightList": [
-        "8.4 MB quantized model footprint",
-        "0.71 mAP@0.5 on the evaluation set",
-        "48 FPS sustained on Jetson Nano",
-        "TensorRT + OpenCV preprocessing pipeline"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit."
       ],
       "tech": ["OpenCV", "TensorRT", "C++", "PyTorch"],
       "tags": ["OpenCV", "TensorRT", "C++"],
@@ -98,17 +98,17 @@
     {
       "id": "lex-graph",
       "title": "Lex Graph",
-      "subtitle": "Semantic retrieval over 1.2M documents",
+      "subtitle": "Lorem ipsum dolor sit amet",
       "category": "NLP",
       "year": "2024",
       "status": "shipped",
       "role": "Engineer",
       "duration": "Sep 2024 — Dec 2024",
       "timeline": "Sep 2024 — Dec 2024",
-      "summary": "A hybrid vector + graph retrieval engine answering legal queries in 18ms p99 across 1.2M documents.",
+      "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores.",
       "description": [
-        "Lex Graph is a hybrid retrieval system combining dense vector search with a document graph for legal research. It indexes 1.2M documents and returns ranked, citation-linked results in 18ms p99.",
-        "A transformer encoder powers embeddings, while a vector DB handles approximate nearest neighbor search. The graph layer adds citation-aware reranking, lifting Recall@10 to 0.88."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       ],
       "highlights": [
         { "label": "Recall@10", "value": "0.88" },
@@ -117,10 +117,10 @@
         { "label": "Stack", "value": "Transformers · Vector DB" }
       ],
       "highlightList": [
-        "1.2M documents indexed",
-        "18ms p99 query latency",
-        "Recall@10 of 0.88 with citation reranking",
-        "Hybrid dense + graph retrieval"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit."
       ],
       "tech": ["Transformers", "LangChain", "Vector DB", "Python"],
       "tags": ["Transformers", "LangChain", "Vector DB"],
@@ -145,17 +145,17 @@
     {
       "id": "rl-maze",
       "title": "RL Maze",
-      "subtitle": "PPO agents learning to solve mazes",
+      "subtitle": "Lorem ipsum dolor sit amet",
       "category": "Reinforcement Learning",
       "year": "2024",
       "status": "archived",
       "role": "Solo",
       "duration": "May 2024 — Jul 2024",
       "timeline": "May 2024 — Jul 2024",
-      "summary": "A PPO training harness for grid-world maze solving, reaching a 94% solve rate over 10k episodes.",
+      "summary": "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.",
       "description": [
-        "RL Maze is a training harness for Proximal Policy Optimization agents learning to navigate procedurally generated mazes. It includes a vectorized Gym environment and a logging dashboard.",
-        "Over 10k episodes the agent reaches a 94% solve rate, with curriculum difficulty scaling that keeps learning stable as mazes grow."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       ],
       "highlights": [
         { "label": "Algorithm", "value": "PPO" },
@@ -164,10 +164,10 @@
         { "label": "Stack", "value": "Gym · Python" }
       ],
       "highlightList": [
-        "PPO implementation with GAE",
-        "10k training episodes",
-        "94% maze solve rate",
-        "Curriculum difficulty scaling"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit."
       ],
       "tech": ["Python", "PyTorch", "Gym", "PPO"],
       "tags": ["PPO", "Gym", "Python"],
@@ -192,17 +192,17 @@
     {
       "id": "data-forge",
       "title": "Data Forge",
-      "subtitle": "MLOps pipeline orchestrator",
+      "subtitle": "Lorem ipsum dolor sit amet",
       "category": "MLOps",
       "year": "2023",
       "status": "shipped",
       "role": "Infrastructure",
       "duration": "Aug 2023 — Nov 2023",
       "timeline": "Aug 2023 — Nov 2023",
-      "summary": "An orchestrator running 40+ data pipelines with 99.9% uptime, processing 2.4 TB/day.",
+      "summary": "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet.",
       "description": [
-        "Data Forge is an MLOps orchestrator built on Airflow and Docker that schedules and monitors 40+ data pipelines.",
-        "It ships with alerting, retries, and lineage tracking, sustaining 99.9% uptime while processing 2.4 TB of data per day."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       ],
       "highlights": [
         { "label": "Pipelines", "value": "40+" },
@@ -211,10 +211,10 @@
         { "label": "Stack", "value": "Docker · Airflow" }
       ],
       "highlightList": [
-        "40+ orchestrated data pipelines",
-        "99.9% uptime with retries and alerting",
-        "2.4 TB processed per day",
-        "Lineage tracking across stages"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit."
       ],
       "tech": ["Docker", "Airflow", "PostgreSQL", "Python"],
       "tags": ["Docker", "Airflow", "PostgreSQL"],
@@ -239,17 +239,17 @@
     {
       "id": "synth-ui",
       "title": "Synth UI",
-      "subtitle": "Lightweight WebGL component kit",
+      "subtitle": "Lorem ipsum dolor sit amet",
       "category": "Frontend",
       "year": "2023",
       "status": "shipped",
       "role": "Design Engineer",
       "duration": "Feb 2023 — Jun 2023",
       "timeline": "Feb 2023 — Jun 2023",
-      "summary": "A 94 KB WebGL-accelerated UI kit scoring 98 on Lighthouse and holding a steady 60 FPS.",
+      "summary": "Delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores.",
       "description": [
-        "Synth UI is a lightweight component kit pairing React ergonomics with WebGL-accelerated effects.",
-        "The full bundle ships at 94 KB, scores 98 on Lighthouse, and holds 60 FPS even with multiple animated surfaces on screen."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       ],
       "highlights": [
         { "label": "Bundle", "value": "94 KB" },
@@ -258,10 +258,10 @@
         { "label": "Stack", "value": "React · Three.js" }
       ],
       "highlightList": [
-        "94 KB gzipped bundle",
-        "Lighthouse score of 98",
-        "Steady 60 FPS with animated surfaces",
-        "React + Three.js hybrid rendering"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit."
       ],
       "tech": ["React", "Three.js", "TypeScript", "WebGL"],
       "tags": ["React", "Three.js", "WebGL"],

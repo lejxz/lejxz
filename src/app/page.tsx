@@ -14,7 +14,6 @@ import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
 import { Work } from "@/components/sections/work";
-import { NowSection } from "@/components/sections/now";
 import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
@@ -39,7 +38,6 @@ export default function Home() {
           <SkewDivider />
           <Work />
           <SkewDivider flip />
-          <NowSection />
           <Contact />
           <Footer />
         </main>

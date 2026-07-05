@@ -1,9 +1,9 @@
 {
   "updated": "2025-07",
   "items": [
-    { "label": "Learning", "value": "Distributed training systems", "detail": "Studying model & data parallelism, pipeline scheduling, and collective comms.", "icon": "graduation-cap" },
-    { "label": "Building", "value": "Real-time inference pipeline", "detail": "A low-latency serving layer for vision models with continuous batching.", "icon": "cpu" },
-    { "label": "Reading", "value": "Designing ML Systems", "detail": "Working through data lifecycle, monitoring, and continuous training patterns.", "icon": "book" },
-    { "label": "Exploring", "value": "Diffusion + 3D scene synthesis", "detail": "Probing how generative priors transfer to 3D scene generation.", "icon": "sparkles" }
+    { "label": "Learning", "value": "Lorem ipsum dolor sit amet", "detail": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.", "icon": "graduation-cap" },
+    { "label": "Building", "value": "Lorem ipsum dolor sit amet", "detail": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "icon": "cpu" },
+    { "label": "Reading", "value": "Lorem ipsum dolor sit amet", "detail": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.", "icon": "book" },
+    { "label": "Exploring", "value": "Lorem ipsum dolor sit amet", "detail": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.", "icon": "sparkles" }
   ]
 }

@@ -34,8 +34,8 @@ export function Experience() {
 
         <Reveal delay={0.06}>
           <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            A timeline of roles, research, and recognition. Click any entry to see the full
-            breakdown — achievements, stack, and context.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua.
           </p>
         </Reveal>
 
@@ -88,7 +88,7 @@ export function Experience() {
 
         {items.length === 0 && (
           <div className="mt-10 rounded-2xl border border-dashed border-line p-10 text-center text-sm text-dim">
-            No entries in this category yet.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </div>
         )}
       </div>

@@ -42,8 +42,8 @@ export function Work() {
 
         <Reveal delay={0.06}>
           <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            A selection of things I&apos;ve designed, trained, and shipped. Open any card for the
-            full case study — architecture, metrics, and outcomes.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua.
           </p>
         </Reveal>
 
@@ -119,7 +119,7 @@ export function Work() {
                 exit={{ opacity: 0 }}
                 className="rounded-2xl border border-dashed border-line p-12 text-center"
               >
-                <p className="text-sm text-dim">No projects match your filters.</p>
+                <p className="text-sm text-dim">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 <button
                   type="button"
                   onClick={() => {
