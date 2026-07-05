@@ -34,24 +34,25 @@ function ExperienceEntry({
     <>
       <Reveal delay={0.04 * index}>
         <div className="relative grid md:grid-cols-2">
+          {/* Dot — sits exactly on the center line */}
+          <div className="absolute left-3 top-6 z-10 -translate-x-1/2 md:left-1/2 md:top-6">
+            <span className="relative flex h-3 w-3 items-center justify-center">
+              <span
+                className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/30"
+                style={{ animationDuration: "2.5s" }}
+              />
+              <span className="relative h-2.5 w-2.5 rounded-full bg-teal ring-4 ring-background" />
+            </span>
+          </div>
+
           <div
             className={cn(
               "relative pl-10 md:pl-0",
               isLeft
-                ? "md:col-start-1 md:pr-[10%]"
-                : "md:col-start-1 md:col-end-3 md:ml-[50%] md:pl-[10%]"
+                ? "md:col-start-1 md:-mr-[20%] md:pr-8"
+                : "md:col-start-2 md:-ml-[20%] md:pl-8"
             )}
           >
-            <div className="absolute left-3 top-6 z-10 -translate-x-1/2 md:left-[50%] md:top-6">
-              <span className="relative flex h-3 w-3 items-center justify-center">
-                <span
-                  className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/30"
-                  style={{ animationDuration: "2.5s" }}
-                />
-                <span className="relative h-2.5 w-2.5 rounded-full bg-teal ring-4 ring-background" />
-              </span>
-            </div>
-
             <motion.div
               whileHover={{ y: -3 }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
