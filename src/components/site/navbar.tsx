@@ -20,7 +20,6 @@ import { ThemeToggle } from "@/components/site/theme-toggle";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const { scrollYProgress } = useScroll();
@@ -31,29 +30,11 @@ export function Navbar() {
   });
 
   useEffect(() => {
-    let last = window.scrollY;
-    let ticking = false;
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(y > 16);
-          // hide on scroll-down (past threshold), show on scroll-up
-          if (y > last && y > 240 && !open) {
-            setHidden(true);
-          } else {
-            setHidden(false);
-          }
-          last = y;
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [open]);
+  }, []);
 
   useEffect(() => {
     const ids = nav.map((n) => n.href.replace("/#", ""));
@@ -78,27 +59,34 @@ export function Navbar() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        hidden && "-translate-y-full",
-        scrolled
-          ? "border-b border-line bg-background/70 backdrop-blur-xl"
-          : "border-b border-transparent"
+        scrolled ? "py-2" : "py-4"
       )}
     >
-      <motion.div
-        className="absolute inset-x-0 top-0 h-px origin-left bg-teal"
-        style={{ scaleX: progress }}
-      />
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <Link href="/#top" className="group flex items-center gap-2.5">
-          <img
-            src={asset("/assets/mark.svg")}
-            alt="lejxz mark"
-            className="h-7 w-7 transition-transform duration-300 group-hover:rotate-6"
-          />
-          <span className="font-mono text-sm font-bold tracking-tight text-foreground">
-            lejxz<span className="text-dim">.dev</span>
-          </span>
-        </Link>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div
+          className={cn(
+            "flex items-center justify-between transition-all duration-300",
+            scrolled
+              ? "rounded-2xl border border-line bg-background/70 px-4 py-2.5 shadow-lg shadow-black/20 backdrop-blur-xl"
+              : "rounded-none border border-transparent px-1 py-1"
+          )}
+        >
+        <motion.div
+          className="absolute inset-x-0 bottom-0 h-px origin-left bg-teal"
+          style={{ scaleX: progress }}
+        />
+        <div className="flex items-center gap-2.5">
+          <Link href="/#top" className="group flex items-center gap-2.5">
+            <img
+              src={asset("/assets/mark.svg")}
+              alt="lejxz mark"
+              className="h-7 w-7 transition-transform duration-300 group-hover:rotate-6"
+            />
+            <span className="hidden font-mono text-sm font-bold tracking-tight text-foreground sm:inline">
+              lejxz<span className="text-dim">.dev</span>
+            </span>
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-1 md:flex">
           {nav.map((item) => {
@@ -218,6 +206,7 @@ export function Navbar() {
               </div>
             </SheetContent>
           </Sheet>
+        </div>
         </div>
       </div>
     </header>

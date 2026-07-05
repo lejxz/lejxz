@@ -28,8 +28,28 @@ export interface Profile {
   socials: Socials;
   tagline: string;
   bio: string[];
+  quote?: string;
+  facts?: Fact[];
+  codeBlock?: CodeBlock;
   stats: Stat[];
   numericStats?: NumericStat[];
+}
+
+export interface Fact {
+  label: string;
+  value: string;
+}
+
+export interface CodeBlockField {
+  key: string;
+  value: string;
+}
+
+export interface CodeBlock {
+  variableName: string;
+  fields: CodeBlockField[];
+  interests: string[];
+  closing: string;
 }
 
 export interface MarqueeData {

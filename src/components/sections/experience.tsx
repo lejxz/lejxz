@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown, MapPin } from "lucide-react";
 import { experience } from "@/lib/data";
 import type { ExperienceItem as ExperienceItemType } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
+import { Reveal } from "@/components/motion/reveal";
 import {
   Dialog,
   DialogContent,
@@ -14,57 +15,107 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
-function ExperienceRow({ item, index }: { item: ExperienceItemType; index: number }) {
+function ExperienceEntry({
+  item,
+  index,
+}: {
+  item: ExperienceItemType;
+  index: number;
+}) {
   const [open, setOpen] = useState(false);
+  const isLeft = index % 2 === 0;
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-        className="group/exp relative grid gap-4 rounded-lg border border-transparent px-3 py-7 transition-colors hover:border-line hover:bg-surface/20 -mx-3 md:grid-cols-[180px_1fr_auto] md:gap-8"
-      >
-        <div className="flex items-start gap-3">
-          <span className="relative mt-1 flex h-3 w-3 shrink-0 items-center justify-center">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/30" style={{ animationDuration: "2.5s" }} />
-            <span className="relative h-2 w-2 rounded-full bg-teal ring-4 ring-teal/10" />
-          </span>
-          <span className="font-mono text-xs uppercase tracking-wider text-dim">
-            {item.period}
-          </span>
-        </div>
-
-        <div className="md:pl-0">
-          <h3 className="font-mono text-lg font-bold text-foreground">
-            {item.role}
-            <span className="text-dim"> @ </span>
-            <span className="text-teal">{item.org}</span>
-          </h3>
-          <p className="mt-1 font-mono text-xs text-dim">{item.location}</p>
-          <p className="mt-3 max-w-2xl text-sm text-foreground/80">{item.summary}</p>
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {item.tags.map((tag) => (
+      <Reveal delay={0.03 * index}>
+        <div className="relative grid md:grid-cols-2 md:gap-12">
+          {/* Center dot (on the line) */}
+          <div className="absolute left-3 top-3 z-10 -translate-x-1/2 md:left-1/2">
+            <span className="relative flex h-3 w-3 items-center justify-center">
               <span
-                key={tag}
-                className="rounded border border-line px-2 py-0.5 font-mono text-[10px] text-dim"
+                className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal/30"
+                style={{ animationDuration: "2.5s" }}
+              />
+              <span className="relative h-2.5 w-2.5 rounded-full bg-teal ring-4 ring-background" />
+            </span>
+          </div>
+
+          {/* Card — left on even, right on odd (mobile: always full width, left-aligned) */}
+          <div
+            className={cn(
+              "pl-10 md:pl-0",
+              isLeft ? "md:col-start-1 md:pr-12 md:text-right" : "md:col-start-2 md:pl-12"
+            )}
+          >
+            <motion.div
+              whileHover={{ y: -3 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              className="rounded-xl border border-line bg-surface/50 p-5 transition-colors hover:border-teal/30"
+            >
+              <div
+                className={cn(
+                  "mb-2 flex flex-wrap items-center gap-2",
+                  isLeft && "md:justify-end"
+                )}
               >
-                {tag}
-              </span>
-            ))}
+                <span className="font-mono text-[10px] uppercase tracking-wider text-teal">
+                  {item.period}
+                </span>
+              </div>
+              <h3 className="font-mono text-lg font-bold text-foreground">
+                {item.role}
+              </h3>
+              <div
+                className={cn(
+                  "mb-3 flex items-center gap-2 text-sm",
+                  isLeft && "md:justify-end"
+                )}
+              >
+                <span className="font-medium text-teal">{item.org}</span>
+                <span className="text-dim">·</span>
+                <span className="flex items-center gap-1 text-dim">
+                  <MapPin className="h-3 w-3" />
+                  {item.location}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-foreground/80">
+                {item.summary}
+              </p>
+              <div
+                className={cn(
+                  "mt-3 flex flex-wrap gap-1.5",
+                  isLeft && "md:justify-end"
+                )}
+              >
+                {item.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded border border-line px-2 py-0.5 font-mono text-[10px] text-dim"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div
+                className={cn(
+                  "mt-4",
+                  isLeft && "md:flex md:justify-end"
+                )}
+              >
+                <button
+                  onClick={() => setOpen(true)}
+                  className="group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:border-teal/50 hover:text-teal"
+                >
+                  Details
+                  <ArrowUpRight className="h-3 w-3" />
+                </button>
+              </div>
+            </motion.div>
           </div>
         </div>
-
-        <button
-          onClick={() => setOpen(true)}
-          className="group inline-flex items-center gap-1.5 self-start whitespace-nowrap rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:border-teal/50 hover:text-teal"
-        >
-          Details
-          <ArrowUpRight className="h-3 w-3" />
-        </button>
-      </motion.div>
+      </Reveal>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[88vh] overflow-y-auto border-line bg-background p-0 sm:max-w-xl">
@@ -81,9 +132,10 @@ function ExperienceRow({ item, index }: { item: ExperienceItemType; index: numbe
               <span>{item.location}</span>
             </DialogDescription>
           </DialogHeader>
-
           <div className="space-y-5 p-6">
-            <p className="text-sm leading-relaxed text-foreground/90">{item.summary}</p>
+            <p className="text-sm leading-relaxed text-foreground/90">
+              {item.summary}
+            </p>
             <ul className="space-y-2.5">
               {item.bullets.map((bullet, i) => (
                 <li key={i} className="flex gap-3 text-sm text-foreground/85">
@@ -116,10 +168,28 @@ export function Experience() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading index="03" kicker="Timeline" title="Experience" />
 
-        <div className="mt-12 divide-y divide-line border-t border-line">
-          {experience.items.map((item, i) => (
-            <ExperienceRow key={item.id} item={item} index={i} />
-          ))}
+        <div className="mt-12">
+          <div className="mb-3 flex items-center justify-between font-mono text-xs text-dim">
+            <span>{experience.items.length} entries · scroll to see all</span>
+            <ChevronDown className="h-3.5 w-3.5 animate-bounce text-teal/60" />
+          </div>
+
+          <div className="relative">
+            {/* Center vertical line (desktop) / left line (mobile) */}
+            <div className="absolute left-3 top-0 h-full w-px bg-line md:left-1/2 md:-translate-x-1/2" />
+
+            {/* Scrollable container for long lists */}
+            <div className="max-h-[640px] overflow-y-auto pr-2 pl-1 [scrollbar-width:thin]">
+              <div className="space-y-8 py-2">
+                {experience.items.map((item, i) => (
+                  <ExperienceEntry key={item.id} item={item} index={i} />
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom fade */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background to-transparent" />
+          </div>
         </div>
       </div>
     </section>
