@@ -22,6 +22,10 @@ export const now = nowData as NowData;
 
 export const featuredProjects = projects.projects.filter((p) => p.featured);
 
+export function getProject(id: string) {
+  return projects.projects.find((p) => p.id === id);
+}
+
 export const nav = [
   { label: "Home", href: "/#top" },
   { label: "About", href: "/#about" },

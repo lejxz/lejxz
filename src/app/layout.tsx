@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { SkipLink } from "@/components/site/skip-link";
+import { CustomCursor } from "@/components/site/custom-cursor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -53,6 +55,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${inter.variable} ${spaceMono.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground antialiased">
+        <SkipLink />
+        <CustomCursor />
         {children}
         <Toaster />
       </body>

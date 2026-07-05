@@ -150,6 +150,28 @@
   code, pre, kbd {
     font-family: var(--font-space-mono), ui-monospace, monospace;
   }
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* Soft contrast theme — lifts surfaces + text for reduced-glare reading. */
+:root[data-theme="soft"] {
+  --background: #11141a;
+  --foreground: #e6ebf2;
+  --card: #181c23;
+  --popover: #181c23;
+  --secondary: #1c2129;
+  --muted: #1c2129;
+  --muted-foreground: #8a94a3;
+  --accent: #21272f;
+  --border: rgba(216, 222, 230, 0.12);
+  --input: rgba(216, 222, 230, 0.14);
+}
+:root[data-theme="soft"] body {
+  background-color: var(--background);
 }
 
 @layer utilities {
@@ -193,6 +215,17 @@
     mask-image: linear-gradient(to bottom, #000 60%, transparent);
   }
 }
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(40px, -30px, 0) scale(1.1); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-50px, 40px, 0) scale(0.9); }
+}
+.animate-orb-1 { animation: orb-drift-1 18s ease-in-out infinite; }
+.animate-orb-2 { animation: orb-drift-2 22s ease-in-out infinite; }
 
 @keyframes marquee-x {
   from { transform: translate3d(0, 0, 0); }

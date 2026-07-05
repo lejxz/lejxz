@@ -6,10 +6,18 @@
       "category": "Generative AI",
       "year": "2025",
       "status": "shipped",
+      "role": "Lead Engineer",
+      "timeline": "Jan 2025 — Apr 2025",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "description": [
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      ],
+      "highlights": [
+        { "label": "Throughput", "value": "3.2× faster" },
+        { "label": "Latency", "value": "120ms p95" },
+        { "label": "Resolution", "value": "1024²" },
+        { "label": "Stack", "value": "PyTorch · FastAPI" }
       ],
       "tags": ["Diffusion", "PyTorch", "FastAPI"],
       "links": [
@@ -25,10 +33,18 @@
       "category": "Computer Vision",
       "year": "2025",
       "status": "wip",
+      "role": "Researcher",
+      "timeline": "Mar 2025 — Present",
       "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
       "description": [
-        "Deserunt mollit anim id est laborum. Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
-        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur."
+        "Deserunt mollit anim id est laborum. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."
+      ],
+      "highlights": [
+        { "label": "Model size", "value": "8.4 MB" },
+        { "label": "mAP@0.5", "value": "0.71" },
+        { "label": "FPS (Jetson)", "value": "48" },
+        { "label": "Stack", "value": "OpenCV · TensorRT" }
       ],
       "tags": ["OpenCV", "TensorRT", "C++"],
       "links": [
@@ -43,10 +59,18 @@
       "category": "NLP",
       "year": "2024",
       "status": "shipped",
+      "role": "Engineer",
+      "timeline": "Sep 2024 — Dec 2024",
       "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
       "description": [
-        "Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
-        "Neque porro quisquam est, dolorem ipsum quia dolor sit amet."
+        "Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est.",
+        "Dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt."
+      ],
+      "highlights": [
+        { "label": "Recall@10", "value": "0.88" },
+        { "label": "Index size", "value": "1.2M docs" },
+        { "label": "Query", "value": "18ms p99" },
+        { "label": "Stack", "value": "Transformers · Vector DB" }
       ],
       "tags": ["Transformers", "LangChain", "Vector DB"],
       "links": [
@@ -61,10 +85,18 @@
       "category": "Reinforcement Learning",
       "year": "2024",
       "status": "archived",
+      "role": "Solo",
+      "timeline": "May 2024 — Jul 2024",
       "summary": "Quis autem vel eum iure reprehenderit qui in ea voluptate.",
       "description": [
-        "Velit esse quam nihil molestiae consequatur, vel illum qui dolorem.",
-        "Eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus."
+        "Velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.",
+        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum."
+      ],
+      "highlights": [
+        { "label": "Algorithm", "value": "PPO" },
+        { "label": "Episodes", "value": "10k" },
+        { "label": "Solve rate", "value": "94%" },
+        { "label": "Stack", "value": "Gym · Python" }
       ],
       "tags": ["PPO", "Gym", "Python"],
       "links": [
@@ -79,10 +111,18 @@
       "category": "MLOps",
       "year": "2023",
       "status": "shipped",
+      "role": "Infrastructure",
+      "timeline": "Aug 2023 — Nov 2023",
       "summary": "Temporibus autem quibusdam et aut officiis debitis aut rerum.",
       "description": [
-        "Necessitatibus saepe eveniet ut et voluptates repudiandae sint.",
-        "Et molestiae non recusandae. Itaque earum rerum hic tenetur sapiente."
+        "Necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.",
+        "Itaque earum rerum hic tenetur sapiente delectus, ut aut reiciendis voluptatibus maiores alias."
+      ],
+      "highlights": [
+        { "label": "Pipelines", "value": "40+" },
+        { "label": "Uptime", "value": "99.9%" },
+        { "label": "Data/day", "value": "2.4 TB" },
+        { "label": "Stack", "value": "Docker · Airflow" }
       ],
       "tags": ["Docker", "Airflow", "PostgreSQL"],
       "links": [
@@ -97,10 +137,18 @@
       "category": "Frontend",
       "year": "2023",
       "status": "shipped",
+      "role": "Design Engineer",
+      "timeline": "Feb 2023 — Jun 2023",
       "summary": "Delectus, ut aut reiciendis voluptatibus maiores alias consequatur.",
       "description": [
-        "Aut perferendis doloribus asperiores repellat. Temporibus quibusdam.",
-        "Officiis debitis aut rerum necessitatibus saepe eveniet."
+        "Aut perferendis doloribus asperiores repellat temporibus quibusdam et aut officiis debitis.",
+        "Aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae."
+      ],
+      "highlights": [
+        { "label": "Bundle", "value": "94 KB" },
+        { "label": "Lighthouse", "value": "98" },
+        { "label": "FPS", "value": "60" },
+        { "label": "Stack", "value": "React · Three.js" }
       ],
       "tags": ["React", "Three.js", "WebGL"],
       "links": [

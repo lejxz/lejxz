@@ -25,6 +25,8 @@ export function Hero() {
       className="relative flex min-h-[100svh] items-center overflow-hidden"
     >
       <div className="pointer-events-none absolute inset-0 bg-grid mask-fade-b opacity-60" />
+      <div className="pointer-events-none absolute -left-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/10 blur-[120px] animate-orb-1" />
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-[32rem] w-[32rem] rounded-full bg-violet/10 blur-[140px] animate-orb-2" />
       <motion.div
         style={{ y, opacity, scale }}
         className="relative mx-auto w-full max-w-7xl px-5 pt-24 sm:px-8"

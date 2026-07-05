@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, ExternalLink, ArrowRight } from "lucide-react";
 import type { Project } from "@/lib/types";
 import {
   Dialog,
@@ -166,6 +167,14 @@ export function ProjectCard({
                     {link.label}
                   </a>
                 ))}
+                <Link
+                  href={`/projects/${project.id}`}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-teal px-4 py-2 font-mono text-xs uppercase tracking-wider text-primary-foreground transition-colors hover:bg-teal/90"
+                >
+                  Case Study
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
               </div>
             )}
           </div>

@@ -62,6 +62,11 @@ export interface ProjectLink {
   url: string;
 }
 
+export interface ProjectHighlight {
+  label: string;
+  value: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -70,6 +75,9 @@ export interface Project {
   status: "shipped" | "wip" | "archived";
   summary: string;
   description: string[];
+  highlights?: ProjectHighlight[];
+  role?: string;
+  timeline?: string;
   tags: string[];
   links: ProjectLink[];
   featured: boolean;

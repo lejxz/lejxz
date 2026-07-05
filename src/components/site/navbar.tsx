@@ -16,6 +16,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -98,6 +99,8 @@ export function Navbar() {
               <ArrowUpRight className="h-3.5 w-3.5" />
             </Button>
           </Link>
+
+          <ThemeToggle className="hidden sm:flex" />
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
