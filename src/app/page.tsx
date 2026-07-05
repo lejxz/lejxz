@@ -15,6 +15,7 @@ import { Uses } from "@/components/sections/uses";
 import { Work } from "@/components/sections/work";
 import { NowSection } from "@/components/sections/now-section";
 import { Testimonials } from "@/components/sections/testimonials";
+import { Changelog } from "@/components/sections/changelog";
 import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
@@ -41,6 +42,8 @@ export default function Home() {
         <NowSection />
         <SkewDivider />
         <Testimonials />
+        <SkewDivider />
+        <Changelog />
         <SkewDivider flip />
         <Contact />
         <Footer />

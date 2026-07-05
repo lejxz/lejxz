@@ -25,7 +25,7 @@ function ExperienceRow({ item, index }: { item: ExperienceItemType; index: numbe
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-        className="relative grid gap-4 border-line py-7 md:grid-cols-[180px_1fr_auto] md:gap-8"
+        className="group/exp relative grid gap-4 rounded-lg border border-transparent px-3 py-7 transition-colors hover:border-line hover:bg-surface/20 -mx-3 md:grid-cols-[180px_1fr_auto] md:gap-8"
       >
         <div className="flex items-start gap-3">
           <span className="relative mt-1 flex h-3 w-3 shrink-0 items-center justify-center">
