@@ -14,21 +14,36 @@ import { cn } from "@/lib/utils";
 
 const CATEGORIES = ["All", ...Array.from(new Set(projects.projects.map((p) => p.category)))];
 
+const STATUSES: { key: "all" | "shipped" | "wip" | "archived"; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "shipped", label: "Shipped" },
+  { key: "wip", label: "In progress" },
+  { key: "archived", label: "Archived" },
+];
+
+const STATUS_DOT: Record<string, string> = {
+  shipped: "bg-teal",
+  wip: "bg-violet",
+  archived: "bg-dim",
+};
+
 export function Work() {
   const [category, setCategory] = useState("All");
+  const [status, setStatus] = useState<"all" | "shipped" | "wip" | "archived">("all");
   const [query, setQuery] = useState("");
   const { openProject } = useModals();
 
   const q = query.trim().toLowerCase();
   const filtered = projects.projects.filter((p) => {
     const matchCat = category === "All" || p.category === category;
+    const matchStatus = status === "all" || p.status === status;
     const matchQuery =
       !q ||
       p.title.toLowerCase().includes(q) ||
       (p.subtitle ?? "").toLowerCase().includes(q) ||
       p.tags.some((t) => t.toLowerCase().includes(q)) ||
       (p.tech ?? []).some((t) => t.toLowerCase().includes(q));
-    return matchCat && matchQuery;
+    return matchCat && matchStatus && matchQuery;
   });
 
   const spotlight = featuredProjects[0] ?? projects.projects[0];
@@ -60,7 +75,7 @@ export function Work() {
         {/* Search + filters */}
         <Reveal delay={0.12}>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {CATEGORIES.map((c) => (
                 <button
                   key={c}
@@ -95,6 +110,36 @@ export function Work() {
               />
             </div>
           </div>
+
+          {/* status filter row + count */}
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="mr-1 font-mono text-[10px] uppercase tracking-wider text-dim/70">
+                status:
+              </span>
+              {STATUSES.map((s) => (
+                <button
+                  key={s.key}
+                  type="button"
+                  onClick={() => setStatus(s.key)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[10px] transition-colors",
+                    status === s.key
+                      ? "border-violet/40 bg-violet/10 text-violet"
+                      : "border-line text-dim hover:border-violet/30 hover:text-foreground"
+                  )}
+                >
+                  {s.key !== "all" && (
+                    <span className={cn("h-1.5 w-1.5 rounded-full", STATUS_DOT[s.key])} />
+                  )}
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            <span className="font-mono text-[10px] text-dim">
+              {filtered.length} / {projects.projects.length} shown
+            </span>
+          </div>
         </Reveal>
 
         {/* Grid */}
@@ -124,6 +169,7 @@ export function Work() {
                   type="button"
                   onClick={() => {
                     setCategory("All");
+                    setStatus("all");
                     setQuery("");
                   }}
                   className="mt-3 rounded-full border border-teal/40 bg-teal/10 px-4 py-1.5 font-mono text-xs text-teal transition-colors hover:bg-teal/20"

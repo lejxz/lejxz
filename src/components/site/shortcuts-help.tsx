@@ -18,11 +18,12 @@ interface Shortcut {
 const SHORTCUTS: Shortcut[] = [
   { keys: "⌘ K", label: "Open command palette" },
   { keys: "G H", label: "Go home" },
-  { keys: "G P", label: "Go to all projects" },
+  { keys: "G P", label: "Jump to projects (work)" },
   { keys: "G A", label: "Jump to about" },
   { keys: "G S", label: "Jump to skills" },
   { keys: "G E", label: "Jump to experience" },
   { keys: "G W", label: "Jump to work" },
+  { keys: "G U", label: "Jump to uses" },
   { keys: "G C", label: "Jump to contact" },
   { keys: "?", label: "Show this help" },
   { keys: "Esc", label: "Close dialogs" },
@@ -66,11 +67,12 @@ export function ShortcutsHelp() {
       if (pending) {
         const map: Record<string, string> = {
           h: "/#top",
-          p: "/projects",
+          p: "/#work",
           a: "/#about",
           s: "/#skills",
           e: "/#experience",
           w: "/#work",
+          u: "/#uses",
           c: "/#contact",
         };
         const href = map[e.key.toLowerCase()];

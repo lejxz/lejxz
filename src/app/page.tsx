@@ -10,6 +10,7 @@ import { ModalsProvider } from "@/lib/modals";
 import { SkewDivider } from "@/components/motion/skew-divider";
 import { Hero } from "@/components/sections/hero";
 import { HomeTicker } from "@/components/sections/home-ticker";
+import { StatsBand } from "@/components/sections/stats-band";
 import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
@@ -31,6 +32,7 @@ export default function Home() {
         <main className="relative z-10 flex min-h-screen flex-col">
           <Hero />
           <HomeTicker />
+          <StatsBand />
           <About />
           <SkewDivider />
           <Skills />
