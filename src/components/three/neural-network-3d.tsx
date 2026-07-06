@@ -6,32 +6,58 @@ import { useRef, useMemo, Suspense, useEffect, useState } from "react";
 import * as THREE from "three";
 
 /**
- * NeuralNetwork3D — an interactive 3D wave grid background.
+ * NeuralNetwork3D — a unique 3D neural network with spread-out nodes,
+ * flowing connections, and mouse interaction.
  *
- * A grid of vertices forms a flowing wave surface. The mouse creates a
- * "dip" in the grid — like pressing into a fabric. Nodes light up near
- * the cursor, and connection lines between adjacent grid points pulse.
+ * Design:
+ *  • Nodes are spread across a wide 3D volume (not in rigid columns).
+ *    Each node drifts slowly around its base position with organic
+ *    per-node motion — the network feels "alive" and breathing.
+ *  • Connections form dynamically: nodes within a threshold distance
+ *    are linked with lines. As nodes drift, connections appear and
+ *    disappear — the topology is always changing.
+ *  • Signal pulses travel along active connections, lighting up edges.
+ *  • Mouse interaction:
+ *     - Nodes near the cursor (unprojected to 3D) brighten + scale up
+ *       and shift color from teal → violet.
+ *     - The cursor "activates" nodes, causing them to emit signals
+ *       along their connections.
+ *     - Subtle parallax tilt toward the cursor.
+ *     - Click emits a burst of signals from nearby nodes.
  *
- * This is a completely different visual from the previous layered NN:
- *  • A wave grid (think: a rippling sheet of light) instead of columns
- *  • The mouse creates a visible deformation (push-down) in the grid
- *  • Nodes near the cursor glow brighter + shift color
- *  • Subtle parallax tilt
- *  • Auto-undulating wave motion when idle
- *
- * Theme-aware via CSS variables.
+ *  • Theme-aware via CSS variables.
+ *  • The whole network slowly rotates on the Y axis for a living feel.
  */
 
-const GRID_SIZE = 24; // 24x24 grid
-const GRID_SPACING = 0.55;
-const WAVE_SPEED = 0.8;
-const WAVE_AMPLITUDE = 0.4;
-const MOUSE_INFLUENCE = 2.5;
-const MOUSE_DEPTH = 1.5; // how deep the mouse pushes the grid
+const NODE_COUNT_DESKTOP = 80;
+const NODE_COUNT_MOBILE = 40;
+const VOLUME = 10; // spread range
+const CONNECT_DIST = 2.2; // max distance for a connection
+const MAX_LINES = 300; // perf cap
+const MAX_SIGNALS = 20;
+const MOUSE_RADIUS = 2.5;
+const SPAWN_INTERVAL = 0.35;
+
+interface Node {
+  pos: THREE.Vector3;
+  basePos: THREE.Vector3;
+  vel: THREE.Vector3;
+  phase: number;
+  activation: number;
+  outNeighbors: number[];
+}
+
+interface Signal {
+  fromIdx: number;
+  toIdx: number;
+  t: number; // 0..1
+  speed: number;
+  alive: boolean;
+}
 
 function readThemeColors() {
   if (typeof window === "undefined") {
-    return { node: "#5eead4", nodeAlt: "#a78bfa", line: new THREE.Color(0.12, 0.3, 0.28) };
+    return { node: "#5eead4", nodeAlt: "#a78bfa", line: new THREE.Color(0.1, 0.25, 0.22) };
   }
   const cs = getComputedStyle(document.documentElement);
   const node = cs.getPropertyValue("--nn-node").trim() || "#5eead4";
@@ -39,55 +65,54 @@ function readThemeColors() {
   const lineVar = cs.getPropertyValue("--nn-line").trim();
   const line = new THREE.Color();
   const normalized = lineVar && lineVar.startsWith("#") && lineVar.length === 9 ? lineVar.slice(0, 7) : lineVar;
-  if (normalized) { try { line.setStyle(normalized); } catch { line.set(0.12, 0.3, 0.28); } }
-  else line.set(0.12, 0.3, 0.28);
+  if (normalized) { try { line.setStyle(normalized); } catch { line.set(0.1, 0.25, 0.22); } }
+  else line.set(0.1, 0.25, 0.22);
   return { node, nodeAlt, line };
 }
 
-function WaveGrid({ isMobile }: { isMobile: boolean }) {
+function buildNodes(count: number): Node[] {
+  const nodes: Node[] = [];
+  for (let i = 0; i < count; i++) {
+    const pos = new THREE.Vector3(
+      (Math.random() - 0.5) * VOLUME,
+      (Math.random() - 0.5) * VOLUME * 0.7,
+      (Math.random() - 0.5) * VOLUME * 0.4
+    );
+    nodes.push({
+      pos: pos.clone(),
+      basePos: pos.clone(),
+      vel: new THREE.Vector3(
+        (Math.random() - 0.5) * 0.008,
+        (Math.random() - 0.5) * 0.008,
+        (Math.random() - 0.5) * 0.004
+      ),
+      phase: Math.random() * Math.PI * 2,
+      activation: 0,
+      outNeighbors: [],
+    });
+  }
+  return nodes;
+}
+
+function Network({ isMobile }: { isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
-  const pointsRef = useRef<THREE.Points>(null);
-  const linesRef = useRef<THREE.LineSegments>(null);
+  const nodeRef = useRef<THREE.InstancedMesh>(null);
+  const lineRef = useRef<THREE.LineSegments>(null);
+  const pulseRef = useRef<THREE.InstancedMesh>(null);
   const { camera, gl } = useThree();
 
-  const gridSize = isMobile ? 16 : GRID_SIZE;
-  const totalPoints = gridSize * gridSize;
+  const count = isMobile ? NODE_COUNT_MOBILE : NODE_COUNT_DESKTOP;
 
-  // Base positions + per-point phase.
-  const data = useMemo(() => {
-    const positions = new Float32Array(totalPoints * 3);
-    const phases = new Float32Array(totalPoints);
-    const half = ((gridSize - 1) * GRID_SPACING) / 2;
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        const idx = (i * gridSize + j) * 3;
-        positions[idx] = i * GRID_SPACING - half;
-        positions[idx + 1] = j * GRID_SPACING - half;
-        positions[idx + 2] = 0;
-        phases[i * gridSize + j] = Math.random() * Math.PI * 2;
-      }
-    }
-    return { positions, phases, half };
-  }, [gridSize, totalPoints]);
+  // Mutable nodes.
+  const nodesRef = useRef<Node[]>(null);
+  if (nodesRef.current == null) nodesRef.current = buildNodes(count);
+  const nodes = nodesRef.current;
 
-  // Build line index pairs (grid connections: right + down neighbors).
-  const lineGeometry = useMemo(() => {
-    const segs: number[] = [];
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        const a = i * gridSize + j;
-        if (j < gridSize - 1) segs.push(a, a + 1); // right
-        if (i < gridSize - 1) segs.push(a, a + gridSize); // down
-      }
-    }
-    const positions = new Float32Array(segs.length * 3);
-    const colors = new Float32Array(segs.length * 3);
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    geo.setIndex(segs);
-    return geo;
-  }, [gridSize]);
+  // Signals.
+  const signalsRef = useRef<Signal[]>(
+    Array.from({ length: MAX_SIGNALS }, () => ({ fromIdx: -1, toIdx: -1, t: 0, speed: 1, alive: false }))
+  );
+  const lastSpawn = useRef(0);
 
   // Theme colors.
   const colorsRef = useRef(readThemeColors());
@@ -97,6 +122,16 @@ function WaveGrid({ isMobile }: { isMobile: boolean }) {
     const obs = new MutationObserver(update);
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => obs.disconnect();
+  }, []);
+
+  // Pre-allocate line geometry buffer.
+  const lineGeometry = useMemo(() => {
+    const positions = new Float32Array(MAX_LINES * 6);
+    const colors = new Float32Array(MAX_LINES * 6);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    return geo;
   }, []);
 
   // Window-level pointer tracking.
@@ -114,8 +149,54 @@ function WaveGrid({ isMobile }: { isMobile: boolean }) {
     return () => { window.removeEventListener("pointermove", onMove); window.removeEventListener("pointerleave", onLeave); };
   }, [gl]);
 
+  // Spawn a signal from a node to a random neighbor.
+  const spawnSignal = (fromIdx: number) => {
+    const slot = signalsRef.current.find((s) => !s.alive);
+    if (!slot) return;
+    const node = nodes[fromIdx];
+    if (!node) return;
+    // Find neighbors within CONNECT_DIST.
+    const neighbors: number[] = [];
+    for (let j = 0; j < nodes.length; j++) {
+      if (j === fromIdx) continue;
+      const d = node.pos.distanceTo(nodes[j].pos);
+      if (d < CONNECT_DIST) neighbors.push(j);
+    }
+    if (neighbors.length === 0) return;
+    const toIdx = neighbors[Math.floor(Math.random() * neighbors.length)];
+    const dist = node.pos.distanceTo(nodes[toIdx].pos);
+    slot.fromIdx = fromIdx;
+    slot.toIdx = toIdx;
+    slot.t = 0;
+    slot.speed = (1.5 + Math.random() * 1.0) / Math.max(dist, 0.1);
+    slot.alive = true;
+  };
+
+  // Click → burst signals from nodes near cursor.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t?.closest('a, button, [role="button"], input, textarea, select, [cmdk-input]')) return;
+      // Find nodes near the cursor and emit signals.
+      const px = pointerRef.current.wx;
+      const py = pointerRef.current.wy;
+      for (let i = 0; i < nodes.length; i++) {
+        const dx = nodes[i].pos.x - px;
+        const dy = nodes[i].pos.y - py;
+        if (dx * dx + dy * dy < MOUSE_RADIUS * MOUSE_RADIUS) {
+          spawnSignal(i);
+        }
+      }
+    };
+    window.addEventListener("click", onClick);
+    return () => window.removeEventListener("click", onClick);
+  }, []);
+
   // Scratch.
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const tmpColor = useMemo(() => new THREE.Color(), []);
   const tmpVec = useMemo(() => new THREE.Vector3(), []);
+  const mouseWorld = useMemo(() => new THREE.Vector3(), []);
   const rayDir = useMemo(() => new THREE.Vector3(), []);
   const cNode = useMemo(() => new THREE.Color(), []);
   const cAlt = useMemo(() => new THREE.Color(), []);
@@ -127,11 +208,13 @@ function WaveGrid({ isMobile }: { isMobile: boolean }) {
 
     const ptr = pointerRef.current;
 
-    // Parallax tilt.
-    const targetRotY = ptr.active ? ptr.x * 0.2 : 0;
-    const targetRotX = ptr.active ? -ptr.y * 0.15 : 0;
-    groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.04;
-    groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.04;
+    // Slow auto-rotation for a "living" feel.
+    groupRef.current.rotation.y += dt * 0.03;
+
+    // Parallax tilt (additive on top of auto-rotation).
+    const tiltY = ptr.active ? ptr.x * 0.15 : 0;
+    const tiltX = ptr.active ? -ptr.y * 0.1 : 0;
+    groupRef.current.rotation.x += (tiltX - groupRef.current.rotation.x) * 0.03;
 
     // Unproject pointer to world XY plane (z=0).
     let mx = 9999, my = 9999;
@@ -145,107 +228,174 @@ function WaveGrid({ isMobile }: { isMobile: boolean }) {
       ptr.wx = mx; ptr.wy = my;
     }
 
+    // Auto-spawn signals.
+    lastSpawn.current += dt;
+    if (lastSpawn.current > SPAWN_INTERVAL) {
+      lastSpawn.current = 0;
+      spawnSignal(Math.floor(Math.random() * nodes.length));
+    }
+
+    // Update nodes: drift + spring back + mouse activation.
+    for (let i = 0; i < nodes.length; i++) {
+      const n = nodes[i];
+      // Organic drift.
+      n.pos.add(n.vel);
+      // Spring back toward base position.
+      n.pos.lerp(n.basePos, 0.005);
+      // Bounce off volume bounds.
+      const lim = VOLUME / 2;
+      if (n.pos.x > lim) n.vel.x = -Math.abs(n.vel.x);
+      if (n.pos.x < -lim) n.vel.x = Math.abs(n.vel.x);
+      if (n.pos.y > lim * 0.7) n.vel.y = -Math.abs(n.vel.y);
+      if (n.pos.y < -lim * 0.7) n.vel.y = Math.abs(n.vel.y);
+
+      // Mouse activation.
+      let act = 0;
+      if (ptr.active) {
+        const dx = n.pos.x - mx;
+        const dy = n.pos.y - my;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < MOUSE_RADIUS * MOUSE_RADIUS) {
+          act = 1 - Math.sqrt(d2) / MOUSE_RADIUS;
+          // Occasionally emit a signal from an activated node.
+          if (act > 0.3 && Math.random() < dt * 2) spawnSignal(i);
+        }
+      }
+      n.activation = Math.max(act, n.activation * 0.92);
+    }
+
+    // Advance signals.
+    for (const s of signalsRef.current) {
+      if (!s.alive) continue;
+      // eslint-disable-next-line react-hooks/immutability
+      s.t += s.speed * dt;
+      // Activate endpoints.
+      if (nodes[s.fromIdx]) nodes[s.fromIdx].activation = Math.max(nodes[s.fromIdx].activation, 0.4);
+      if (nodes[s.toIdx]) nodes[s.toIdx].activation = Math.max(nodes[s.toIdx].activation, 0.6);
+      if (s.t >= 1) {
+        // Hop to a new neighbor of the destination, or die.
+        if (nodes[s.toIdx] && Math.random() < 0.5) {
+          const dest = nodes[s.toIdx];
+          const neighbors: number[] = [];
+          for (let j = 0; j < nodes.length; j++) {
+            if (j === s.toIdx) continue;
+            if (dest.pos.distanceTo(nodes[j].pos) < CONNECT_DIST) neighbors.push(j);
+          }
+          if (neighbors.length > 0) {
+            const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+            s.fromIdx = s.toIdx;
+            s.toIdx = next;
+            s.t = 0;
+            const dist = nodes[s.fromIdx].pos.distanceTo(nodes[s.toIdx].pos);
+            s.speed = (1.5 + Math.random()) / Math.max(dist, 0.1);
+          } else {
+            s.alive = false;
+          }
+        } else {
+          s.alive = false;
+        }
+      }
+    }
+
+    // Update node instances.
     cNode.set(colorsRef.current.node);
     cAlt.set(colorsRef.current.nodeAlt);
-
-    // Update point positions + colors.
-    const posAttr = data.positions;
-    const half = data.half;
-
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        const idx = (i * gridSize + j) * 3;
-        const x = posAttr[idx];
-        const y = posAttr[idx + 1];
-        const phase = data.phases[i * gridSize + j];
-
-        // Base wave motion.
-        let z = Math.sin(time * WAVE_SPEED + x * 0.5 + phase) * WAVE_AMPLITUDE
-              + Math.cos(time * WAVE_SPEED * 0.7 + y * 0.4 + phase) * WAVE_AMPLITUDE * 0.6;
-
-        // Mouse push-down.
-        let activation = 0;
-        if (ptr.active) {
-          const dx = x - mx;
-          const dy = y - my;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < MOUSE_INFLUENCE * MOUSE_INFLUENCE) {
-            const d = Math.sqrt(d2);
-            const intensity = 1 - d / MOUSE_INFLUENCE;
-            activation = intensity;
-            // Push the grid DOWN near the cursor (like pressing into fabric).
-            z -= intensity * intensity * MOUSE_DEPTH;
-          }
-        }
-
-        // Update Z.
-        // eslint-disable-next-line react-hooks/immutability
-        posAttr[idx + 2] = z;
-
-        // Update point color.
-        if (pointsRef.current) {
-          const color = activation > 0
-            ? cNode.clone().lerp(cAlt, activation).multiplyScalar(1 + activation)
-            : cNode.clone().multiplyScalar(0.5 + Math.sin(time + phase) * 0.1);
-          // Use setColorAt if available (Points doesn't have setColorAt,
-          // so we update the geometry color attribute directly).
-        }
+    if (nodeRef.current) {
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const breath = 0.7 + Math.sin(time * 1.2 + n.phase) * 0.15;
+        const act = n.activation;
+        const scale = 0.05 + breath * 0.02 + act * 0.1;
+        dummy.position.copy(n.pos);
+        dummy.scale.setScalar(scale);
+        dummy.updateMatrix();
+        nodeRef.current.setMatrixAt(i, dummy.matrix);
+        tmpColor.copy(cNode).lerp(cAlt, act).multiplyScalar(1 + act * 0.8);
+        nodeRef.current.setColorAt(i, tmpColor);
       }
+      nodeRef.current.instanceMatrix.needsUpdate = true;
+      if (nodeRef.current.instanceColor) nodeRef.current.instanceColor.needsUpdate = true;
     }
 
-    // Update points geometry.
-    if (pointsRef.current) {
-      const geom = pointsRef.current.geometry;
-      (geom.getAttribute("position") as THREE.BufferAttribute).copyArray(posAttr);
-      geom.getAttribute("position").needsUpdate = true;
-    }
-
-    // Update line geometry positions (follow the points) + colors.
-    if (linesRef.current) {
-      const linePos = linesRef.current.geometry.getAttribute("position") as THREE.BufferAttribute;
-      const lineCol = linesRef.current.geometry.getAttribute("color") as THREE.BufferAttribute;
+    // Rebuild connection lines dynamically (nodes drift, so connections change).
+    if (lineRef.current) {
+      const posAttr = lineRef.current.geometry.getAttribute("position") as THREE.BufferAttribute;
+      const colorAttr = lineRef.current.geometry.getAttribute("color") as THREE.BufferAttribute;
       const baseLine = colorsRef.current.line;
-      const index = linesRef.current.geometry.getIndex();
-      if (index) {
-        for (let k = 0; k < index.count; k++) {
-          const vi = index.getX(k);
-          linePos.setXYZ(k, posAttr[vi * 3], posAttr[vi * 3 + 1], posAttr[vi * 3 + 2]);
-
-          // Compute activation for this vertex.
-          const x = posAttr[vi * 3];
-          const y = posAttr[vi * 3 + 1];
-          let act = 0;
-          if (ptr.active) {
-            const dx = x - ptr.wx;
-            const dy = y - ptr.wy;
-            const d2 = dx * dx + dy * dy;
-            if (d2 < MOUSE_INFLUENCE * MOUSE_INFLUENCE) {
-              act = 1 - Math.sqrt(d2) / MOUSE_INFLUENCE;
-            }
+      let li = 0;
+      for (let i = 0; i < nodes.length && li < MAX_LINES; i++) {
+        for (let j = i + 1; j < nodes.length && li < MAX_LINES; j++) {
+          const a = nodes[i];
+          const b = nodes[j];
+          const d = a.pos.distanceTo(b.pos);
+          if (d < CONNECT_DIST) {
+            const closeness = 1 - d / CONNECT_DIST;
+            const act = Math.max(a.activation, b.activation);
+            posAttr.setXYZ(li * 2, a.pos.x, a.pos.y, a.pos.z);
+            posAttr.setXYZ(li * 2 + 1, b.pos.x, b.pos.y, b.pos.z);
+            tmpColor.copy(baseLine).lerp(cAlt, act * 0.6).multiplyScalar(0.5 + closeness * 0.5 + act * 1.5);
+            colorAttr.setXYZ(li * 2, tmpColor.r, tmpColor.g, tmpColor.b);
+            colorAttr.setXYZ(li * 2 + 1, tmpColor.r, tmpColor.g, tmpColor.b);
+            li++;
           }
-          const c = baseLine.clone().lerp(cAlt, act * 0.8).multiplyScalar(1 + act * 2);
-          lineCol.setXYZ(k, c.r, c.g, c.b);
         }
-        linePos.needsUpdate = true;
-        lineCol.needsUpdate = true;
       }
+      // Hide unused lines.
+      for (let i = li; i < MAX_LINES; i++) {
+        posAttr.setXYZ(i * 2, 0, 0, -1000);
+        posAttr.setXYZ(i * 2 + 1, 0, 0, -1000);
+      }
+      posAttr.needsUpdate = true;
+      colorAttr.needsUpdate = true;
+    }
+
+    // Update signal pulse instances.
+    if (pulseRef.current) {
+      let written = 0;
+      for (const s of signalsRef.current) {
+        if (!s.alive) continue;
+        if (!nodes[s.fromIdx] || !nodes[s.toIdx]) continue;
+        const a = nodes[s.fromIdx].pos;
+        const b = nodes[s.toIdx].pos;
+        tmpVec.lerpVectors(a, b, s.t);
+        dummy.position.copy(tmpVec);
+        const intensity = Math.sin(s.t * Math.PI);
+        dummy.scale.setScalar(0.05 + intensity * 0.08);
+        dummy.updateMatrix();
+        pulseRef.current.setMatrixAt(written, dummy.matrix);
+        tmpColor.copy(cNode).lerp(cAlt, intensity).multiplyScalar(2);
+        pulseRef.current.setColorAt(written, tmpColor);
+        written++;
+      }
+      for (let i = written; i < MAX_SIGNALS; i++) {
+        dummy.scale.setScalar(0);
+        dummy.position.set(0, 0, -100);
+        dummy.updateMatrix();
+        pulseRef.current.setMatrixAt(i, dummy.matrix);
+      }
+      pulseRef.current.instanceMatrix.needsUpdate = true;
+      if (pulseRef.current.instanceColor) pulseRef.current.instanceColor.needsUpdate = true;
     }
   });
 
   return (
-    <group ref={groupRef} rotation={[-0.3, 0, 0]}>
-      {/* Grid lines */}
-      <lineSegments ref={linesRef} geometry={lineGeometry}>
-        <lineBasicMaterial vertexColors transparent opacity={0.6} toneMapped={false} blending={THREE.AdditiveBlending} depthWrite={false} />
+    <group ref={groupRef}>
+      {/* Dynamic connection lines */}
+      <lineSegments ref={lineRef} geometry={lineGeometry}>
+        <lineBasicMaterial vertexColors transparent opacity={0.7} toneMapped={false} blending={THREE.AdditiveBlending} depthWrite={false} />
       </lineSegments>
 
-      {/* Grid points */}
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" count={totalPoints} array={data.positions} itemSize={3} />
-        </bufferGeometry>
-        <pointsMaterial size={0.08} color={colorsRef.current.node} toneMapped={false} sizeAttenuation />
-      </points>
+      {/* Nodes */}
+      <instancedMesh ref={nodeRef} args={[undefined, undefined, count]}>
+        <sphereGeometry args={[1, 10, 10]} />
+        <meshBasicMaterial color="#5eead4" toneMapped={false} />
+      </instancedMesh>
+
+      {/* Signal pulses */}
+      <instancedMesh ref={pulseRef} args={[undefined, undefined, MAX_SIGNALS]}>
+        <sphereGeometry args={[1, 8, 8]} />
+        <meshBasicMaterial color="#a78bfa" toneMapped={false} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </instancedMesh>
     </group>
   );
 }
@@ -272,17 +422,17 @@ export function NeuralNetwork3D({ className }: { className?: string }) {
   return (
     <div className={className} aria-hidden>
       <Canvas
-        camera={{ position: [0, 1, 10], fov: 55 }}
+        camera={{ position: [0, 0, 11], fov: 50 }}
         dpr={isMobile ? [1, 1.5] : [1, 2]}
         gl={{ antialias: !isMobile, alpha: true, powerPreference: "high-performance" }}
         frameloop={reducedMotion ? "demand" : "always"}
         style={{ width: "100%", height: "100%" }}
       >
         <Suspense fallback={null}>
-          <WaveGrid isMobile={isMobile} />
+          <Network isMobile={isMobile} />
           {!isMobile && !reducedMotion && (
             <EffectComposer>
-              <Bloom intensity={0.7} luminanceThreshold={0.1} luminanceSmoothing={0.9} mipmapBlur />
+              <Bloom intensity={0.8} luminanceThreshold={0.1} luminanceSmoothing={0.9} mipmapBlur />
             </EffectComposer>
           )}
         </Suspense>
