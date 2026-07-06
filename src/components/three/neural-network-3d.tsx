@@ -225,7 +225,7 @@ function Network({ isMobile }: { isMobile: boolean }) {
     const slot = signalsRef.current.find((s) => !s.alive);
     if (!slot) return;
     const node = nodes[fromNode];
-    if (node.outEdges.length === 0) return;
+    if (!node || node.outEdges.length === 0) return;
     slot.edgeIdx = node.outEdges[Math.floor(Math.random() * node.outEdges.length)];
     slot.t = 0;
     slot.speed = SIGNAL_SPEED * (0.8 + Math.random() * 0.4);
@@ -238,7 +238,8 @@ function Network({ isMobile }: { isMobile: boolean }) {
       const t = e.target as HTMLElement | null;
       if (t?.closest('a, button, [role="button"], input, textarea, select, [cmdk-input]'))
         return;
-      for (let i = 0; i < LAYOUT[0]; i++) spawnSignal(layerStart + i);
+      // layerStart[0] is the index of the first input-layer node.
+      for (let i = 0; i < LAYOUT[0]; i++) spawnSignal(layerStart[0] + i);
     };
     window.addEventListener("click", onClick);
     return () => window.removeEventListener("click", onClick);
@@ -284,7 +285,7 @@ function Network({ isMobile }: { isMobile: boolean }) {
     lastSpawn.current += dt;
     if (lastSpawn.current > SPAWN_INTERVAL) {
       lastSpawn.current = 0;
-      const start = layerStart + Math.floor(Math.random() * LAYOUT[0]);
+      const start = layerStart[0] + Math.floor(Math.random() * LAYOUT[0]);
       spawnSignal(start);
     }
 
