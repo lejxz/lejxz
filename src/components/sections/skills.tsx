@@ -435,11 +435,9 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
 function SkillsMarquee({ items }: { items: string[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useRef(0);
-  const paused = useRef(false);
   const duration = Math.max(8, items.length * 0.7);
 
   useAnimationFrame((_, delta) => {
-    if (paused.current) return;
     const el = ref.current;
     if (!el) return;
 
@@ -454,16 +452,7 @@ function SkillsMarquee({ items }: { items: string[] }) {
   });
 
   return (
-    <div
-      ref={ref}
-      className="group flex w-max items-center gap-3 will-change-transform"
-      onMouseEnter={() => {
-        paused.current = true;
-      }}
-      onMouseLeave={() => {
-        paused.current = false;
-      }}
-    >
+    <div ref={ref} className="flex w-max items-center gap-3 will-change-transform">
       {[...items, ...items].map((tag, i) => (
         <span
           key={i}

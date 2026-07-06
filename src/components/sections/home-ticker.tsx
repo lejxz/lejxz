@@ -1,28 +1,27 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useAnimationFrame } from "framer-motion";
+import { useAnimationFrame } from "framer-motion";
 import { marquee } from "@/lib/data";
 
 /**
  * HomeTicker — a full-width news-ticker that rolls endlessly and seamlessly.
  *
- * Uses the FIRST marquee row (tech stack names) with its `duration` from the
- * JSON data. The second row is used in the Contact section.
+ * Uses the FIRST marquee row (tech stack names) with its `duration` and
+ * `direction` from the JSON data. The second row is used in the Contact
+ * section.
  *
  * Animation: uses framer-motion's `useAnimationFrame` to drive the translateX
- * via a motion value. This is JS-driven (not CSS @keyframes), so it works
- * reliably in static export (GitHub Pages) where CSS @keyframes + var() can
- * be unreliable.
+ * via direct DOM manipulation. JS-driven, so it works reliably in static
+ * export (GitHub Pages).
  *
- * Two identical track copies sit side by side. We translate from 0 to -50%
- * (one track width), then snap back to 0 — the snap is invisible because the
- * tracks are identical.
+ * Does NOT pause on hover — keeps scrolling continuously.
  */
 export function HomeTicker() {
   const row = marquee.rows[0];
   const stream = row?.items ?? ["code", "ml", "ship"];
   const duration = row?.duration ?? 15;
+  const reverse = row?.direction === "right";
 
   return (
     <section
@@ -33,7 +32,7 @@ export function HomeTicker() {
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
 
-      <MarqueeTrack duration={duration}>
+      <MarqueeTrack duration={duration} reverse={reverse}>
         <Track items={stream} />
         <Track items={stream} />
       </MarqueeTrack>
@@ -58,7 +57,8 @@ function Track({ items }: { items: string[] }) {
 
 /**
  * ContactTicker — a marquee using the SECOND marquee row (specialization
- * areas). Placed above the contact card. Scrolls in the opposite direction.
+ * areas). Placed above the contact card. Uses its own direction + duration
+ * from the JSON data.
  */
 export function ContactTicker() {
   const row = marquee.rows[1];
@@ -98,8 +98,8 @@ function ContactTrack({ items }: { items: string[] }) {
 
 /**
  * MarqueeTrack — the animated container. Uses framer-motion's
- * useAnimationFrame to drive the translateX. This is JS-driven, so it
- * works in static export without relying on CSS @keyframes.
+ * useAnimationFrame to drive the translateX. JS-driven, so it works in
+ * static export without relying on CSS @keyframes.
  *
  * The container holds TWO identical children. We translate from 0 to -50%
  * (one child's width) over `duration` seconds, then snap back to 0.
@@ -107,7 +107,7 @@ function ContactTrack({ items }: { items: string[] }) {
  *
  * `reverse` flips the direction (scrolls right instead of left).
  *
- * Pauses on hover.
+ * Does NOT pause on hover — keeps scrolling continuously.
  */
 function MarqueeTrack({
   children,
@@ -120,10 +120,8 @@ function MarqueeTrack({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useRef(0);
-  const paused = useRef(false);
 
   useAnimationFrame((_, delta) => {
-    if (paused.current) return;
     const el = ref.current;
     if (!el) return;
 
@@ -133,29 +131,16 @@ function MarqueeTrack({
     if (halfWidth <= 0) return;
 
     const pxPerMs = halfWidth / (duration * 1000);
-    x.current += reverse ? -pxPerMs * delta : pxPerMs * delta;
+    x.current += pxPerMs * delta;
 
     // Wrap: when we've translated past one track width, snap back.
-    if (reverse) {
-      if (x.current <= -halfWidth) x.current = 0;
-    } else {
-      if (x.current >= halfWidth) x.current = 0;
-    }
+    if (x.current >= halfWidth) x.current = 0;
 
     el.style.transform = `translate3d(${reverse ? x.current : -x.current}px, 0, 0)`;
   });
 
   return (
-    <div
-      ref={ref}
-      className="group flex w-max items-center will-change-transform"
-      onMouseEnter={() => {
-        paused.current = true;
-      }}
-      onMouseLeave={() => {
-        paused.current = false;
-      }}
-    >
+    <div ref={ref} className="flex w-max items-center will-change-transform">
       {children}
     </div>
   );

@@ -10,11 +10,12 @@ import { useEffect, useState, useRef, useCallback } from "react";
  *
  * Visually subtle: 2px tall, accent gradient, fades in only when scrolling.
  *
- * Implementation: we intentionally avoid framer-motion's `useScroll` here
- * (its `target` option throws a "ref not hydrated" warning when the target
- * isn't present during SSR). A manual scroll listener with rAF throttling
- * is simpler and avoids the issue entirely. The component renders nothing
- * until mounted + a section is observed, so there's no hydration mismatch.
+ * Bug fix: the old implementation used `-rect.top + vh/2` which caused the
+ * bar to jump to 100% when a new section became active (because the section
+ * was already past the viewport center). The new implementation computes
+ * progress as: how far the section's top has moved from the viewport top
+ * edge, relative to the total scrollable distance of that section. This
+ * gives a smooth 0→1 fill that never jumps.
  */
 export function SectionProgress() {
   const [mounted, setMounted] = useState(false);
@@ -62,6 +63,11 @@ export function SectionProgress() {
   }, [mounted]);
 
   // Compute the reading progress through the active section.
+  //
+  // Progress = 0 when the section's top is at the top of the viewport.
+  // Progress = 1 when the section's bottom is at the bottom of the viewport.
+  // The scrollable distance = sectionHeight - viewportHeight.
+  // scrolled = how far the section top has moved up from the viewport top.
   const compute = useCallback(() => {
     if (!activeId) return;
     const el = document.getElementById(activeId);
@@ -69,8 +75,16 @@ export function SectionProgress() {
     const rect = el.getBoundingClientRect();
     const vh = window.innerHeight;
     const sectionHeight = rect.height;
-    const scrolled = -rect.top + vh / 2;
-    const p = scrolled / Math.max(sectionHeight, 1);
+
+    // How far the section's top edge has scrolled above the viewport top.
+    // When rect.top is 0 (section top at viewport top), scrolled = 0.
+    // When rect.top is negative (section scrolled past), scrolled > 0.
+    const scrolled = Math.max(0, -rect.top);
+
+    // Total scrollable distance for this section.
+    const scrollable = Math.max(sectionHeight - vh, 1);
+
+    const p = scrolled / scrollable;
     setProgress(Math.max(0, Math.min(1, p)));
     setVisible(window.scrollY > window.innerHeight * 0.6);
   }, [activeId]);
