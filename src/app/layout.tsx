@@ -9,6 +9,7 @@ import { ShortcutsHelp } from "@/components/site/shortcuts-help";
 import { SectionProgress } from "@/components/site/section-progress";
 import { RouteProgress } from "@/components/site/route-progress";
 import { CursorTrail } from "@/components/motion/cursor-trail";
+import { BASE_PATH } from "@/lib/asset";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Lejuene Delantar" }],
   creator: "Lejuene Delantar",
   icons: {
-    icon: "/assets/favicon.svg",
+    icon: `${BASE_PATH}/assets/favicon.svg`,
   },
   openGraph: {
     title: "lejxz — Lejuene Delantar",
