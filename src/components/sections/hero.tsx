@@ -8,6 +8,7 @@ import { profile } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { HeroDiorama } from "@/components/sections/hero-diorama";
 import { Magnetic } from "@/components/motion/magnetic";
+import { ScrambleText } from "@/components/motion/scramble-text";
 
 /**
  * TypingPrompt — types out a command character-by-character, then shows a
@@ -122,9 +123,11 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.16 }}
             className="font-mono text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
           >
-            <span className="block text-foreground">{profile.name.split(" ")[0]}</span>
+            <span className="block text-foreground">
+              <ScrambleText text={profile.name.split(" ")[0]} duration={500} />
+            </span>
             <span className="block text-gradient-shimmer text-glow-soft">
-              {profile.name.split(" ").slice(1).join(" ")}
+              <ScrambleText text={profile.name.split(" ").slice(1).join(" ")} duration={700} />
             </span>
           </motion.h1>
 

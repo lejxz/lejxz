@@ -12,6 +12,7 @@ import {
   ExternalLink,
   CheckCircle2,
   ArrowUpRight,
+  ArrowUp,
 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import {
@@ -132,7 +133,10 @@ export function ProjectModal({
                 </div>
 
                 {/* Scrollable body */}
-                <div className="relative max-h-[calc(92svh-12rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+                <div
+                  className="relative max-h-[calc(92svh-12rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6"
+                  id="project-modal-scroll"
+                >
                   <ScrollProgress />
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
@@ -288,6 +292,23 @@ export function ProjectModal({
                       </div>
                     )}
                   </motion.div>
+
+                  {/* Back-to-top button — scrolls the modal body to the top.
+                      Shows a small "back to top" label + up arrow. */}
+                  <div className="mt-6 flex justify-center border-t border-line pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById("project-modal-scroll");
+                        if (el) el.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="group inline-flex items-center gap-2 rounded-full border border-line px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-dim transition-colors hover:border-teal/40 hover:text-teal"
+                      aria-label="Scroll to top of project details"
+                    >
+                      <ArrowUp className="h-3 w-3 transition-transform group-hover:-translate-y-0.5" />
+                      back to top
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             )}

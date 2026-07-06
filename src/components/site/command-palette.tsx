@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   CommandDialog,
@@ -22,6 +22,7 @@ import {
   Hash,
   Briefcase,
   SunMoon,
+  Clock,
 } from "lucide-react";
 import { nav, profile, projects, experience } from "@/lib/data";
 import { useModals } from "@/lib/modals";
@@ -36,10 +37,27 @@ type Action = {
   keywords?: string;
 };
 
+const RECENT_KEY = "lejxz-cmd-recent";
+const RECENT_MAX = 4;
+
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
+  const [recentIds, setRecentIds] = useState<string[]>([]);
   const router = useRouter();
   const { openProject, openExperience } = useModals();
+
+  // Load recently-visited action IDs from localStorage on mount.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(RECENT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setRecentIds(parsed.slice(0, RECENT_MAX));
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -173,6 +191,24 @@ export function CommandPalette() {
     return acc;
   }, {});
 
+  // Build the "recently visited" list from recentIds + the actions map.
+  const recentActions: Action[] = recentIds
+    .map((id) => actions.find((a) => a.id === id))
+    .filter((a): a is Action => a !== undefined);
+
+  // Record a visited action ID at the front of the list (deduped, capped).
+  const recordRecent = useCallback((id: string) => {
+    setRecentIds((cur) => {
+      const next = [id, ...cur.filter((x) => x !== id)].slice(0, RECENT_MAX);
+      try {
+        localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+
   return (
     <CommandDialog
       open={open}
@@ -182,9 +218,40 @@ export function CommandPalette() {
       <CommandInput placeholder="Search sections, projects, experience, links…" />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
+        {/* Recently visited — only shows when there's history AND no search
+            query (cmdk filters by the input value, so this naturally hides
+            when searching because the items won't match arbitrary queries). */}
+        {recentActions.length > 0 && (
+          <CommandGroup
+            heading="Recently visited"
+            className="[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.2em] [&_[cmdk-group-heading]]:text-violet"
+          >
+            {recentActions.map((a) => (
+              <CommandItem
+                key={`recent-${a.id}`}
+                value={`${a.label} ${a.hint} ${a.keywords ?? ""}`}
+                onSelect={() => {
+                  setOpen(false);
+                  recordRecent(a.id);
+                  a.run();
+                }}
+                className="group cursor-pointer rounded-md font-mono text-sm data-[selected=true]:bg-surface data-[selected=true]:text-teal"
+              >
+                <Clock className="h-4 w-4 text-violet/70 group-data-[selected=true]:text-teal" />
+                <span className="text-foreground group-data-[selected=true]:text-teal">
+                  {a.label}
+                </span>
+                <span className="ml-2 truncate text-xs text-dim">{a.hint}</span>
+                <CommandShortcut className="font-mono text-[10px]">
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </CommandShortcut>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
         {Object.entries(grouped).map(([group, items], i) => (
           <div key={group}>
-            {i > 0 && <CommandSeparator />}
+            {(i > 0 || recentActions.length > 0) && <CommandSeparator />}
             <CommandGroup
               heading={group}
               className="[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.2em] [&_[cmdk-group-heading]]:text-dim"
@@ -195,6 +262,7 @@ export function CommandPalette() {
                   value={`${a.label} ${a.hint} ${a.keywords ?? ""}`}
                   onSelect={() => {
                     setOpen(false);
+                    recordRecent(a.id);
                     a.run();
                   }}
                   className="group cursor-pointer rounded-md font-mono text-sm data-[selected=true]:bg-surface data-[selected=true]:text-teal"

@@ -81,20 +81,6 @@ export function Gallery({
               <ChevronRight className="h-4 w-4" />
             </button>
 
-            <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
-              {images.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setIndex(i)}
-                  aria-label={`Go to image ${i + 1}`}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all",
-                    i === index ? "w-5 bg-teal" : "w-1.5 bg-foreground/40 hover:bg-foreground/70"
-                  )}
-                />
-              ))}
-            </div>
             <span className="absolute right-2 top-2 rounded-md border border-line bg-surface/70 px-2 py-0.5 font-mono text-[10px] text-foreground/80 backdrop-blur">
               {index + 1}/{n}
             </span>
@@ -110,6 +96,34 @@ export function Gallery({
           <Expand className="h-4 w-4" />
         </button>
       </div>
+
+      {/* Thumbnails strip — shows below the main image when there are
+          multiple images. The active thumbnail gets a teal ring + slight
+          scale-up. Clicking a thumbnail jumps to that image. */}
+      {n > 1 && (
+        <div className="mt-2 flex items-center gap-1.5 overflow-x-auto pb-1">
+          {images.map((img, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Go to image ${i + 1}: ${img.caption ?? ""}`}
+              className={cn(
+                "relative h-10 w-16 shrink-0 overflow-hidden rounded-md border transition-all",
+                i === index
+                  ? "border-teal/60 ring-1 ring-teal/40 scale-105"
+                  : "border-line opacity-50 hover:opacity-90 hover:border-dim"
+              )}
+            >
+              <img
+                src={asset(img.src)}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
       <AnimatePresence>
         {lightbox && (
