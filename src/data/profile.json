@@ -4,7 +4,7 @@
   "alias": "lejxz",
   "heroLine1": "lejxz",
   "heroLine2": ".dev",
-  "role": "Computer Science Student",
+  "role": "Computer Science",
   "field": "Artificial Intelligence",
   "location": "Philippines",
   "availability": "Open for Dating",
@@ -39,12 +39,12 @@
       "url": "mailto:lejxz.dev@gmail.com"
     }
   ],
-  "tagline": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "tagline": "<Change the world/>",
   "bio": [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
   ],
-  "quote": "Lorem ipsum dolor sit amet — consectetur adipiscing elit, sed do eiusmod tempor.",
+  "quote": "Always Learning. Stay Hungry, Stay Foolish.",
   "facts": [
     {
       "label": "Location",
@@ -103,7 +103,7 @@
     },
     {
       "label": "Stack",
-      "value": "Python · TS"
+      "value": "Python"
     },
     {
       "label": "Based",
@@ -113,21 +113,27 @@
   "numericStats": [
     {
       "label": "Projects",
-      "value": 24,
+      "value": 2,
       "suffix": "+"
     },
     {
       "label": "Years coding",
-      "value": 5
+      "value": 4
     },
     {
       "label": "Models trained",
-      "value": 18,
+      "value": 1,
       "suffix": "+"
     },
     {
-      "label": "Coffees / week",
-      "value": 12
+      "label": "Age",
+      "value": 20
+    },
+    {
+      "label": "Birth",
+      "value": 5,
+      "suffix": "/2006",
+      "prefix": ""
     }
   ],
   "avatar": "/assets/avatar.svg"
