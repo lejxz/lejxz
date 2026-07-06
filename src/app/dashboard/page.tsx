@@ -45,6 +45,7 @@ import usesFallback from "@/data/uses.json";
 const PW_STORAGE_KEY = "lejxz_dashboard_pw";
 const PORT = 3030;
 const API_BASE = `/api/dashboard`;
+const DEFAULT_PASSWORD = "lejxz-edit-2026";
 
 type FileName =
   | "profile"
@@ -159,13 +160,27 @@ function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
       if (res.ok) {
         onUnlock(value);
         toast.success("Dashboard unlocked");
+      } else if (res.status === 401) {
+        toast.error("Wrong password");
+      } else {
+        // Backend returned a non-401 error (e.g. 404 on GitHub Pages where the
+        // mini-service doesn't exist). Validate against the default password
+        // client-side and unlock in read-only mode.
+        if (value === DEFAULT_PASSWORD) {
+          onUnlock(value);
+          toast("Backend offline — read-only mode", { icon: "⚠️" });
+        } else {
+          toast.error("Wrong password");
+        }
+      }
+    } catch {
+      // Network error — mini-service unreachable. Validate client-side.
+      if (value === DEFAULT_PASSWORD) {
+        onUnlock(value);
+        toast("Backend unreachable — read-only mode", { icon: "⚠️" });
       } else {
         toast.error("Wrong password");
       }
-    } catch {
-      // mini-service might be down — still allow unlock with fallback data
-      onUnlock(value);
-      toast("Backend unreachable — showing read-only data", { icon: "⚠️" });
     }
     setChecking(false);
   };
