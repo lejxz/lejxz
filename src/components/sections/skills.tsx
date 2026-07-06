@@ -181,7 +181,7 @@ export function Skills() {
           {/* Right: sticky detail panel with radial gauge */}
           <div className="lg:sticky lg:top-24 lg:h-fit">
             <Reveal delay={0.1}>
-              <div className="card-hover-glow relative flex min-h-[20rem] flex-col items-center justify-center overflow-hidden rounded-2xl border border-line bg-surface/40 p-8">
+              <div className="card-hover-glow relative flex min-h-[20rem] flex-col items-center justify-center overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-8">
                 <div className="pointer-events-none absolute inset-0 bg-radial-fade opacity-60" />
                 <motion.div
                   key={selected?.name ?? "empty"}
@@ -277,7 +277,7 @@ function SkillBar({
         "group w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors",
         active
           ? "border-teal/40 bg-teal/8"
-          : "border-line bg-surface/30 hover:border-teal/25 hover:bg-surface/50"
+          : "border-line bg-surface/60 hover:border-teal/25 hover:bg-surface/80"
       )}
     >
       <div className="flex items-center justify-between">

@@ -66,11 +66,20 @@ export default function Background() {
     <div ref={containerRef} className="fixed inset-0 -z-10" aria-hidden>
       <div className="absolute inset-0 bg-background" />
       {use2D ? (
-        <NeuralNetworkCanvas className="absolute inset-0 h-full w-full opacity-50" />
+        <NeuralNetworkCanvas className="absolute inset-0 h-full w-full opacity-40" />
       ) : (
-        <NeuralNetwork3D className="absolute inset-0 h-full w-full opacity-80" />
+        <NeuralNetwork3D className="absolute inset-0 h-full w-full opacity-60" />
       )}
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-20" />
+      {/* Subtle radial darkening behind the content area to improve card
+          readability without killing the neural network visual. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 40%, color-mix(in oklab, var(--background) 55%, transparent), transparent)",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-15" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
     </div>

@@ -15,7 +15,7 @@ export function HomeTicker() {
   return (
     <section
       aria-label="Technologies ticker"
-      className="relative overflow-hidden border-y border-line bg-surface/30 py-4"
+      className="relative overflow-hidden border-y border-line bg-surface/50 backdrop-blur-sm py-4"
     >
       {/* edge fades */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />

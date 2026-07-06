@@ -50,7 +50,7 @@ export function ProjectCard({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 0.45, delay: (index % 3) * 0.07 }}
-        className="card-hover-glow group flex w-full items-center gap-4 rounded-2xl border border-line bg-surface/50 p-3 text-left transition-colors hover:border-teal/30"
+        className="card-hover-glow group flex w-full items-center gap-4 rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-3 text-left transition-colors hover:border-teal/30"
       >
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-line bg-surface-2">
           {project.cover || project.thumbnail ? (
@@ -101,7 +101,7 @@ export function ProjectCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
-      className="card-hover-glow group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface/40 transition-colors hover:border-teal/30"
+      className="card-hover-glow group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm transition-colors hover:border-teal/30"
     >
       {/* Thumbnail */}
       <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">

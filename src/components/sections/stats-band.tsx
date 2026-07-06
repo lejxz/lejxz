@@ -24,7 +24,7 @@ export function StatsBand() {
     <section
       ref={ref}
       aria-label="Quick stats"
-      className="relative overflow-hidden border-y border-line bg-surface/20"
+      className="relative overflow-hidden border-y border-line bg-surface/40"
     >
       <div className="pointer-events-none absolute inset-0 bg-aurora opacity-40" />
 
@@ -95,7 +95,7 @@ function RevealStat({
         my.set(0);
       }}
       className={cn(
-        "card-hover-glow group relative overflow-hidden rounded-xl border border-line bg-surface/40 p-3 text-center transition-colors sm:p-4",
+        "card-hover-glow group relative overflow-hidden rounded-xl border border-line bg-surface/70 backdrop-blur-sm p-3 text-center transition-colors sm:p-4",
         accent.ring
       )}
     >

@@ -69,7 +69,7 @@ export function Contact() {
   return (
     <section id="contact" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="card-hover-glow relative overflow-hidden rounded-[2rem] border border-line bg-surface/40 p-6 sm:p-10 lg:p-14">
+        <div className="card-hover-glow relative overflow-hidden rounded-[2rem] border border-line bg-surface/75 backdrop-blur-sm p-6 sm:p-10 lg:p-14">
           {/* glow blobs */}
           <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-teal/15 blur-[100px]" />
           <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-violet/15 blur-[100px]" />
@@ -87,7 +87,7 @@ export function Contact() {
               </Reveal>
 
               <Reveal delay={0.14}>
-                <div className="group relative mt-6 flex items-center gap-4 rounded-2xl border border-line bg-surface/50 p-4 transition-colors hover:border-teal/30">
+                <div className="group relative mt-6 flex items-center gap-4 rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-4 transition-colors hover:border-teal/30">
                   <a
                     href={`mailto:${profile.email}`}
                     className="flex flex-1 items-center gap-4"
@@ -139,7 +139,7 @@ export function Contact() {
               <form
                 ref={formRef}
                 onSubmit={onSubmit}
-                className="relative flex flex-col gap-4 rounded-2xl border border-line bg-surface/30 p-5 sm:p-6"
+                className="relative flex flex-col gap-4 rounded-2xl border border-line bg-surface/70 backdrop-blur-sm p-5 sm:p-6"
               >
                 {/* Confetti burst overlay — originates from the submit button */}
                 <ConfettiBurst trigger={confettiTrigger} originX={burstOrigin.x} originY={burstOrigin.y} />
@@ -148,7 +148,7 @@ export function Contact() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ada Lovelace"
-                    className="w-full rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                    className="w-full rounded-xl border border-line bg-background/80 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
                   />
                 </Field>
                 <Field
@@ -164,7 +164,7 @@ export function Contact() {
                     placeholder="ada@example.com"
                     aria-invalid={emailShowError}
                     className={
-                      "w-full rounded-xl border bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:outline-none focus:ring-2 transition-colors " +
+                      "w-full rounded-xl border bg-background/80 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:outline-none focus:ring-2 transition-colors " +
                       (emailShowError
                         ? "border-destructive/50 focus:border-destructive/60 focus:ring-destructive/20"
                         : email !== "" && emailValid
@@ -180,7 +180,7 @@ export function Contact() {
                     rows={5}
                     maxLength={charLimit}
                     placeholder="Tell me about your project, role, or idea…"
-                    className="w-full resize-none rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                    className="w-full resize-none rounded-xl border border-line bg-background/80 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
                   />
                 </Field>
                 <div className="flex items-center justify-between">

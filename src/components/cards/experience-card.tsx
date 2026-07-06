@@ -62,7 +62,7 @@ export function ExperienceCard({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 0.45, delay: (index % 4) * 0.07 }}
-        className="card-hover-glow group flex h-full flex-col rounded-2xl border border-line bg-surface/40 p-5 text-left transition-colors hover:border-teal/30"
+        className="card-hover-glow group flex h-full flex-col rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-5 text-left transition-colors hover:border-teal/30"
       >
         <div className="mb-3 flex items-center justify-between">
           <span className={cn("font-mono text-[10px] uppercase tracking-wider", TYPE_TEXT[type])}>
@@ -103,7 +103,7 @@ export function ExperienceCard({
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: (index % 5) * 0.08 }}
-      className="card-hover-glow group relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-start gap-4 rounded-2xl border border-line bg-surface/40 p-4 transition-colors hover:border-teal/30 sm:gap-5 sm:p-5"
+      className="card-hover-glow group relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-start gap-4 rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-4 transition-colors hover:border-teal/30 sm:gap-5 sm:p-5"
     >
       {/* timeline node */}
       <div className="relative flex items-center justify-center pt-1">

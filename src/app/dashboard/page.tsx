@@ -84,7 +84,21 @@ const FALLBACKS: Record<FileName, unknown> = {
   uses: usesFallback,
 };
 
+/**
+ * Build the API URL for the dashboard mini-service.
+ *
+ * - In dev (localhost): call the mini-service directly at localhost:3030.
+ *   The mini-service has CORS enabled (Access-Control-Allow-Origin: *) so
+ *   cross-origin browser requests work.
+ * - In the sandbox preview (served via the Caddy gateway on port 81): use
+ *   the relative path + ?XTransformPort=3030 so the gateway forwards it.
+ * - In production (GitHub Pages): the relative path 404s (no backend), so
+ *   the dashboard falls back to read-only mode — the expected behavior.
+ */
 function apiUrl(path: string): string {
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return `http://localhost:${PORT}${API_BASE}${path}`;
+  }
   return `${API_BASE}${path}?XTransformPort=${PORT}`;
 }
 

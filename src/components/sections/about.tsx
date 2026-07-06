@@ -74,7 +74,7 @@ export function About() {
 
             {profile.quote && (
               <Reveal delay={0.12}>
-                <figure className="mt-8 flex gap-4 rounded-xl border border-line bg-surface/40 p-5">
+                <figure className="mt-8 flex gap-4 rounded-xl border border-line bg-surface/70 backdrop-blur-sm p-5">
                   <Quote className="h-7 w-7 shrink-0 text-violet/70" />
                   <blockquote className="text-base italic leading-relaxed text-foreground/80">
                     &ldquo;{profile.quote}&rdquo;
@@ -87,7 +87,7 @@ export function About() {
           {/* Right: profile card + now widget */}
           <div className="lg:col-span-5">
             <Reveal delay={0.1}>
-              <div className="overflow-hidden rounded-2xl border border-line bg-surface/60 p-6 shadow-2xl shadow-black/40">
+              <div className="overflow-hidden rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-6 shadow-2xl shadow-black/40">
                 <div className="mb-5 flex items-center gap-4">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-teal/40 to-violet/30 ring-2 ring-teal/30">
                     <div className="flex h-full w-full items-center justify-center font-mono text-3xl font-bold text-primary-foreground">
@@ -143,7 +143,7 @@ export function About() {
 
             {/* Now widget */}
             <Reveal delay={0.14}>
-              <div className="mt-5 rounded-2xl border border-line bg-surface/40 p-5">
+              <div className="mt-5 rounded-2xl border border-line bg-surface/70 backdrop-blur-sm p-5">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-2 w-2">
@@ -240,7 +240,7 @@ function CodeBlock({
   }, [plainText]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-surface/60 shadow-2xl shadow-black/40">
+    <div className="overflow-hidden rounded-xl border border-line bg-surface/80 backdrop-blur-sm shadow-2xl shadow-black/40">
       <div className="flex items-center gap-2 border-b border-line bg-surface-3/60 px-4 py-2.5">
         <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
         <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
@@ -339,7 +339,7 @@ function NowPlaying() {
   const track = PLAYLIST[idx];
 
   return (
-    <div className="mt-5 rounded-2xl border border-line bg-surface/40 p-4">
+    <div className="mt-5 rounded-2xl border border-line bg-surface/70 backdrop-blur-sm p-4">
       <div className="flex items-center gap-3">
         {/* album art placeholder with rotating gradient */}
         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-teal/40 to-violet/40">
@@ -436,7 +436,7 @@ function NowReading() {
   const currentPage = Math.round(book.progress * book.pages);
 
   return (
-    <div className="mt-5 rounded-2xl border border-line bg-surface/40 p-4">
+    <div className="mt-5 rounded-2xl border border-line bg-surface/70 backdrop-blur-sm p-4">
       <div className="flex items-center gap-3">
         {/* book cover placeholder with a spine + gradient */}
         <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md border border-line shadow-lg">

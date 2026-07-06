@@ -64,7 +64,7 @@ export function Uses() {
               <Reveal key={cat.key} delay={i * 0.08}>
                 <TiltCard
                   max={6}
-                  className="group relative h-full rounded-2xl border border-line bg-surface/40 p-6 transition-colors [&:hover]:border-teal/30"
+                  className="group relative h-full rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-6 transition-colors [&:hover]:border-teal/30"
                 >
                   {/* hover glow blob — sits behind content, fades in on hover */}
                   <div

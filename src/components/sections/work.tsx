@@ -93,7 +93,7 @@ function SpotlightCard({ project, onOpen }: { project: Project; onOpen: () => vo
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 0.5 }}
         className={cn(
-          "card-hover-glow group relative grid w-full overflow-hidden rounded-3xl border border-line bg-surface/40 text-left transition-colors hover:border-teal/30 lg:grid-cols-2"
+          "card-hover-glow group relative grid w-full overflow-hidden rounded-3xl border border-line bg-surface/75 backdrop-blur-sm text-left transition-colors hover:border-teal/30 lg:grid-cols-2"
         )}
       >
         {/* image */}
