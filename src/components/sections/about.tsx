@@ -12,8 +12,9 @@ import {
   BookOpen,
   Copy,
   Check,
+  Music2,
 } from "lucide-react";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { profile, now } from "@/lib/data";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
@@ -176,6 +177,13 @@ export function About() {
                 </ul>
               </div>
             </Reveal>
+
+            {/* Now playing widget — a mock "currently listening" card with an
+                animated equalizer. Adds personality without needing a real
+                music API. The track cycles through a small playlist every 8s. */}
+            <Reveal delay={0.18}>
+              <NowPlaying />
+            </Reveal>
           </div>
         </div>
       </div>
@@ -291,6 +299,109 @@ function CodeBlock({
           {"}"}
         </code>
       </pre>
+    </div>
+  );
+}
+
+/**
+ * NowPlaying — a mock "currently listening" widget with an animated
+ * equalizer and a cycling playlist. Adds personality to the About section
+ * without requiring a real music API. The track advances every 8 seconds.
+ *
+ * The playlist is intentionally placeholder (lorem-ipsum style) to match
+ * the rest of the site's placeholder copy.
+ */
+const PLAYLIST = [
+  { title: "Lorem Ipsum", artist: "Consectetur Adipiscing", duration: "3:42" },
+  { title: "Sed Do Eiusmod", artist: "Tempor Incididunt", duration: "4:18" },
+  { title: "Ut Labore", artist: "Magna Aliqua", duration: "2:55" },
+];
+
+function NowPlaying() {
+  const [idx, setIdx] = useState(0);
+  const [bars] = useState(() =>
+    // 5 bars with deterministic base heights so they don't reshuffle on rerender.
+    Array.from({ length: 5 }, (_, i) => 40 + ((i * 37) % 60))
+  );
+
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % PLAYLIST.length), 8000);
+    return () => clearInterval(t);
+  }, []);
+
+  const track = PLAYLIST[idx];
+
+  return (
+    <div className="mt-5 rounded-2xl border border-line bg-surface/40 p-4">
+      <div className="flex items-center gap-3">
+        {/* album art placeholder with rotating gradient */}
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-teal/40 to-violet/40">
+          <motion.div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "conic-gradient(from 0deg, var(--color-teal), var(--color-violet), var(--color-teal))",
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          />
+          <div className="absolute inset-1 flex items-center justify-center rounded-md bg-surface/80 backdrop-blur-sm">
+            <Music2 className="h-4 w-4 text-teal" />
+          </div>
+        </div>
+
+        {/* track info */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal" />
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-widest text-teal">
+              now playing
+            </span>
+          </div>
+          <div className="mt-0.5 truncate font-mono text-sm font-medium text-foreground">
+            {track.title}
+          </div>
+          <div className="truncate text-xs text-dim">{track.artist}</div>
+        </div>
+
+        {/* animated equalizer */}
+        <div className="flex h-8 items-end gap-0.5" aria-hidden>
+          {bars.map((base, i) => (
+            <motion.span
+              key={i}
+              className="w-1 rounded-full bg-gradient-to-t from-teal/40 to-teal"
+              animate={{
+                height: [`${base * 0.3}%`, `${base}%`, `${base * 0.5}%`, `${base * 0.8}%`, `${base * 0.3}%`],
+              }}
+              transition={{
+                duration: 0.9 + (i % 3) * 0.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.12,
+              }}
+              style={{ height: `${base * 0.5}%` }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* progress bar (mock — just animates on a loop) */}
+      <div className="mt-3 flex items-center gap-2">
+        <span className="font-mono text-[9px] tabular-nums text-dim">1:24</span>
+        <div className="relative h-1 flex-1 overflow-hidden rounded-full bg-line">
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-teal to-violet"
+            initial={{ width: "0%" }}
+            animate={{ width: ["0%", "100%"] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+        <span className="font-mono text-[9px] tabular-nums text-dim">{track.duration}</span>
+      </div>
     </div>
   );
 }

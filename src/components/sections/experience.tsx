@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { experience } from "@/lib/data";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -15,6 +16,16 @@ export function Experience() {
   // Filtering lives on the /experience/ full page.
   const items = experience.items.slice(0, PREVIEW_LIMIT);
   const hasMore = experience.items.length > PREVIEW_LIMIT;
+
+  // Scroll-linked progress for the vertical timeline line — matches the
+  // /experience/ full page treatment.
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 80%", "end 80%"],
+  });
+  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const headTop = useTransform(lineScale, [0, 1], ["0%", "100%"]);
 
   return (
     <section id="experience" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -30,9 +41,20 @@ export function Experience() {
           </p>
         </Reveal>
 
-        {/* Timeline — 3 most recent items */}
-        <div className="mt-10 relative">
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-teal/50 via-line to-transparent sm:left-[9px]" />
+        {/* Timeline — the vertical line fills as the user scrolls through it */}
+        <div ref={timelineRef} className="mt-10 relative">
+          {/* Track (full-height faint line) */}
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-line sm:left-[9px]" />
+          {/* Progress fill (teal→violet gradient, scaled by scroll) */}
+          <motion.div
+            style={{ scaleY: lineScale, transformOrigin: "top" }}
+            className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-teal via-teal/80 to-violet sm:left-[9px]"
+          />
+          {/* Glowing head node — sits at the current fill position */}
+          <motion.div
+            style={{ top: headTop }}
+            className="absolute left-[7px] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal shadow-[0_0_10px_var(--color-teal)] sm:left-[9px]"
+          />
           <motion.div layout className="relative space-y-3">
             {items.map((item, i) => (
               <div key={item.id} className="relative sm:pl-0">

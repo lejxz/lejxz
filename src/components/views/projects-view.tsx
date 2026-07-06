@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Search } from "lucide-react";
@@ -31,6 +31,11 @@ export function ProjectsFull() {
   const [status, setStatus] = useState<"all" | ProjectStatus>("all");
   const [query, setQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+
+  // Keyboard navigation: j/k moves focus between project cards. We track the
+  // focused index and scroll the card into view. Enter opens it.
+  const [focusedIdx, setFocusedIdx] = useState<number | null>(null);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   // Build the list of all tech tags across projects, sorted by frequency.
   const ALL_TAGS = useState(() => {
@@ -65,6 +70,48 @@ export function ProjectsFull() {
     setQuery("");
     setActiveTag(null);
   };
+
+  // Clamp focusedIdx when the filtered list changes.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFocusedIdx((cur) => {
+      if (cur === null) return null;
+      if (filtered.length === 0) return null;
+      return Math.min(cur, filtered.length - 1);
+    });
+  }, [filtered.length]);
+
+  const focusCard = useCallback(
+    (idx: number) => {
+      const clamped = Math.max(0, Math.min(idx, filtered.length - 1));
+      setFocusedIdx(clamped);
+      const el = cardRefs.current[clamped];
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    },
+    [filtered.length]
+  );
+
+  // j/k keyboard navigation (only when not typing in an input and no dialog open).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (document.querySelector("[role=dialog]")) return;
+      if (e.key === "j" || e.key === "ArrowDown") {
+        e.preventDefault();
+        focusCard(focusedIdx === null ? 0 : focusedIdx + 1);
+      } else if (e.key === "k" || e.key === "ArrowUp") {
+        e.preventDefault();
+        focusCard(focusedIdx === null ? filtered.length - 1 : focusedIdx - 1);
+      } else if (e.key === "Escape") {
+        setFocusedIdx(null);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focusedIdx, focusCard, filtered.length]);
 
   return (
     <section className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -187,13 +234,45 @@ export function ProjectsFull() {
           )}
         </Reveal>
 
+        {/* Keyboard nav hint */}
+        {filtered.length > 0 && (
+          <p className="mt-4 hidden font-mono text-[10px] text-dim/60 md:block">
+            <span className="text-teal/60">[tip]</span> press{" "}
+            <kbd className="rounded border border-line px-1 py-0.5 text-foreground/70">j</kbd>
+            /<kbd className="rounded border border-line px-1 py-0.5 text-foreground/70">k</kbd>{" "}
+            to navigate cards ·{" "}
+            <kbd className="rounded border border-line px-1 py-0.5 text-foreground/70">↵</kbd>{" "}
+            to open
+          </p>
+        )}
+
         {/* Grid — all filtered projects */}
         <div className="mt-6">
           <AnimatePresence mode="popLayout">
             {filtered.length > 0 ? (
               <motion.div layout className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {filtered.map((p, i) => (
-                  <ProjectCard key={p.id} project={p} list={filtered} index={i} />
+                  <div
+                    key={p.id}
+                    ref={(el) => {
+                      cardRefs.current[i] = el;
+                    }}
+                    onMouseEnter={() => setFocusedIdx(i)}
+                    className={cn(
+                      "relative rounded-2xl transition-all duration-200",
+                      focusedIdx === i
+                        ? "ring-2 ring-teal/50 ring-offset-2 ring-offset-background scale-[1.02]"
+                        : "ring-0 ring-transparent"
+                    )}
+                  >
+                    <ProjectCard project={p} list={filtered} index={i} />
+                    {/* index badge shown when keyboard-focused */}
+                    {focusedIdx === i && (
+                      <span className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-teal font-mono text-[10px] font-bold text-primary-foreground shadow-lg shadow-teal/30">
+                        {i + 1}
+                      </span>
+                    )}
+                  </div>
                 ))}
               </motion.div>
             ) : (
