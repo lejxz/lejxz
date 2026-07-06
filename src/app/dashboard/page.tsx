@@ -454,12 +454,11 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
     setAutoSaveStatus("idle");
   };
 
-  // Auto-save: debounce 2s after the last edit to the active file.
+  // Auto-save: debounce 60s (1 minute) after the last edit to the active file.
   // Only triggers if the backend is up and the active file is dirty.
-  // In GitHub Pages mode, auto-save is disabled (too many API calls).
+  // In GitHub Pages mode, auto-save is disabled (would spam the GitHub API).
   React.useEffect(() => {
     if (!allData || !original || !backendUp) return;
-    // Disable auto-save in GitHub Pages mode (would spam the GitHub API).
     if (getEnv() === "github") return;
     const isDirtyNow =
       JSON.stringify(allData[active]) !== JSON.stringify(original[active]);
@@ -480,7 +479,7 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
       } catch {
         setAutoSaveStatus("idle");
       }
-    }, 2000);
+    }, 60000); // 1 minute
 
     return () => clearTimeout(timer);
   }, [allData, original, active, backendUp, password]);
