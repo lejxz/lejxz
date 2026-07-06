@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef } from "react";
+import { useState, useMemo, useRef } from "react";
+import { motion, useInView, AnimatePresence, useAnimationFrame } from "framer-motion";
 import { Search, X, ArrowUpDown } from "lucide-react";
 import { skills } from "@/lib/data";
 import { Icon } from "@/components/icon";
@@ -226,25 +225,11 @@ export function Skills() {
           </div>
         </div>
 
-        {/* Tech marquee */}
+        {/* Tech marquee — uses framer-motion for JS-driven animation */}
         {skills.marquee && skills.marquee.length > 0 && (
           <Reveal delay={0.1}>
             <div className="mask-fade-edges mt-14 overflow-hidden">
-              <div
-                className="group flex w-max items-center gap-3 hover:[animation-play-state:paused]"
-                style={{
-                  animation: `marquee-x ${Math.max(8, skills.marquee.length * 0.7)}s linear infinite`,
-                }}
-              >
-                {[...skills.marquee, ...skills.marquee].map((tag, i) => (
-                  <span
-                    key={i}
-                    className="shrink-0 rounded-full border border-line bg-surface/60 px-4 py-1.5 font-mono text-xs text-foreground/70"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              <SkillsMarquee items={skills.marquee} />
             </div>
           </Reveal>
         )}
@@ -438,6 +423,55 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+/**
+ * SkillsMarquee — a JS-driven (framer-motion) marquee for the tech tags.
+ * Uses useAnimationFrame to translate the container. Two copies of the
+ * items ensure a seamless loop.
+ */
+function SkillsMarquee({ items }: { items: string[] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useRef(0);
+  const paused = useRef(false);
+  const duration = Math.max(8, items.length * 0.7);
+
+  useAnimationFrame((_, delta) => {
+    if (paused.current) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const halfWidth = el.scrollWidth / 2;
+    if (halfWidth <= 0) return;
+
+    const pxPerMs = halfWidth / (duration * 1000);
+    x.current += pxPerMs * delta;
+
+    if (x.current >= halfWidth) x.current = 0;
+    el.style.transform = `translate3d(${-x.current}px, 0, 0)`;
+  });
+
+  return (
+    <div
+      ref={ref}
+      className="group flex w-max items-center gap-3 will-change-transform"
+      onMouseEnter={() => {
+        paused.current = true;
+      }}
+      onMouseLeave={() => {
+        paused.current = false;
+      }}
+    >
+      {[...items, ...items].map((tag, i) => (
+        <span
+          key={i}
+          className="shrink-0 rounded-full border border-line bg-surface/60 px-4 py-1.5 font-mono text-xs text-foreground/70"
+        >
+          {tag}
+        </span>
+      ))}
     </div>
   );
 }

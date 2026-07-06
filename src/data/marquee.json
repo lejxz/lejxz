@@ -2,7 +2,7 @@
   "rows": [
     {
       "direction": "left",
-      "duration": 38,
+      "duration": 5,
       "items": [
         "Python",
         "TypeScript",
@@ -26,7 +26,7 @@
     },
     {
       "direction": "right",
-      "duration": 52,
+      "duration": 5,
       "items": [
         "Computer Vision",
         "NLP",

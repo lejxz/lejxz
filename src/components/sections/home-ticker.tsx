@@ -1,24 +1,28 @@
 "use client";
 
+import { useRef } from "react";
+import { motion, useAnimationFrame } from "framer-motion";
 import { marquee } from "@/lib/data";
 
 /**
  * HomeTicker — a full-width news-ticker that rolls endlessly and seamlessly.
  *
- * Uses the FIRST marquee row only (tech stack names). The second row
- * (specialization areas) is used in the Contact section as a separate
- * ticker above the contact card.
+ * Uses the FIRST marquee row (tech stack names) with its `duration` from the
+ * JSON data. The second row is used in the Contact section.
  *
- * NOTE: We use an INLINE animation style rather than the `animate-marquee`
- * CSS class + `--marquee-duration` variable. The CSS `var()` inside an
- * `animation` shorthand doesn't work reliably across all browsers/build
- * pipelines (especially Next.js static export). Inline style is the most
- * robust approach.
+ * Animation: uses framer-motion's `useAnimationFrame` to drive the translateX
+ * via a motion value. This is JS-driven (not CSS @keyframes), so it works
+ * reliably in static export (GitHub Pages) where CSS @keyframes + var() can
+ * be unreliable.
+ *
+ * Two identical track copies sit side by side. We translate from 0 to -50%
+ * (one track width), then snap back to 0 — the snap is invisible because the
+ * tracks are identical.
  */
 export function HomeTicker() {
   const row = marquee.rows[0];
   const stream = row?.items ?? ["code", "ml", "ship"];
-  const duration = Math.max(10, Math.min(18, stream.length * 0.8));
+  const duration = row?.duration ?? 15;
 
   return (
     <section
@@ -29,15 +33,10 @@ export function HomeTicker() {
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
 
-      <div
-        className="group flex w-max items-center will-change-transform hover:[animation-play-state:paused]"
-        style={{
-          animation: `marquee-x ${duration}s linear infinite`,
-        }}
-      >
+      <MarqueeTrack duration={duration}>
         <Track items={stream} />
         <Track items={stream} />
-      </div>
+      </MarqueeTrack>
     </section>
   );
 }
@@ -59,21 +58,14 @@ function Track({ items }: { items: string[] }) {
 
 /**
  * ContactTicker — a marquee using the SECOND marquee row (specialization
- * areas like "Computer Vision", "NLP", etc.). Placed above the contact
- * card to add visual interest and reinforce the AI/ML focus.
- *
- * Uses the reverse direction (left → right) to contrast with the home
- * ticker.
+ * areas). Placed above the contact card. Scrolls in the opposite direction.
  */
 export function ContactTicker() {
   const row = marquee.rows[1];
   if (!row) return null;
   const stream = row.items;
-  const duration = Math.max(10, Math.min(18, stream.length * 0.8));
-
-  // Determine direction: "right" in the data means the track should move
-  // right-to-left visually, which is the `marquee-x-rev` keyframe.
-  const keyframe = row.direction === "right" ? "marquee-x-rev" : "marquee-x";
+  const duration = row.duration ?? 15;
+  const reverse = row.direction === "right";
 
   return (
     <div className="relative overflow-hidden border-y border-line bg-surface/40 backdrop-blur-sm py-3">
@@ -81,15 +73,10 @@ export function ContactTicker() {
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent" />
 
-      <div
-        className="group flex w-max items-center will-change-transform hover:[animation-play-state:paused]"
-        style={{
-          animation: `${keyframe} ${duration}s linear infinite`,
-        }}
-      >
+      <MarqueeTrack duration={duration} reverse={reverse}>
         <ContactTrack items={stream} />
         <ContactTrack items={stream} />
-      </div>
+      </MarqueeTrack>
     </div>
   );
 }
@@ -105,6 +92,71 @@ function ContactTrack({ items }: { items: string[] }) {
           <span className="text-teal/40">·</span>
         </span>
       ))}
+    </div>
+  );
+}
+
+/**
+ * MarqueeTrack — the animated container. Uses framer-motion's
+ * useAnimationFrame to drive the translateX. This is JS-driven, so it
+ * works in static export without relying on CSS @keyframes.
+ *
+ * The container holds TWO identical children. We translate from 0 to -50%
+ * (one child's width) over `duration` seconds, then snap back to 0.
+ * The snap is invisible because the children are identical.
+ *
+ * `reverse` flips the direction (scrolls right instead of left).
+ *
+ * Pauses on hover.
+ */
+function MarqueeTrack({
+  children,
+  duration,
+  reverse = false,
+}: {
+  children: React.ReactNode;
+  duration: number;
+  reverse?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useRef(0);
+  const paused = useRef(false);
+
+  useAnimationFrame((_, delta) => {
+    if (paused.current) return;
+    const el = ref.current;
+    if (!el) return;
+
+    // Pixels per millisecond. Total distance = half the container width
+    // (one track copy). Duration is in seconds → milliseconds.
+    const halfWidth = el.scrollWidth / 2;
+    if (halfWidth <= 0) return;
+
+    const pxPerMs = halfWidth / (duration * 1000);
+    x.current += reverse ? -pxPerMs * delta : pxPerMs * delta;
+
+    // Wrap: when we've translated past one track width, snap back.
+    if (reverse) {
+      if (x.current <= -halfWidth) x.current = 0;
+    } else {
+      if (x.current >= halfWidth) x.current = 0;
+    }
+
+    el.style.transform = `translate3d(${reverse ? x.current : -x.current}px, 0, 0)`;
+  });
+
+  return (
+    <div
+      ref={ref}
+      className="group flex w-max items-center will-change-transform"
+      onMouseEnter={() => {
+        paused.current = true;
+      }}
+      onMouseLeave={() => {
+        paused.current = false;
+      }}
+    >
+      {children}
     </div>
   );
 }
