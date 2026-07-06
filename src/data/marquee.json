@@ -2,37 +2,39 @@
   "rows": [
     {
       "direction": "left",
-      "duration": 15,
+      "duration": 20,
       "items": [
         "Python",
+        "TypeScript",
         "PyTorch",
         "TensorFlow",
+        "React",
         "Next.js",
         "scikit-learn",
         "Hugging Face",
         "OpenCV",
+        "Rust",
         "C++",
         "SQL",
+        "Docker",
         "Linux",
+        "FastAPI",
         "NumPy",
-        "C"
+        "Pandas",
+        "LangChain"
       ]
     },
     {
       "direction": "right",
-      "duration": 15,
+      "duration": 20,
       "items": [
         "Computer Vision",
         "NLP",
         "Reinforcement Learning",
         "Generative Models",
-        "MLOps",
-        "Graph Neural Nets",
-        "Diffusion",
         "Transformers",
         "Edge Inference",
         "Data Engineering",
-        "Vector Search",
         "Evaluation"
       ]
     }
