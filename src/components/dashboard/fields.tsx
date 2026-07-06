@@ -256,15 +256,28 @@ export function ListEditor<T>({
   itemLabel: (item: T, index: number) => string;
   addLabel: string;
 }) {
-  const [openIndex, setOpenIndex] = React.useState<number | null>(0);
+  // Track which item is expanded by a stable id (not array index, which shifts
+  // on delete/reorder and causes the "deletes the wrong item" bug).
+  const [openId, setOpenId] = React.useState<string | null>(null);
+
+  // Assign a stable id to each item on first render; persist across re-renders.
+  const idsRef = React.useRef<string[]>([]);
+  if (idsRef.current.length !== items.length) {
+    // grow / shrink the id array to match items
+    const next = items.map((_, i) => idsRef.current[i] ?? `item-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 7)}`);
+    idsRef.current = next;
+  }
+
+  const idOf = (i: number) => idsRef.current[i];
 
   const update = (i: number, patch: Partial<T>) => {
     onChange(items.map((it, j) => (j === i ? { ...it, ...patch } : it)));
   };
   const remove = (i: number) => {
+    const id = idOf(i);
     onChange(items.filter((_, j) => j !== i));
-    if (openIndex === i) setOpenIndex(null);
-    else if (openIndex !== null && openIndex > i) setOpenIndex(openIndex - 1);
+    idsRef.current = idsRef.current.filter((_, j) => j !== i);
+    if (openId === id) setOpenId(null);
   };
   const move = (i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -272,70 +285,82 @@ export function ListEditor<T>({
     const next = [...items];
     [next[i], next[j]] = [next[j], next[i]];
     onChange(next);
-    setOpenIndex(j);
+    // swap ids too so the open panel follows the moved item
+    [idsRef.current[i], idsRef.current[j]] = [idsRef.current[j], idsRef.current[i]];
   };
   const add = () => {
+    const newId = `item-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    idsRef.current = [...idsRef.current, newId];
     onChange([...items, makeNew()]);
-    setOpenIndex(items.length);
+    setOpenId(newId);
   };
+
+  // stop wrapper so clicks on action buttons don't bubble to the toggle row
+  const stop = (e: React.MouseEvent) => e.stopPropagation();
 
   return (
     <div className="space-y-2">
-      {items.map((item, i) => (
-        <div
-          key={i}
-          className={cn(
-            "overflow-hidden rounded-xl border bg-surface/30 transition-colors",
-            openIndex === i ? "border-teal/30" : "border-line"
-          )}
-        >
-          <div className="flex items-center gap-2 px-3 py-2">
-            <button
-              type="button"
-              onClick={() => setOpenIndex(openIndex === i ? null : i)}
-              className="flex flex-1 items-center gap-2 text-left"
-            >
-              <GripVertical className="h-3.5 w-3.5 shrink-0 text-dim/50" />
-              <span className="truncate font-mono text-xs font-medium text-foreground/90">
-                {itemLabel(item, i)}
-              </span>
-            </button>
-            <div className="flex items-center gap-0.5">
+      {items.map((item, i) => {
+        const id = idOf(i);
+        const isOpen = openId === id;
+        return (
+          <div
+            key={id}
+            className={cn(
+              "overflow-hidden rounded-xl border bg-surface/30 transition-colors",
+              isOpen ? "border-teal/30" : "border-line"
+            )}
+          >
+            <div className="flex items-center gap-2 px-3 py-2">
               <button
                 type="button"
-                onClick={() => move(i, -1)}
-                disabled={i === 0}
-                className="flex h-6 w-6 items-center justify-center rounded text-dim hover:text-teal disabled:opacity-30"
-                aria-label="Move up"
+                onClick={() => setOpenId(isOpen ? null : id)}
+                className="flex flex-1 items-center gap-2 text-left"
               >
-                <ChevronUp className="h-3.5 w-3.5" />
+                <GripVertical className="h-3.5 w-3.5 shrink-0 text-dim/50" />
+                <span className="truncate font-mono text-xs font-medium text-foreground/90">
+                  {itemLabel(item, i)}
+                </span>
               </button>
-              <button
-                type="button"
-                onClick={() => move(i, 1)}
-                disabled={i === items.length - 1}
-                className="flex h-6 w-6 items-center justify-center rounded text-dim hover:text-teal disabled:opacity-30"
-                aria-label="Move down"
-              >
-                <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => remove(i)}
-                className="flex h-6 w-6 items-center justify-center rounded text-dim hover:text-destructive"
-                aria-label="Delete"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
+              <div className="flex items-center gap-0.5" onClick={stop}>
+                <button
+                  type="button"
+                  onClick={() => move(i, -1)}
+                  disabled={i === 0}
+                  className="flex h-6 w-6 items-center justify-center rounded text-dim hover:text-teal disabled:opacity-30 disabled:hover:text-dim"
+                  aria-label="Move up"
+                >
+                  <ChevronUp className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(i, 1)}
+                  disabled={i === items.length - 1}
+                  className="flex h-6 w-6 items-center justify-center rounded text-dim hover:text-teal disabled:opacity-30 disabled:hover:text-dim"
+                  aria-label="Move down"
+                >
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm(`Delete "${itemLabel(item, i)}"?`)) remove(i);
+                  }}
+                  className="flex h-6 w-6 items-center justify-center rounded text-dim hover:text-destructive"
+                  aria-label="Delete"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
+            {isOpen && (
+              <div className="space-y-3 border-t border-line p-3">
+                {renderItem(item, (patch) => update(i, patch))}
+              </div>
+            )}
           </div>
-          {openIndex === i && (
-            <div className="space-y-3 border-t border-line p-3">
-              {renderItem(item, (patch) => update(i, patch))}
-            </div>
-          )}
-        </div>
-      ))}
+        );
+      })}
       <Button
         type="button"
         variant="outline"
