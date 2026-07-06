@@ -10,8 +10,10 @@ import {
   Code2,
   Cpu,
   BookOpen,
+  Copy,
+  Check,
 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import { profile, now } from "@/lib/data";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
@@ -63,55 +65,7 @@ export function About() {
             {profile.codeBlock && (
               <motion.div style={{ y: yCode }} className="mt-8">
                 <Reveal>
-                  <div className="overflow-hidden rounded-xl border border-line bg-surface/60 shadow-2xl shadow-black/40">
-                    <div className="flex items-center gap-2 border-b border-line bg-surface-3/60 px-4 py-2.5">
-                      <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-                      <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-                      <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                      <span className="ml-2 font-mono text-xs text-dim">
-                        {profile.penname}@lab: ~/profile
-                      </span>
-                    </div>
-                    <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed sm:text-sm">
-                      <code>
-                        <span className="text-violet">const</span>{" "}
-                        <span className="text-teal">{profile.codeBlock.variableName}</span>{" "}
-                        <span className="text-dim">=</span> {"{"}
-                        {"\n"}
-                        {profile.codeBlock.fields.map((f, i) => (
-                          <span key={i}>
-                            {"  "}
-                            <span className="text-teal/80">{f.key}</span>
-                            <span className="text-dim">:</span>{" "}
-                            <span className="text-violet/90">&apos;{f.value}&apos;</span>
-                            <span className="text-dim">,</span>
-                            {"\n"}
-                          </span>
-                        ))}
-                        {"  "}
-                        <span className="text-teal/80">interests</span>
-                        <span className="text-dim">:</span> {"{"}
-                        {"\n"}
-                        {profile.codeBlock.interests.map((intr, i) => (
-                          <span key={i}>
-                            {"    "}
-                            <span className="text-teal/80">{intr}</span>
-                            <span className="text-dim">:</span>{" "}
-                            <span className="text-teal">true</span>,
-                            {"\n"}
-                          </span>
-                        ))}
-                        {"  "}
-                        {"}"},{"\n"}
-                        {"  "}
-                        <span className="text-teal/80">status</span>
-                        <span className="text-dim">:</span>{" "}
-                        <span className="text-teal">&apos;{profile.codeBlock.closing}&apos;</span>,
-                        {"\n"}
-                        {"}"}
-                      </code>
-                    </pre>
-                  </div>
+                  <CodeBlock codeBlock={profile.codeBlock} penname={profile.penname} />
                 </Reveal>
               </motion.div>
             )}
@@ -226,5 +180,117 @@ export function About() {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * CodeBlock — the terminal-style profile code block with a copy-to-clipboard
+ * button in the header. Builds a plain-text version of the code for copying
+ * (the rendered version uses colored <span>s which can't be selected cleanly).
+ */
+function CodeBlock({
+  codeBlock,
+  penname,
+}: {
+  codeBlock: NonNullable<typeof profile.codeBlock>;
+  penname: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  // Build the plain-text version once.
+  const plainText = (() => {
+    const lines: string[] = [];
+    lines.push(`const ${codeBlock.variableName} = {`);
+    for (const f of codeBlock.fields) {
+      lines.push(`  ${f.key}: '${f.value}',`);
+    }
+    lines.push("  interests: {");
+    for (const intr of codeBlock.interests) {
+      lines.push(`    ${intr}: true,`);
+    }
+    lines.push("  },");
+    lines.push(`  status: '${codeBlock.closing}',`);
+    lines.push("}");
+    return lines.join("\n");
+  })();
+
+  const onCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(plainText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // clipboard API may be unavailable (e.g. non-secure context) — fail silently
+    }
+  }, [plainText]);
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-line bg-surface/60 shadow-2xl shadow-black/40">
+      <div className="flex items-center gap-2 border-b border-line bg-surface-3/60 px-4 py-2.5">
+        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+        <span className="ml-2 font-mono text-xs text-dim">
+          {penname}@lab: ~/profile
+        </span>
+        <button
+          type="button"
+          onClick={onCopy}
+          aria-label={copied ? "Copied" : "Copy code"}
+          className="ml-auto flex items-center gap-1.5 rounded-md border border-line bg-surface/60 px-2 py-1 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
+        >
+          {copied ? (
+            <>
+              <Check className="h-3 w-3 text-teal" />
+              <span className="text-teal">copied</span>
+            </>
+          ) : (
+            <>
+              <Copy className="h-3 w-3" />
+              <span>copy</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed sm:text-sm">
+        <code>
+          <span className="text-violet">const</span>{" "}
+          <span className="text-teal">{codeBlock.variableName}</span>{" "}
+          <span className="text-dim">=</span> {"{"}
+          {"\n"}
+          {codeBlock.fields.map((f, i) => (
+            <span key={i}>
+              {"  "}
+              <span className="text-teal/80">{f.key}</span>
+              <span className="text-dim">:</span>{" "}
+              <span className="text-violet/90">&apos;{f.value}&apos;</span>
+              <span className="text-dim">,</span>
+              {"\n"}
+            </span>
+          ))}
+          {"  "}
+          <span className="text-teal/80">interests</span>
+          <span className="text-dim">:</span> {"{"}
+          {"\n"}
+          {codeBlock.interests.map((intr, i) => (
+            <span key={i}>
+              {"    "}
+              <span className="text-teal/80">{intr}</span>
+              <span className="text-dim">:</span>{" "}
+              <span className="text-teal">true</span>,
+              {"\n"}
+            </span>
+          ))}
+          {"  "}
+          {"}"},{"\n"}
+          {"  "}
+          <span className="text-teal/80">status</span>
+          <span className="text-dim">:</span>{" "}
+          <span className="text-teal">&apos;{codeBlock.closing}&apos;</span>,
+          {"\n"}
+          {"}"}
+        </code>
+      </pre>
+    </div>
   );
 }

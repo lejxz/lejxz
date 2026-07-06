@@ -1,12 +1,52 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Sparkles, Github, Linkedin, Instagram, Mail } from "lucide-react";
 import { profile } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { HeroDiorama } from "@/components/sections/hero-diorama";
+import { Magnetic } from "@/components/motion/magnetic";
+
+/**
+ * TypingPrompt — types out a command character-by-character, then shows a
+ * blinking caret. Gives the hero a "live terminal" feel without being noisy.
+ */
+function TypingPrompt({ text, delay = 0.8 }: { text: string; delay?: number }) {
+  const [shown, setShown] = useState("");
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    let i = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const start = setTimeout(function tick() {
+      if (i <= text.length) {
+        setShown(text.slice(0, i));
+        i++;
+        timer = setTimeout(tick, 65 + Math.random() * 50);
+      } else {
+        setDone(true);
+      }
+    }, delay * 1000);
+    return () => {
+      clearTimeout(start);
+      clearTimeout(timer);
+    };
+  }, [text, delay]);
+
+  return (
+    <span className="font-mono text-sm text-teal">
+      <span className="text-dim">$</span> {shown}
+      <span
+        className={`ml-0.5 inline-block h-4 w-2 bg-teal align-middle ${
+          done ? "animate-blink" : ""
+        }`}
+        style={{ opacity: done ? undefined : 1 }}
+      />
+    </span>
+  );
+}
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -60,10 +100,8 @@ export function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08 }}
-            className="font-mono text-sm text-teal"
           >
-            <span className="text-dim">$</span> whoami
-            <span className="ml-0.5 inline-block h-4 w-2 animate-blink bg-teal align-middle" />
+            <TypingPrompt text="whoami" delay={0.7} />
           </motion.div>
 
           <motion.h1
@@ -73,7 +111,7 @@ export function Hero() {
             className="font-mono text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
           >
             <span className="block text-foreground">{profile.name.split(" ")[0]}</span>
-            <span className="block text-gradient-shimmer">
+            <span className="block text-gradient-shimmer text-glow-soft">
               {profile.name.split(" ").slice(1).join(" ")}
             </span>
           </motion.h1>
@@ -97,25 +135,27 @@ export function Hero() {
             {profile.tagline}
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs — primary CTA wrapped in Magnetic for a tactile pull */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.44 }}
             className="flex flex-wrap items-center gap-3"
           >
-            <Button
-              size="lg"
-              className="gap-2 bg-teal text-primary-foreground hover:bg-teal/90"
-              onClick={() =>
-                document
-                  .getElementById("work")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-            >
-              <Sparkles className="h-4 w-4" />
-              Explore My Work
-            </Button>
+            <Magnetic strength={0.4} className="inline-block">
+              <Button
+                size="lg"
+                className="gap-2 bg-teal text-primary-foreground shadow-lg shadow-teal/20 hover:bg-teal/90 hover:shadow-teal/30"
+                onClick={() =>
+                  document
+                    .getElementById("work")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                <Sparkles className="h-4 w-4" />
+                Explore My Work
+              </Button>
+            </Magnetic>
             <Link href="/#contact">
               <Button
                 size="lg"
@@ -141,7 +181,7 @@ export function Hero() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={s.label}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-line text-dim transition-all hover:border-teal/50 hover:text-teal"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border border-line text-dim transition-all hover:-translate-y-0.5 hover:border-teal/50 hover:text-teal"
               >
                 <s.icon className="h-4 w-4" />
               </a>

@@ -6,6 +6,7 @@ import { SkipLink } from "@/components/site/skip-link";
 import { CustomCursor } from "@/components/site/custom-cursor";
 import { BackToTop } from "@/components/site/back-to-top";
 import { ShortcutsHelp } from "@/components/site/shortcuts-help";
+import { SectionProgress } from "@/components/site/section-progress";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -103,6 +104,7 @@ export default function RootLayout({
         <CustomCursor />
         <BackToTop />
         <ShortcutsHelp />
+        <SectionProgress />
         {children}
         <Toaster position="bottom-right" />
       </body>

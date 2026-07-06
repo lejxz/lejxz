@@ -17,6 +17,7 @@ interface Shortcut {
 
 const SHORTCUTS: Shortcut[] = [
   { keys: "⌘ K", label: "Open command palette" },
+  { keys: "T", label: "Toggle dark / light theme" },
   { keys: "G H", label: "Go home" },
   { keys: "G P", label: "Jump to projects (work)" },
   { keys: "G A", label: "Jump to about" },
@@ -40,6 +41,28 @@ export function ShortcutsHelp() {
       if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
         e.preventDefault();
         setOpen((o) => !o);
+        return;
+      }
+      // 'T' toggles theme (lower or upper, no modifiers)
+      if (
+        (e.key === "t" || e.key === "T") &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey
+      ) {
+        // Don't interfere if a dialog is open
+        if (document.querySelector("[role=dialog]")) return;
+        e.preventDefault();
+        const root = document.documentElement;
+        const isLight = root.classList.contains("light");
+        const next = isLight ? "dark" : "light";
+        if (next === "light") root.classList.add("light");
+        else root.classList.remove("light");
+        try {
+          localStorage.setItem("lejxz-theme", next);
+        } catch {
+          /* ignore */
+        }
       }
     };
     window.addEventListener("keydown", onKey);

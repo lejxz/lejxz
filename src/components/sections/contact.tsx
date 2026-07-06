@@ -14,11 +14,24 @@ export function Contact() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
+
+  // Simple but practical email regex — not RFC-perfect, but catches the
+  // common mistakes (missing @, missing TLD, spaces).
+  const emailValid = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const emailShowError = emailTouched && email !== "" && !emailValid;
+  const charCount = message.length;
+  const charLimit = 600;
+  const charWarn = charCount > charLimit * 0.9;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) {
       toast.error("Please write a message first");
+      return;
+    }
+    if (email && !emailValid) {
+      toast.error("Please fix the email address or leave it blank");
       return;
     }
     const subject = encodeURIComponent(`Portfolio message from ${name || "a visitor"}`);
@@ -114,13 +127,26 @@ export function Contact() {
                     className="w-full rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
                   />
                 </Field>
-                <Field label="Reply-to (optional)">
+                <Field
+                  label="Reply-to (optional)"
+                  error={emailShowError ? "Hmm, that doesn't look like an email" : undefined}
+                  valid={email !== "" && emailValid}
+                >
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() => setEmailTouched(true)}
                     placeholder="ada@example.com"
-                    className="w-full rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                    aria-invalid={emailShowError}
+                    className={
+                      "w-full rounded-xl border bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:outline-none focus:ring-2 transition-colors " +
+                      (emailShowError
+                        ? "border-destructive/50 focus:border-destructive/60 focus:ring-destructive/20"
+                        : email !== "" && emailValid
+                        ? "border-teal/40 focus:border-teal/50 focus:ring-teal/20"
+                        : "border-line focus:border-teal/40 focus:ring-teal/20")
+                    }
                   />
                 </Field>
                 <Field label="Message">
@@ -128,19 +154,26 @@ export function Contact() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     rows={5}
-                    maxLength={600}
+                    maxLength={charLimit}
                     placeholder="Tell me about your project, role, or idea…"
                     className="w-full resize-none rounded-xl border border-line bg-background/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
                   />
                 </Field>
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[10px] text-dim">
-                    {message.length}/600
+                  <span
+                    className={
+                      "font-mono text-[10px] transition-colors " +
+                      (charWarn ? "text-violet" : "text-dim")
+                    }
+                  >
+                    {charCount}/{charLimit}
+                    {charWarn && charCount < charLimit && " · almost full"}
                   </span>
                   <motion.button
                     type="submit"
                     whileTap={{ scale: 0.98 }}
-                    className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 font-mono text-xs font-medium text-primary-foreground shadow-lg shadow-teal/20 transition-shadow hover:shadow-teal/30"
+                    whileHover={{ y: -1 }}
+                    className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 font-mono text-xs font-medium text-primary-foreground shadow-lg shadow-teal/20 transition-all hover:shadow-teal/40"
                   >
                     Send message
                     <Send className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -158,13 +191,37 @@ export function Contact() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+  error,
+  valid,
+}: {
+  label: string;
+  children: React.ReactNode;
+  error?: string;
+  valid?: boolean;
+}) {
   return (
     <label className="block">
-      <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-dim">
+      <span className="mb-1.5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-dim">
         {label}
+        {valid && (
+          <span className="inline-flex items-center gap-1 text-teal normal-case tracking-normal">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
+              <path d="M1 5l2.5 2.5L9 1.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            looks good
+          </span>
+        )}
       </span>
       {children}
+      {error && (
+        <span className="mt-1.5 flex items-center gap-1 font-mono text-[10px] text-destructive">
+          <span aria-hidden>⚠</span>
+          {error}
+        </span>
+      )}
     </label>
   );
 }
