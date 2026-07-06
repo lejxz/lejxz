@@ -230,11 +230,16 @@ export function Skills() {
         {skills.marquee && skills.marquee.length > 0 && (
           <Reveal delay={0.1}>
             <div className="mask-fade-edges mt-14 overflow-hidden">
-              <div className="group flex w-max animate-marquee items-center gap-3 hover:[animation-play-state:paused]">
+              <div
+                className="group flex w-max animate-marquee items-center gap-3 hover:[animation-play-state:paused]"
+                style={{
+                  ["--marquee-duration" as string]: `${Math.max(15, skills.marquee.length * 1.8)}s`,
+                }}
+              >
                 {[...skills.marquee, ...skills.marquee].map((tag, i) => (
                   <span
                     key={i}
-                    className="rounded-full border border-line bg-surface/40 px-4 py-1.5 font-mono text-xs text-foreground/70"
+                    className="shrink-0 rounded-full border border-line bg-surface/60 px-4 py-1.5 font-mono text-xs text-foreground/70"
                   >
                     {tag}
                   </span>
