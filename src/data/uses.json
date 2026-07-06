@@ -4,27 +4,27 @@
       "title": "Hardware",
       "key": "hardware",
       "items": [
-        { "name": "Lorem ipsum", "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-        { "name": "Lorem ipsum", "detail": "Sed do eiusmod tempor incididunt ut labore et dolore." },
-        { "name": "Lorem ipsum", "detail": "Ut enim ad minim veniam, quis nostrud exercitation." }
+        { "name": "Add your PC/laptop model", "detail": "Fill in your actual specs here — I don't have verified details on your hardware." },
+        { "name": "Add your peripherals", "detail": "Keyboard, mouse, monitor, etc." },
+        { "name": "Add anything DIY", "detail": "You maintain your own hardware — worth a mention if there's a build story here." }
       ]
     },
     {
       "title": "Editor",
       "key": "editor",
       "items": [
-        { "name": "Lorem ipsum", "detail": "Lorem ipsum dolor sit amet, consectetur adipiscing." },
-        { "name": "Lorem ipsum", "detail": "Sed do eiusmod tempor incididunt ut labore." },
-        { "name": "Lorem ipsum", "detail": "Ut enim ad minim veniam, quis nostrud." }
+        { "name": "VS Code", "detail": "Primary editor for nearly all development work." },
+        { "name": "Cursor / Claude Code", "detail": "Used for agentic development on larger builds — delegating scoped, well-specified work to AI agents." },
+        { "name": "Figma", "detail": "Used for UI design work on Hira and other frontend projects." }
       ]
     },
     {
       "title": "Stack",
       "key": "stack",
       "items": [
-        { "name": "Lorem ipsum", "detail": "Lorem ipsum dolor sit amet, consectetur." },
-        { "name": "Lorem ipsum", "detail": "Sed do eiusmod tempor incididunt ut labore." },
-        { "name": "Lorem ipsum", "detail": "Ut enim ad minim veniam, quis nostrud." }
+        { "name": "Python", "detail": "Primary language for ML, computer vision, and backend work." },
+        { "name": "Next.js / TypeScript", "detail": "Frontend stack for this portfolio and the Hira frontend." },
+        { "name": "FastAPI + SQLite", "detail": "Backend stack behind LoadSense's cloud layer." }
       ]
     }
   ]

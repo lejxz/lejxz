@@ -2,144 +2,113 @@
   "items": [
     {
       "id": "exp-1",
-      "type": "work",
-      "role": "Lorem Ipsum Developer",
-      "org": "Acme Labs",
-      "organization": "Acme Labs",
-      "orgUrl": "https://github.com/lejxz",
-      "period": "2024 — Present",
-      "location": "Remote",
-      "current": true,
-      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "type": "award",
+      "role": "AI/ML Lead — LoadSense",
+      "org": "ASEAN AI Hackathon 2026",
+      "organization": "ASEAN AI Hackathon 2026 · Team FlowerBoys",
+      "orgUrl": "https://github.com/lejxz/LoadSense",
+      "period": "Apr 2026 — Jun 2026",
+      "location": "Cebu, Philippines (virtual finals)",
+      "current": false,
+      "summary": "Built LoadSense, an edge-AI + cloud occupancy platform for Philippine jeepneys, with Team FlowerBoys. Placed Top 6 in the Smart Cities track and Top 40 overall.",
       "description": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "LoadSense uses a YOLOv8-nano model to count boarding and alighting passengers on public utility vehicles, mapping the live count to a four-tier occupancy state shown on a windshield LED strip so waiting commuters can see at a glance whether a jeepney has room.",
+        "A FastAPI + SQLite cloud layer ingests GPS and occupancy telemetry to predict ETA, forecast route demand, flag route deviations and driving anomalies, and drives an operator console with a live fleet map (Leaflet) and an alert verification workflow."
       ],
       "bullets": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."
+        "Placed Top 6 in the Smart Cities track and Top 40 overall at ASEAN AI Hackathon 2026",
+        "Designed the edge (YOLOv8-nano occupancy counting) and cloud (FastAPI/SQLite) architecture",
+        "Built the operator console, live fleet map, and alert verification workflow"
       ],
       "achievements": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."
+        "Top 6, Smart Cities track — ASEAN AI Hackathon 2026",
+        "Top 40 overall, ASEAN AI Hackathon 2026",
+        "Advanced to and competed in the virtual semi-finals"
       ],
-      "tech": ["Python", "PyTorch", "MLOps"],
-      "tags": ["Python", "PyTorch", "MLOps"],
+      "tech": ["Python", "YOLOv8", "FastAPI", "SQLite", "Leaflet"],
+      "tags": ["Computer Vision", "Edge AI", "FastAPI"],
       "logo": "/assets/experiences/exp-01.svg"
     },
     {
       "id": "exp-2",
       "type": "research",
-      "role": "Research Assistant",
-      "org": "University AI Lab",
-      "organization": "University AI Lab",
-      "period": "2023 — 2024",
-      "location": "On-campus",
-      "current": false,
-      "summary": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "role": "Architecture & Research Lead — Hira",
+      "org": "HCI Coursework · USJR",
+      "organization": "HCI Coursework · University of San Jose-Recoletos",
+      "orgUrl": "https://github.com/lejxz/Hira-Frontend-Only",
+      "period": "2026",
+      "location": "Cebu, Philippines",
+      "current": true,
+      "summary": "Leading architecture and design on Hira, a persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs, built as HCI coursework and drafted into a Design Science Research paper.",
       "description": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Hira serves dual purpose as an HCI course deliverable and a potential hackathon entry. The frontend is a Next.js 16 + Tailwind v4 + TypeScript scaffold with a forest-green design system, built frontend-first against mock data with government API integrations (TESDA, SSS, Pag-IBIG, DMW) deferred to a later phase.",
+        "The design work was written up as an independent paper, \"Persona-Aware Platform Design for Cross-Segment Labor Market Integration in the Philippines,\" with plans to adapt it into competition proposals."
       ],
       "bullets": [
-        "Deserunt mollit anim id est laborum.",
-        "Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
-        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet."
+        "Led architecture and persona-driven design across employer, job-seeker, and government-agency views",
+        "Directed a full Figma design build alongside the coded frontend",
+        "Drafted an independent Design Science Research paper on the platform's design approach"
       ],
       "achievements": [
-        "Deserunt mollit anim id est laborum.",
-        "Nemo enim ipsam voluptatem quia voluptas sit aspernatur.",
-        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet."
+        "Shipped a working frontend demo running entirely on mock data",
+        "Completed a full DSR paper draft for independent publication"
       ],
-      "tech": ["Python", "PyTorch", "Transformers", "NLP"],
-      "tags": ["Research", "NLP", "Transformers"],
+      "tech": ["Next.js", "TypeScript", "Tailwind CSS", "Figma"],
+      "tags": ["HCI", "Design Research", "Frontend"],
       "logo": "/assets/experiences/exp-02.svg"
     },
     {
       "id": "exp-3",
       "type": "work",
-      "role": "Frontend Intern",
-      "org": "Studio Vert",
-      "organization": "Studio Vert",
-      "period": "2023",
-      "location": "Remote",
+      "role": "Developer — Email Security Classifier",
+      "org": "Intelligent Systems Finals",
+      "organization": "Intelligent Systems Coursework · USJR",
+      "orgUrl": "https://github.com/lejxz/IntSys-Finals-Project",
+      "period": "2026",
+      "location": "Cebu, Philippines",
       "current": false,
-      "summary": "Voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores.",
+      "summary": "Built a Naive Bayes classifier that flags fraudulent/phishing emails and prompt-injection attempts, with a custom 300-row labeled dataset and a Streamlit app for the final defense.",
       "description": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Designed a custom CSV dataset spanning safe, fraudulent, and prompt-injection email samples, then built text-feature extraction and a Naive Bayes classifier around it.",
+        "Wrapped the model in a Streamlit app for live demonstration during the course defense."
       ],
       "bullets": [
-        "Sed quia consequuntur magni dolores eos qui ratione.",
-        "Neque porro quisquam est, dolorem ipsum.",
-        "Quis autem vel eum iure reprehenderit qui in ea voluptate."
+        "Built and labeled a 300-row custom email dataset across three classes",
+        "Implemented Naive Bayes classification with custom text-feature extraction",
+        "Shipped a Streamlit demo app for the finals defense"
       ],
       "achievements": [
-        "Sed quia consequuntur magni dolores eos qui ratione.",
-        "Neque porro quisquam est, dolorem ipsum.",
-        "Quis autem vel eum iure reprehenderit qui in ea voluptate."
+        "Completed as a solo finals project for Intelligent Systems"
       ],
-      "tech": ["React", "TypeScript", "Tailwind CSS"],
-      "tags": ["React", "TypeScript", "UI"],
+      "tech": ["Python", "scikit-learn", "Streamlit"],
+      "tags": ["NLP", "Naive Bayes", "Security"],
       "logo": "/assets/experiences/exp-03.svg"
     },
     {
       "id": "exp-4",
       "type": "education",
-      "role": "B.S. Computer Science — AI Track",
-      "org": "University",
-      "organization": "University",
-      "period": "2022 — Present",
-      "location": "Philippines",
+      "role": "B.S. Computer Science — AI/ML Specialization",
+      "org": "University of San Jose-Recoletos",
+      "organization": "University of San Jose-Recoletos",
+      "period": "2022 — 2026 (expected)",
+      "location": "Cebu City, Philippines",
       "current": true,
-      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna.",
+      "summary": "Studying Computer Science with a specialization in AI/ML, working across HCI, data analytics, algorithms, and IP/privacy law coursework alongside a small competition team, FlowerBoys.",
       "description": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Coursework has spanned data analytics (correlation analysis, exploratory notebooks), AI surveillance and biometrics policy (PhilSys, NPC, Clearview AI, BIPA), and SIPP topics on IP rights and privacy/data rights.",
+        "Outside of class requirements, has built and competed with hackathon projects (LoadSense) and independent research write-ups (Hira) alongside team FlowerBoys."
       ],
       "bullets": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco."
+        "Specializing in AI/ML within the BSCS program",
+        "Core member of competition team FlowerBoys",
+        "Coursework spans HCI, data analytics, algorithms, and SIPP (IP/privacy law)"
       ],
       "achievements": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco."
+        "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (with FlowerBoys)"
       ],
-      "tech": ["Python", "C++", "Algorithms"],
-      "tags": ["Education", "AI"],
+      "tech": ["Python", "C", "Algorithms"],
+      "tags": ["Education", "AI/ML"],
       "logo": "/assets/experiences/exp-04.svg"
-    },
-    {
-      "id": "exp-5",
-      "type": "award",
-      "role": "Hackathon Winner",
-      "org": "National AI Hackathon",
-      "organization": "National AI Hackathon",
-      "period": "2024",
-      "location": "Philippines",
-      "current": false,
-      "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.",
-      "description": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-      ],
-      "bullets": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
-        "Ut enim ad minim veniam, quis nostrud exercitation."
-      ],
-      "achievements": [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna.",
-        "Ut enim ad minim veniam, quis nostrud exercitation."
-      ],
-      "tech": ["Python", "OpenCV", "Edge AI"],
-      "tags": ["Award", "Computer Vision"],
-      "logo": "/assets/experiences/exp-05.svg"
     }
   ]
 }

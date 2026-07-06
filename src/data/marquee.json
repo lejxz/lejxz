@@ -7,21 +7,19 @@
         "Python",
         "TypeScript",
         "PyTorch",
-        "TensorFlow",
+        "YOLOv8",
         "React",
         "Next.js",
         "scikit-learn",
-        "Hugging Face",
         "OpenCV",
-        "Rust",
         "C++",
-        "SQL",
-        "Docker",
+        "C",
         "Linux",
         "FastAPI",
+        "SQLite",
         "NumPy",
         "Pandas",
-        "LangChain"
+        "Tailwind CSS"
       ]
     },
     {
@@ -30,12 +28,11 @@
       "items": [
         "Computer Vision",
         "NLP",
-        "Reinforcement Learning",
-        "Generative Models",
-        "Transformers",
-        "Edge Inference",
-        "Data Engineering",
-        "Evaluation"
+        "Edge AI",
+        "AR/VR",
+        "HCI",
+        "Data Analytics",
+        "Cybersecurity"
       ]
     }
   ]

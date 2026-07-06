@@ -1,12 +1,12 @@
 {
   "heading": "Skills & Tools",
-  "subtitle": "Equipped with essential skills and tools to adapt, create, and deliver across diverse projects.”",
+  "subtitle": "Equipped with essential skills and tools to adapt, create, and deliver across diverse projects.",
   "groups": [
     {
       "title": "Languages",
       "key": "languages",
       "icon": "code",
-      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "blurb": "Core languages used across coursework, competitions, and personal projects.",
       "items": [
         {
           "name": "Python",
@@ -29,27 +29,32 @@
       "title": "AI / ML",
       "key": "ai",
       "icon": "brain",
-      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "blurb": "Focused on computer vision and applied ML — models that perceive and respond to the real world.",
       "items": [
         {
           "name": "PyTorch",
-          "level": 86,
-          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna."
-        },
-        {
-          "name": "TensorFlow",
-          "level": 70,
-          "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
-        },
-        {
-          "name": "Hugging Face",
           "level": 78,
-          "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+          "description": "Used for model work behind computer vision projects, including real-time detection pipelines."
+        },
+        {
+          "name": "YOLOv8",
+          "level": 80,
+          "description": "Used for real-time object detection over an IP webcam and for the occupancy-counting model behind LoadSense."
         },
         {
           "name": "OpenCV",
-          "level": 72,
-          "description": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur."
+          "level": 78,
+          "description": "Core library for computer vision work — video capture, frame processing, and detection pipelines."
+        },
+        {
+          "name": "TensorFlow",
+          "level": 55,
+          "description": "Studied through structured coursework and notes; PyTorch and YOLOv8 are the primary tools for shipped CV work."
+        },
+        {
+          "name": "scikit-learn",
+          "level": 78,
+          "description": "Used to build a Naive Bayes classifier for fraud and prompt-injection detection in emails."
         }
       ]
     },
@@ -57,22 +62,22 @@
       "title": "Tooling",
       "key": "tooling",
       "icon": "wrench",
-      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "blurb": "Backend, infra, and everyday developer tooling.",
       "items": [
         {
           "name": "Git",
           "level": 90,
-          "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip."
+          "description": "Daily driver for version control across coursework, competitions, and personal repos."
         },
         {
           "name": "Linux",
-          "level": 60,
-          "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore."
+          "level": 65,
+          "description": "Used for day-to-day development and for hosting always-on personal tools like Discord bots."
         },
         {
-          "name": "PostgreSQL",
-          "level": 68,
-          "description": "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur."
+          "name": "SQLite",
+          "level": 65,
+          "description": "Persistence layer behind LoadSense's fleet state and telemetry."
         }
       ]
     }
@@ -80,11 +85,11 @@
   "marquee": [
     "Python",
     "PyTorch",
+    "YOLOv8",
     "TypeScript",
     "Next.js",
     "OpenCV",
     "Linux",
-    "Hugging Face",
     "scikit-learn"
   ]
 }
