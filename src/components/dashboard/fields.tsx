@@ -194,25 +194,46 @@ export function TagInput({
   hint?: string;
 }) {
   const [input, setInput] = React.useState("");
+  // stable ids for tags so delete targets the correct one (not index-based)
+  const idsRef = React.useRef<string[]>([]);
+  if (idsRef.current.length !== values.length) {
+    idsRef.current = values.map(
+      (_, i) => idsRef.current[i] ?? `tag-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`
+    );
+  }
+
   const add = () => {
     const v = input.trim();
-    if (v && !values.includes(v)) onChange([...values, v]);
+    if (v && !values.includes(v)) {
+      idsRef.current = [...idsRef.current, `tag-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`];
+      onChange([...values, v]);
+    }
     setInput("");
   };
+  const remove = (i: number) => {
+    idsRef.current = idsRef.current.filter((_, j) => j !== i);
+    onChange(values.filter((_, j) => j !== i));
+  };
+
   return (
     <Field label={label} hint={hint}>
       <div className="rounded-md border border-line bg-surface/50 p-2 focus-within:border-teal/40">
+        {/* tag chips */}
         <div className="flex flex-wrap gap-1.5">
           {values.map((v, i) => (
             <span
-              key={i}
+              key={idsRef.current[i]}
               className="inline-flex items-center gap-1 rounded border border-teal/30 bg-teal/10 px-1.5 py-0.5 font-mono text-[10px] text-teal"
             >
               {v}
               <button
                 type="button"
-                onClick={() => onChange(values.filter((_, j) => j !== i))}
-                className="text-teal/60 hover:text-teal"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  remove(i);
+                }}
+                className="ml-0.5 flex h-3.5 w-3.5 items-center justify-center rounded text-teal/60 hover:bg-teal/20 hover:text-teal"
                 aria-label={`Remove ${v}`}
               >
                 ×
@@ -220,22 +241,35 @@ export function TagInput({
             </span>
           ))}
         </div>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === ",") {
-              e.preventDefault();
-              add();
-            }
-            if (e.key === "Backspace" && !input && values.length) {
-              onChange(values.slice(0, -1));
-            }
-          }}
-          onBlur={add}
-          placeholder={values.length ? "" : placeholder}
-          className="mt-1 w-full bg-transparent font-mono text-xs text-foreground placeholder:text-dim/50 focus:outline-none"
-        />
+        {/* input + explicit Add button */}
+        <div className="mt-1.5 flex items-center gap-2">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                add();
+              }
+            }}
+            placeholder={values.length ? "" : placeholder}
+            className="flex-1 bg-transparent font-mono text-xs text-foreground placeholder:text-dim/50 focus:outline-none"
+          />
+          {input.trim() && (
+            <button
+              type="button"
+              onClick={add}
+              className="flex h-5 items-center gap-1 rounded border border-teal/40 bg-teal/10 px-1.5 font-mono text-[10px] text-teal hover:bg-teal/20"
+            >
+              <Plus className="h-2.5 w-2.5" />
+              Add
+            </button>
+          )}
+        </div>
+        {/* hint */}
+        <p className="mt-1 font-mono text-[9px] text-dim/50">
+          Type, then press Enter or click Add. Click × on a tag to remove it.
+        </p>
       </div>
     </Field>
   );

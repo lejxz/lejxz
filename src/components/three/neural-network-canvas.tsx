@@ -12,14 +12,15 @@ interface Node {
 }
 
 /**
- * NeuralNetworkCanvas — an animated particle-network visualization that
- * resembles a neural network. Nodes drift, connect to nearby nodes, and
- * occasionally "fire" signal pulses along edges. Pointer-reactive.
+ * NeuralNetworkCanvas — lightweight Canvas 2D particle network.
+ *
+ * Works everywhere (desktop, mobile, static export). No WebGL/three.js deps.
+ * - Mobile: fewer nodes, lower opacity, coarser links
+ * - Reduced-motion: renders a single static frame (no RAF loop)
+ * - Resilient: handles 0×0 canvas, resize, and visibility without crashing
  */
 export function NeuralNetworkCanvas({
   className,
-  density = 0.9,
-  linkDistance = 150,
 }: {
   className?: string;
   density?: number;
@@ -38,56 +39,45 @@ export function NeuralNetworkCanvas({
     let width = 0;
     let height = 0;
     let nodes: Node[] = [];
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let dpr = 1;
 
-    // Resolve our palette colors to rgba
-    const getColor = (hex: string) => {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      return { r, g, b };
-    };
-    const teal = getColor("#5eead4");
-    const violet = getColor("#a78bfa");
+    const isMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 768px)").matches;
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const teal = { r: 94, g: 234, b: 212 };
+    const violet = { r: 167, g: 139, b: 250 };
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const target = Math.max(
-        20,
-        Math.floor((width * height) / 100000) * density * 10
+      // density: fewer nodes on mobile, capped for perf
+      const base = isMobile ? 26000 : 16000;
+      const target = Math.min(
+        isMobile ? 40 : 80,
+        Math.max(15, Math.floor((width * height) / base))
       );
-      const count = Math.min(target, 90);
-      nodes = Array.from({ length: count }, () => ({
+      nodes = Array.from({ length: target }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25,
-        r: Math.random() * 1.8 + 1.2,
+        vx: (Math.random() - 0.5) * (isMobile ? 0.15 : 0.25),
+        vy: (Math.random() - 0.5) * (isMobile ? 0.15 : 0.25),
+        r: Math.random() * 1.5 + 1,
         pulse: Math.random() * Math.PI * 2,
       }));
     };
 
-    resize();
-    window.addEventListener("resize", resize);
+    const linkDistance = isMobile ? 110 : 150;
 
-    const onMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      pointer.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    };
-    const onLeave = () => {
-      pointer.current = { x: -9999, y: -9999 };
-    };
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerleave", onLeave);
-
-    let t = 0;
-    const draw = () => {
-      t += 0.016;
+    const drawFrame = (t: number) => {
       ctx.clearRect(0, 0, width, height);
 
       // Update + draw links
@@ -97,19 +87,19 @@ export function NeuralNetworkCanvas({
         a.y += a.vy;
         a.pulse += 0.02;
 
-        // pointer attraction (subtle)
-        const dxp = pointer.current.x - a.x;
-        const dyp = pointer.current.y - a.y;
-        const dp = Math.hypot(dxp, dyp);
-        if (dp < 160 && dp > 0) {
-          a.vx += (dxp / dp) * 0.012;
-          a.vy += (dyp / dp) * 0.012;
+        // pointer attraction (subtle, desktop only — mobile has no pointer)
+        if (!isMobile) {
+          const dxp = pointer.current.x - a.x;
+          const dyp = pointer.current.y - a.y;
+          const dp = Math.hypot(dxp, dyp);
+          if (dp < 160 && dp > 0) {
+            a.vx += (dxp / dp) * 0.012;
+            a.vy += (dyp / dp) * 0.012;
+          }
         }
-        // friction
         a.vx *= 0.99;
         a.vy *= 0.99;
 
-        // wrap
         if (a.x < -20) a.x = width + 20;
         if (a.x > width + 20) a.x = -20;
         if (a.y < -20) a.y = height + 20;
@@ -121,7 +111,7 @@ export function NeuralNetworkCanvas({
           const dy = a.y - b.y;
           const dist = Math.hypot(dx, dy);
           if (dist < linkDistance) {
-            const alpha = (1 - dist / linkDistance) * 0.5;
+            const alpha = (1 - dist / linkDistance) * (isMobile ? 0.35 : 0.5);
             const isSignal = Math.sin(t * 1.3 + i * 0.7 + j * 0.3) > 0.93;
             const c = isSignal ? violet : teal;
             ctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha})`;
@@ -131,7 +121,6 @@ export function NeuralNetworkCanvas({
             ctx.lineTo(b.x, b.y);
             ctx.stroke();
 
-            // signal pulse traveling along edge
             if (isSignal) {
               const pp = (t * 0.5) % 1;
               const px = a.x + (b.x - a.x) * pp;
@@ -152,30 +141,65 @@ export function NeuralNetworkCanvas({
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r + glow * 0.8, 0, Math.PI * 2);
         ctx.fill();
-        // halo
         ctx.fillStyle = `rgba(${teal.r}, ${teal.g}, ${teal.b}, ${glow * 0.08})`;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r + 6, 0, Math.PI * 2);
         ctx.fill();
       }
-
-      rafRef.current = requestAnimationFrame(draw);
     };
-    draw();
+
+    const loop = () => {
+      drawFrame(performance.now() / 1000);
+      rafRef.current = requestAnimationFrame(loop);
+    };
+
+    // Initial setup
+    resize();
+    window.addEventListener("resize", resize);
+
+    const onMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => {
+      pointer.current = { x: -9999, y: -9999 };
+    };
+    if (!isMobile) {
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerleave", onLeave);
+    }
+
+    // Pause when tab hidden (saves battery + avoids backlog)
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafRef.current);
+      } else if (!reducedMotion) {
+        rafRef.current = requestAnimationFrame(loop);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    if (reducedMotion) {
+      // Single static frame for reduced-motion users
+      drawFrame(0);
+    } else {
+      rafRef.current = requestAnimationFrame(loop);
+    }
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [density, linkDistance]);
+  }, []);
 
   return (
     <canvas
       ref={canvasRef}
       className={className}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "100%", display: "block" }}
     />
   );
 }
