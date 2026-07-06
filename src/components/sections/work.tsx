@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Star, Search, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { projects, featuredProjects } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -13,43 +12,15 @@ import { useModals } from "@/lib/modals";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
-const CATEGORIES = ["All", ...Array.from(new Set(projects.projects.map((p) => p.category)))];
-
 const PREVIEW_LIMIT = 3;
 
-const STATUSES: { key: "all" | "shipped" | "wip" | "archived"; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "shipped", label: "Shipped" },
-  { key: "wip", label: "In progress" },
-  { key: "archived", label: "Archived" },
-];
-
-const STATUS_DOT: Record<string, string> = {
-  shipped: "bg-teal",
-  wip: "bg-violet",
-  archived: "bg-dim",
-};
-
 export function Work() {
-  const [category, setCategory] = useState("All");
-  const [status, setStatus] = useState<"all" | "shipped" | "wip" | "archived">("all");
-  const [query, setQuery] = useState("");
   const { openProject } = useModals();
-
-  const q = query.trim().toLowerCase();
-  const filtered = projects.projects.filter((p) => {
-    const matchCat = category === "All" || p.category === category;
-    const matchStatus = status === "all" || p.status === status;
-    const matchQuery =
-      !q ||
-      p.title.toLowerCase().includes(q) ||
-      (p.subtitle ?? "").toLowerCase().includes(q) ||
-      p.tags.some((t) => t.toLowerCase().includes(q)) ||
-      (p.tech ?? []).some((t) => t.toLowerCase().includes(q));
-    return matchCat && matchStatus && matchQuery;
-  });
-
   const spotlight = featuredProjects[0] ?? projects.projects[0];
+  // Show 3 most recent projects — no filters on the home preview.
+  // Filtering lives on the /projects/ full page.
+  const items = projects.projects.slice(0, PREVIEW_LIMIT);
+  const hasMore = projects.projects.length > PREVIEW_LIMIT;
 
   return (
     <section id="work" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -75,127 +46,29 @@ export function Work() {
           </Reveal>
         )}
 
-        {/* Search + filters */}
-        <Reveal delay={0.12}>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-2">
-              {CATEGORIES.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setCategory(c)}
-                  className={cn(
-                    "relative rounded-full border px-3 py-1 font-mono text-[11px] transition-colors",
-                    category === c
-                      ? "border-teal/40 text-teal"
-                      : "border-line text-dim hover:border-teal/30 hover:text-foreground"
-                  )}
-                >
-                  {category === c && (
-                    <motion.span
-                      layoutId="work-cat-active"
-                      className="absolute inset-0 -z-10 rounded-full bg-teal/10"
-                      transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                    />
-                  )}
-                  {c}
-                </button>
-              ))}
-            </div>
-
-            <div className="relative w-full sm:w-64">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-dim" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search projects…"
-                className="w-full rounded-full border border-line bg-surface/40 py-1.5 pl-9 pr-3 font-mono text-xs text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          {/* status filter row + count */}
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="mr-1 font-mono text-[10px] uppercase tracking-wider text-dim/70">
-                status:
-              </span>
-              {STATUSES.map((s) => (
-                <button
-                  key={s.key}
-                  type="button"
-                  onClick={() => setStatus(s.key)}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[10px] transition-colors",
-                    status === s.key
-                      ? "border-violet/40 bg-violet/10 text-violet"
-                      : "border-line text-dim hover:border-violet/30 hover:text-foreground"
-                  )}
-                >
-                  {s.key !== "all" && (
-                    <span className={cn("h-1.5 w-1.5 rounded-full", STATUS_DOT[s.key])} />
-                  )}
-                  {s.label}
-                </button>
-              ))}
-            </div>
-            <span className="font-mono text-[10px] text-dim">
-              {filtered.length} / {projects.projects.length} shown
-            </span>
-          </div>
-        </Reveal>
-
-        {/* Grid */}
+        {/* Grid — 3 most recent projects */}
         <div className="mt-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.length > 0 ? (
-              <motion.div layout className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {filtered.slice(0, PREVIEW_LIMIT).map((p, i) => (
-                  <ProjectCard
-                    key={p.id}
-                    project={p}
-                    list={filtered}
-                    index={i}
-                  />
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="rounded-2xl border border-dashed border-line p-12 text-center"
-              >
-                <p className="text-sm text-dim">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCategory("All");
-                    setStatus("all");
-                    setQuery("");
-                  }}
-                  className="mt-3 rounded-full border border-teal/40 bg-teal/10 px-4 py-1.5 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
-                >
-                  Reset filters
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <motion.div layout className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((p, i) => (
+              <ProjectCard key={p.id} project={p} list={projects.projects} index={i} />
+            ))}
+          </motion.div>
+        </div>
 
-          {/* View all link */}
-          {filtered.length > PREVIEW_LIMIT && (
+        {/* View all link */}
+        {hasMore && (
+          <Reveal delay={0.1}>
             <div className="mt-8 flex justify-center">
               <Link
                 href="/projects/"
                 className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
               >
-                View all {filtered.length} projects
+                View all {projects.projects.length} projects
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
-          )}
-        </div>
+          </Reveal>
+        )}
       </div>
     </section>
   );

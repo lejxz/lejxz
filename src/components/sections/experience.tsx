@@ -1,35 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { experience } from "@/lib/data";
-import type { ExperienceType } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { ExperienceCard } from "@/components/cards/experience-card";
-import { cn } from "@/lib/utils";
 
 const PREVIEW_LIMIT = 3;
 
-const FILTERS: { key: ExperienceType | "all"; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "work", label: "Work" },
-  { key: "education", label: "Education" },
-  { key: "research", label: "Research" },
-  { key: "award", label: "Awards" },
-];
-
 export function Experience() {
-  const [filter, setFilter] = useState<ExperienceType | "all">("all");
-
-  const all = experience.items.filter(
-    (e) => filter === "all" || (e.type ?? "work") === filter
-  );
-  // Limit the home preview so the section doesn't grow unbounded.
-  const items = all.slice(0, PREVIEW_LIMIT);
-  const hasMore = all.length > PREVIEW_LIMIT;
+  // Show the 3 most recent items — no filters on the home preview.
+  // Filtering lives on the /experience/ full page.
+  const items = experience.items.slice(0, PREVIEW_LIMIT);
+  const hasMore = experience.items.length > PREVIEW_LIMIT;
 
   return (
     <section id="experience" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -45,44 +30,9 @@ export function Experience() {
           </p>
         </Reveal>
 
-        {/* Filters */}
-        <Reveal delay={0.1}>
-          <div className="mt-8 flex flex-wrap gap-2">
-            {FILTERS.map((f) => (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => setFilter(f.key)}
-                className={cn(
-                  "relative rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
-                  filter === f.key
-                    ? "border-teal/40 text-teal"
-                    : "border-line text-dim hover:border-teal/30 hover:text-foreground"
-                )}
-              >
-                {filter === f.key && (
-                  <motion.span
-                    layoutId="exp-filter-active"
-                    className="absolute inset-0 -z-10 rounded-full bg-teal/10"
-                    transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                  />
-                )}
-                {f.label}
-                <span className="ml-1.5 text-dim/60">
-                  {f.key === "all"
-                    ? experience.items.length
-                    : experience.items.filter((e) => (e.type ?? "work") === f.key).length}
-                </span>
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* Timeline */}
+        {/* Timeline — 3 most recent items */}
         <div className="mt-10 relative">
-          {/* vertical gradient line */}
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-teal/50 via-line to-transparent sm:left-[9px]" />
-
           <motion.div layout className="relative space-y-3">
             {items.map((item, i) => (
               <div key={item.id} className="relative sm:pl-0">
@@ -106,7 +56,7 @@ export function Experience() {
                 href="/experience/"
                 className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
               >
-                View all {all.length} entries
+                View all {experience.items.length} entries
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>

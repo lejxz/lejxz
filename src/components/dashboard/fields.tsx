@@ -194,25 +194,16 @@ export function TagInput({
   hint?: string;
 }) {
   const [input, setInput] = React.useState("");
-  // stable ids for tags so delete targets the correct one (not index-based)
-  const idsRef = React.useRef<string[]>([]);
-  if (idsRef.current.length !== values.length) {
-    idsRef.current = values.map(
-      (_, i) => idsRef.current[i] ?? `tag-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`
-    );
-  }
 
   const add = () => {
     const v = input.trim();
     if (v && !values.includes(v)) {
-      idsRef.current = [...idsRef.current, `tag-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`];
       onChange([...values, v]);
     }
     setInput("");
   };
-  const remove = (i: number) => {
-    idsRef.current = idsRef.current.filter((_, j) => j !== i);
-    onChange(values.filter((_, j) => j !== i));
+  const remove = (val: string) => {
+    onChange(values.filter((v) => v !== val));
   };
 
   return (
@@ -220,12 +211,13 @@ export function TagInput({
       <div
         className="rounded-md border border-line bg-surface/50 p-2 focus-within:border-teal/40"
         onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
-        {/* tag chips */}
+        {/* tag chips — keyed by the tag value itself (unique) */}
         <div className="flex flex-wrap gap-1.5">
-          {values.map((v, i) => (
+          {values.map((v) => (
             <span
-              key={idsRef.current[i]}
+              key={v}
               className="inline-flex items-center gap-1 rounded border border-teal/30 bg-teal/10 px-1.5 py-0.5 font-mono text-[10px] text-teal"
             >
               {v}
@@ -234,8 +226,9 @@ export function TagInput({
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  remove(i);
+                  remove(v);
                 }}
+                onDoubleClick={(e) => e.stopPropagation()}
                 className="ml-0.5 flex h-3.5 w-3.5 items-center justify-center rounded text-teal/60 hover:bg-teal/20 hover:text-teal"
                 aria-label={`Remove ${v}`}
               >
@@ -293,28 +286,26 @@ export function ListEditor<T>({
   itemLabel: (item: T, index: number) => string;
   addLabel: string;
 }) {
-  // Track which item is expanded by a stable id (not array index, which shifts
-  // on delete/reorder and causes the "deletes the wrong item" bug).
-  const [openId, setOpenId] = React.useState<string | null>(null);
+  // Use a WeakMap to assign a stable uid to each item OBJECT (not index).
+  // This survives delete/reorder without the fragility of a separate id array.
+  const uidMap = React.useRef(new WeakMap<object, string>());
+  const getUid = (item: object): string => {
+    let uid = uidMap.current.get(item);
+    if (!uid) {
+      uid = `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      uidMap.current.set(item, uid);
+    }
+    return uid;
+  };
 
-  // Assign a stable id to each item on first render; persist across re-renders.
-  const idsRef = React.useRef<string[]>([]);
-  if (idsRef.current.length !== items.length) {
-    // grow / shrink the id array to match items
-    const next = items.map((_, i) => idsRef.current[i] ?? `item-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 7)}`);
-    idsRef.current = next;
-  }
-
-  const idOf = (i: number) => idsRef.current[i];
+  const [openUid, setOpenUid] = React.useState<string | null>(null);
 
   const update = (i: number, patch: Partial<T>) => {
     onChange(items.map((it, j) => (j === i ? { ...it, ...patch } : it)));
   };
   const remove = (i: number) => {
-    const id = idOf(i);
     onChange(items.filter((_, j) => j !== i));
-    idsRef.current = idsRef.current.filter((_, j) => j !== i);
-    if (openId === id) setOpenId(null);
+    setOpenUid(null);
   };
   const move = (i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -322,27 +313,27 @@ export function ListEditor<T>({
     const next = [...items];
     [next[i], next[j]] = [next[j], next[i]];
     onChange(next);
-    // swap ids too so the open panel follows the moved item
-    [idsRef.current[i], idsRef.current[j]] = [idsRef.current[j], idsRef.current[i]];
   };
   const add = () => {
-    const newId = `item-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-    idsRef.current = [...idsRef.current, newId];
-    onChange([...items, makeNew()]);
-    setOpenId(newId);
+    const newItem = makeNew();
+    const uid = getUid(newItem as object);
+    onChange([...items, newItem]);
+    setOpenUid(uid);
   };
 
-  // stop wrapper so clicks on action buttons don't bubble to the toggle row
-  const stop = (e: React.MouseEvent) => e.stopPropagation();
+  const stop = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
 
   return (
     <div className="space-y-2">
       {items.map((item, i) => {
-        const id = idOf(i);
-        const isOpen = openId === id;
+        const uid = getUid(item as object);
+        const isOpen = openUid === uid;
         return (
           <div
-            key={id}
+            key={uid}
             className={cn(
               "overflow-hidden rounded-xl border bg-surface/30 transition-colors",
               isOpen ? "border-teal/30" : "border-line"
@@ -351,7 +342,7 @@ export function ListEditor<T>({
             <div className="flex items-center gap-2 px-3 py-2">
               <button
                 type="button"
-                onClick={() => setOpenId(isOpen ? null : id)}
+                onClick={() => setOpenUid(isOpen ? null : uid)}
                 className="flex flex-1 items-center gap-2 text-left"
               >
                 <GripVertical className="h-3.5 w-3.5 shrink-0 text-dim/50" />
@@ -359,7 +350,7 @@ export function ListEditor<T>({
                   {itemLabel(item, i)}
                 </span>
               </button>
-              <div className="flex items-center gap-0.5" onClick={stop}>
+              <div className="flex items-center gap-0.5" onClick={stop} onMouseDown={stop}>
                 <button
                   type="button"
                   onClick={() => move(i, -1)}
@@ -394,6 +385,7 @@ export function ListEditor<T>({
               <div
                 className="space-y-3 border-t border-line p-3"
                 onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
               >
                 {renderItem(item, (patch) => update(i, patch))}
               </div>

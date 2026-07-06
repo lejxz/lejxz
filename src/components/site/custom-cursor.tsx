@@ -3,22 +3,9 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
-/**
- * CustomCursor — a white dot with mixBlendMode: difference that inverts the
- * colors underneath (see-through contrast effect). Enlarges when hovering
- * interactive elements (buttons, links) and text elements.
- *
- * Three hover states:
- * - default (10px): over empty/structural areas
- * - text (20px): over headings, paragraphs, labels, spans, list items
- * - interactive (44px): over buttons, links, inputs — the original big enlarge
- *
- * The default OS cursor is hidden globally via CSS (cursor: none on body).
- */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
-  // "idle" | "text" | "interactive"
-  const [mode, setMode] = useState<"idle" | "text" | "interactive">("idle");
+  const [hovering, setHovering] = useState(false);
   const [down, setDown] = useState(false);
 
   const x = useMotionValue(-100);
@@ -38,19 +25,10 @@ export function CustomCursor() {
       x.set(e.clientX);
       y.set(e.clientY);
       const t = e.target as HTMLElement | null;
-      if (!t) return;
-      // Don't react to the cursor's own layer.
-      if (t.closest("[data-cursor-layer]")) {
-        setMode("idle");
-        return;
-      }
-      const interactive = !!t.closest(
+      const interactive = !!t?.closest(
         'a, button, [role="button"], input, textarea, select, [cmdk-input], [data-cursor="hover"]'
       );
-      const textish = !!t.closest(
-        'h1, h2, h3, h4, h5, h6, p, span, label, li, td, th, blockquote, code, pre, [data-cursor="text"]'
-      );
-      setMode(interactive ? "interactive" : textish ? "text" : "idle");
+      setHovering(interactive);
     };
     const onDown = () => setDown(true);
     const onUp = () => setDown(false);
@@ -67,9 +45,6 @@ export function CustomCursor() {
 
   if (!enabled) return null;
 
-  // sizes: idle 10, text 20, interactive 44
-  const size = mode === "interactive" ? 44 : mode === "text" ? 20 : 10;
-
   return (
     <div
       aria-hidden
@@ -77,7 +52,6 @@ export function CustomCursor() {
       className="pointer-events-none fixed inset-0 z-[90] hidden md:block"
       style={{ mixBlendMode: "difference" }}
     >
-      {/* Enlarging white circle — the signature see-through contrast dot */}
       <motion.div
         className="absolute rounded-full bg-white"
         style={{
@@ -87,11 +61,16 @@ export function CustomCursor() {
           translateY: "-50%",
         }}
         animate={{
-          width: size,
-          height: size,
+          width: hovering ? 44 : 10,
+          height: hovering ? 44 : 10,
           opacity: down ? 0.6 : 1,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      />
+      <motion.div
+        className="absolute h-1.5 w-1.5 rounded-full bg-teal"
+        style={{ x, y, translateX: "-50%", translateY: "-50%" }}
+        animate={{ opacity: hovering ? 0 : 1 }}
       />
     </div>
   );
