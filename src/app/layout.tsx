@@ -7,6 +7,7 @@ import { CustomCursor } from "@/components/site/custom-cursor";
 import { BackToTop } from "@/components/site/back-to-top";
 import { ShortcutsHelp } from "@/components/site/shortcuts-help";
 import { SectionProgress } from "@/components/site/section-progress";
+import { RouteProgress } from "@/components/site/route-progress";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -105,6 +106,7 @@ export default function RootLayout({
         <BackToTop />
         <ShortcutsHelp />
         <SectionProgress />
+        <RouteProgress />
         {children}
         <Toaster position="bottom-right" />
       </body>

@@ -118,14 +118,32 @@ export function ProjectsFull() {
       <div className="pointer-events-none absolute -left-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-violet/8 blur-[150px]" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        {/* Breadcrumb — back to home + section quick-links */}
         <Reveal>
-          <Link
-            href="/#work"
-            className="group inline-flex items-center gap-1.5 font-mono text-xs text-dim transition-colors hover:text-teal"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-            Back to home
-          </Link>
+          <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-dim">
+            <Link
+              href="/#work"
+              className="group inline-flex items-center gap-1.5 transition-colors hover:text-teal"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+              Back to home
+            </Link>
+            <span className="text-dim/30">·</span>
+            <span className="text-dim/60">jump to:</span>
+            {[
+              { label: "work", href: "/#work" },
+              { label: "skills", href: "/#skills" },
+              { label: "contact", href: "/#contact" },
+            ].map((s, i) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                className="rounded-full border border-line px-2 py-0.5 text-[10px] transition-colors hover:border-teal/40 hover:text-teal"
+              >
+                {s.label}
+              </Link>
+            ))}
+          </div>
         </Reveal>
 
         <div className="mt-6">

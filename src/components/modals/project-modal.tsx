@@ -50,12 +50,15 @@ export function ProjectModal({
 }) {
   const { copy } = useCopy();
 
-  // keyboard arrow navigation
+  // keyboard navigation: ArrowLeft/Right and [/] for prev/next
   useEffect(() => {
     if (!open || !hasMultiple) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" && onNext) onNext();
-      if (e.key === "ArrowLeft" && onPrev) onPrev();
+      // Don't interfere with form inputs
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if ((e.key === "ArrowRight" || e.key === "]") && onNext) onNext();
+      if ((e.key === "ArrowLeft" || e.key === "[") && onPrev) onPrev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -264,11 +267,13 @@ export function ProjectModal({
 
                     {/* keyboard hint footer */}
                     {hasMultiple && (
-                      <div className="mt-6 flex items-center justify-center gap-3 border-t border-line pt-4 font-mono text-[10px] text-dim">
+                      <div className="mt-6 flex flex-wrap items-center justify-center gap-3 border-t border-line pt-4 font-mono text-[10px] text-dim">
                         <span className="inline-flex items-center gap-1.5">
                           <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">
                             <ChevronLeft className="inline h-3 w-3" />
                           </kbd>
+                          /
+                          <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">[</kbd>
                           prev
                         </span>
                         <span className="text-dim/40">·</span>
@@ -277,6 +282,8 @@ export function ProjectModal({
                           <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">
                             <ChevronRight className="inline h-3 w-3" />
                           </kbd>
+                          /
+                          <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">]</kbd>
                         </span>
                       </div>
                     )}
