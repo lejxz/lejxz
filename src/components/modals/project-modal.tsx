@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   ArrowUpRight,
   ArrowUp,
+  X,
 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import {
@@ -93,7 +94,7 @@ export function ProjectModal({
         <DialogDescription className="sr-only">
           Detailed view of {project?.title}.
         </DialogDescription>
-        <DialogContent className="max-h-[92svh] max-w-5xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
+        <DialogContent showCloseButton={false} className="max-h-[92svh] max-w-5xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
           <AnimatePresence mode="wait">
             {project && (
               <motion.div
@@ -117,7 +118,7 @@ export function ProjectModal({
                       </span>
                     )}
                   </div>
-                  <div className="absolute right-3 top-3 flex gap-1.5">
+                  <div className="absolute right-3 top-3 flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={handleShare}
@@ -129,6 +130,14 @@ export function ProjectModal({
                     <span className="flex h-8 items-center rounded-full border border-line bg-surface/80 px-2.5 font-mono text-[10px] text-foreground/80 backdrop-blur">
                       {project.year}
                     </span>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      aria-label="Close"
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground/70 backdrop-blur transition-colors hover:text-destructive"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
 
@@ -316,15 +325,15 @@ export function ProjectModal({
         </DialogContent>
       </Dialog>
 
-      {/* floating prev/next (desktop) */}
+      {/* floating prev/next — visible on all screens, above dialog */}
       {hasMultiple && open && (
         <>
           {onPrev && (
             <button
               type="button"
-              onClick={onPrev}
+              onClick={(e) => { e.stopPropagation(); onPrev(); }}
               aria-label="Previous project"
-              className="fixed left-3 top-1/2 z-[60] hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur transition-all hover:ring-glow lg:flex"
+              className="fixed left-3 top-1/2 z-[70] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur transition-all hover:border-teal/40 hover:text-teal"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -332,9 +341,9 @@ export function ProjectModal({
           {onNext && (
             <button
               type="button"
-              onClick={onNext}
+              onClick={(e) => { e.stopPropagation(); onNext(); }}
               aria-label="Next project"
-              className="fixed right-3 top-1/2 z-[60] hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur transition-all hover:ring-glow lg:flex"
+              className="fixed right-3 top-1/2 z-[70] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur transition-all hover:border-teal/40 hover:text-teal"
             >
               <ChevronRight className="h-5 w-5" />
             </button>

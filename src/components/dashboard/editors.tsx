@@ -346,6 +346,23 @@ export function ProjectsEditor({ data, onChange }: EditorProps<any>) {
               <TextField label="Duration" value={item.duration ?? ""} onChange={(v) => up({ duration: v })} />
             </div>
             <TextField label="Cover image (path or URL)" value={item.cover ?? ""} onChange={(v) => up({ cover: v, thumbnail: v })} hint="/assets/projects/x.png or https://..." />
+            {/* Gallery images — multiple images shown in the project modal */}
+            <div className="rounded-lg border border-line p-2">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-dim">Gallery images (shown in project modal)</p>
+              <ListEditor
+                items={item.gallery ?? []}
+                onChange={(v) => up({ gallery: v, galleryImages: v.map((g: any) => g.src) })}
+                makeNew={() => ({ src: "", caption: "" })}
+                itemLabel={(g) => g.caption || g.src?.slice(-20) || "Untitled"}
+                addLabel="Add gallery image"
+                renderItem={(g, gup) => (
+                  <div className="space-y-2">
+                    <TextField label="Image (path or URL)" value={g.src ?? ""} onChange={(v) => gup({ src: v })} hint="/assets/projects/x.png or https://..." />
+                    <TextField label="Caption (optional)" value={g.caption ?? ""} onChange={(v) => gup({ caption: v })} />
+                  </div>
+                )}
+              />
+            </div>
             <TextAreaField label="Summary" value={item.summary ?? ""} onChange={(v) => up({ summary: v })} rows={2} />
             <TextAreaField label="Description (one per line)" value={(item.description ?? []).join("\n")} onChange={(v) => up({ description: v.split("\n") })} rows={4} />
             <ToggleField label="Featured" value={item.featured ?? false} onChange={(v) => up({ featured: v })} />
