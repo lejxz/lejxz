@@ -129,8 +129,9 @@ async function fetchAllData(password: string): Promise<{ files: Record<string, u
 
   if (env === "github") {
     // GitHub Pages mode: fetch each file from raw GitHub URLs.
+    // backendUp is ALWAYS true in GitHub mode — we can always read from
+    // raw.githubusercontent.com (public repo) and write via the GitHub API.
     const files: Record<string, unknown> = {};
-    let allOk = true;
     for (const name of ALLOWED_FILES) {
       try {
         const res = await fetch(`${RAW_BASE}/${name}.json`, { cache: "no-store" });
@@ -138,14 +139,12 @@ async function fetchAllData(password: string): Promise<{ files: Record<string, u
           files[name] = await res.json();
         } else {
           files[name] = clone(FALLBACKS[name]);
-          allOk = false;
         }
       } catch {
         files[name] = clone(FALLBACKS[name]);
-        allOk = false;
       }
     }
-    return { files, backendUp: allOk };
+    return { files, backendUp: true };
   }
 
   // Dev / gateway mode: call the mini-service.
@@ -498,7 +497,9 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
 
   // save the active file
   const save = async () => {
-    if (!allData || !backendUp) return;
+    if (!allData) return;
+    // In dev/gateway mode, require backendUp. In GitHub mode, always allow.
+    if (!backendUp && getEnv() !== "github") return;
     setSaving(true);
     try {
       const result = await saveFile(active, allData[active], password);
@@ -549,7 +550,7 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
           <div className="flex items-center gap-2">
             <span className={`hidden items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] sm:flex ${backendUp ? "border-teal/30 bg-teal/10 text-teal" : "border-destructive/30 bg-destructive/10 text-destructive"}`}>
               <CircleDot className="h-2.5 w-2.5" />
-              {backendUp ? "connected · live" : "offline · read-only"}
+              {getEnv() === "github" ? "GitHub · read/write" : backendUp ? "connected · live" : "offline · read-only"}
             </span>
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-1.5 font-mono text-xs text-dim hover:text-teal">
@@ -569,8 +570,8 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
         </div>
       </header>
 
-      {/* Backend-down banner */}
-      {!backendUp && (
+      {/* Backend-down banner (dev/gateway mode only — GitHub mode is always "up") */}
+      {!backendUp && getEnv() !== "github" && (
         <div className="border-b border-destructive/30 bg-destructive/10 px-4 py-2.5 text-center">
           <p className="flex items-center justify-center gap-2 font-mono text-xs text-destructive">
             <CloudOff className="h-3.5 w-3.5" />
@@ -678,7 +679,7 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
                 <Button
                   size="sm"
                   onClick={save}
-                  disabled={!isDirty || saving || !backendUp}
+                  disabled={!isDirty || saving || (!backendUp && getEnv() !== "github")}
                   className="gap-1.5 bg-teal font-mono text-xs text-primary-foreground hover:bg-teal/90 disabled:opacity-40"
                 >
                   {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : isDirty ? <Save className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5" />}
