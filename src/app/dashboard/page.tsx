@@ -50,6 +50,16 @@ const PORT = 3030;
 const API_BASE = `/api/dashboard`;
 const DEFAULT_PASSWORD = "lejxz-edit-2026";
 
+// GitHub repo config for the GitHub Pages dashboard mode.
+// When the dashboard is accessed on GitHub Pages (not localhost), it reads
+// data from the raw GitHub URLs and writes via the GitHub Contents API.
+const GH_OWNER = "lejxz";
+const GH_REPO = "lejxz";
+const GH_BRANCH = "main";
+const GH_DATA_DIR = "src/data";
+const RAW_BASE = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_DATA_DIR}`;
+const API_GH = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_DIR}`;
+
 type FileName =
   | "profile"
   | "marquee"
@@ -86,21 +96,143 @@ const FALLBACKS: Record<FileName, unknown> = {
 };
 
 /**
- * Build the API URL for the dashboard mini-service.
- *
- * - In dev (localhost): call the mini-service directly at localhost:3030.
- *   The mini-service has CORS enabled (Access-Control-Allow-Origin: *) so
- *   cross-origin browser requests work.
- * - In the sandbox preview (served via the Caddy gateway on port 81): use
- *   the relative path + ?XTransformPort=3030 so the gateway forwards it.
- * - In production (GitHub Pages): the relative path 404s (no backend), so
- *   the dashboard falls back to read-only mode — the expected behavior.
+ * Detect the current environment.
+ * - "dev": localhost (mini-service on port 3030)
+ * - "gateway": sandbox preview (Caddy gateway with XTransformPort)
+ * - "github": GitHub Pages (static, use GitHub API for read/write)
+ */
+function getEnv(): "dev" | "gateway" | "github" {
+  if (typeof window === "undefined") return "dev";
+  if (window.location.hostname === "localhost") return "dev";
+  if (window.location.hostname.includes("space-z.ai") || window.location.hostname.includes("z.ai")) return "gateway";
+  return "github";
+}
+
+/**
+ * Build the API URL for the dashboard mini-service (dev + gateway modes).
+ * In GitHub Pages mode, this isn't used — we use the GitHub API directly.
  */
 function apiUrl(path: string): string {
-  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+  const env = getEnv();
+  if (env === "dev") {
     return `http://localhost:${PORT}${API_BASE}${path}`;
   }
   return `${API_BASE}${path}?XTransformPort=${PORT}`;
+}
+
+/**
+ * Fetch all data files. In dev/gateway mode, calls the mini-service.
+ * In GitHub Pages mode, fetches each file from raw.githubusercontent.com.
+ */
+async function fetchAllData(password: string): Promise<{ files: Record<string, unknown>; backendUp: boolean }> {
+  const env = getEnv();
+
+  if (env === "github") {
+    // GitHub Pages mode: fetch each file from raw GitHub URLs.
+    const files: Record<string, unknown> = {};
+    let allOk = true;
+    for (const name of ALLOWED_FILES) {
+      try {
+        const res = await fetch(`${RAW_BASE}/${name}.json`, { cache: "no-store" });
+        if (res.ok) {
+          files[name] = await res.json();
+        } else {
+          files[name] = clone(FALLBACKS[name]);
+          allOk = false;
+        }
+      } catch {
+        files[name] = clone(FALLBACKS[name]);
+        allOk = false;
+      }
+    }
+    return { files, backendUp: allOk };
+  }
+
+  // Dev / gateway mode: call the mini-service.
+  const res = await fetch(apiUrl("/data"), {
+    headers: { "x-dashboard-password": password },
+  });
+  if (res.ok) {
+    const json = await res.json();
+    return { files: json.files, backendUp: true };
+  }
+  return { files: clone(FALLBACKS), backendUp: false };
+}
+
+/**
+ * Save a single data file. In dev/gateway mode, calls the mini-service.
+ * In GitHub Pages mode, uses the GitHub Contents API to commit the change.
+ *
+ * For GitHub Pages mode, the password IS the GitHub token (PAT). The user
+ * enters their GitHub PAT as the "password" — it's used to authenticate
+ * the GitHub API write. This is safe because the token is only stored in
+ * sessionStorage and sent directly to api.github.com.
+ */
+async function saveFile(
+  name: string,
+  data: unknown,
+  password: string
+): Promise<{ ok: boolean; error?: string }> {
+  const env = getEnv();
+
+  if (env === "github") {
+    // GitHub Pages mode: use the GitHub Contents API.
+    // The password is the GitHub PAT.
+    const token = password;
+    const path = `${GH_DATA_DIR}/${name}.json`;
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`;
+
+    // 1. Get the current file's SHA (required for updates).
+    let sha: string | undefined;
+    try {
+      const getRes = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+        },
+      });
+      if (getRes.ok) {
+        const getInfo = await getRes.json();
+        sha = getInfo.sha;
+      }
+    } catch {
+      // File may not exist yet — that's OK, we'll create it.
+    }
+
+    // 2. Update the file with the new content.
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2) + "\n")));
+    const putRes = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: `dashboard: update ${name}.json`,
+        content,
+        sha,
+        branch: GH_BRANCH,
+      }),
+    });
+
+    if (putRes.ok) return { ok: true };
+    const err = await putRes.json().catch(() => ({}));
+    return { ok: false, error: err.message || `GitHub API error: ${putRes.status}` };
+  }
+
+  // Dev / gateway mode: call the mini-service.
+  const res = await fetch(apiUrl(`/file/${name}`), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-dashboard-password": password,
+    },
+    body: JSON.stringify(data),
+  });
+  if (res.ok) return { ok: true };
+  const j = await res.json().catch(() => ({}));
+  return { ok: false, error: j.error || "Save failed" };
 }
 
 const EDITORS: Record<FileName, React.ComponentType<{ data: any; onChange: (n: any) => void }>> = {
@@ -170,6 +302,36 @@ function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
     e.preventDefault();
     if (!value.trim()) return;
     setChecking(true);
+    const env = getEnv();
+
+    if (env === "github") {
+      // GitHub Pages mode: the password is a GitHub PAT.
+      // Validate it by trying to read a file via the GitHub API.
+      try {
+        const testRes = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_DIR}/profile.json`, {
+          headers: {
+            Authorization: `Bearer ${value}`,
+            Accept: "application/vnd.github+json",
+          },
+        });
+        if (testRes.ok) {
+          onUnlock(value);
+          toast.success("Dashboard unlocked — GitHub mode (read/write)");
+        } else if (testRes.status === 401 || testRes.status === 403) {
+          toast.error("Invalid GitHub token");
+        } else {
+          // Token might be valid but repo access differs — try anyway.
+          onUnlock(value);
+          toast("GitHub mode — enter your GitHub PAT to edit", { icon: "🔑" });
+        }
+      } catch {
+        toast.error("Network error — check your connection");
+      }
+      setChecking(false);
+      return;
+    }
+
+    // Dev / gateway mode: validate against the mini-service.
     try {
       const res = await fetch(apiUrl("/data"), {
         headers: { "x-dashboard-password": value },
@@ -180,9 +342,6 @@ function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
       } else if (res.status === 401) {
         toast.error("Wrong password");
       } else {
-        // Backend returned a non-401 error (e.g. 404 on GitHub Pages where the
-        // mini-service doesn't exist). Validate against the default password
-        // client-side and unlock in read-only mode.
         if (value === DEFAULT_PASSWORD) {
           onUnlock(value);
           toast("Backend offline — read-only mode", { icon: "⚠️" });
@@ -191,7 +350,6 @@ function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
         }
       }
     } catch {
-      // Network error — mini-service unreachable. Validate client-side.
       if (value === DEFAULT_PASSWORD) {
         onUnlock(value);
         toast("Backend unreachable — read-only mode", { icon: "⚠️" });
@@ -224,7 +382,7 @@ function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
             type="password"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Password"
+            placeholder={getEnv() === "github" ? "GitHub PAT (github_pat_...)" : "Password"}
             autoFocus
             className="border-line bg-surface/50 font-mono text-sm focus:border-teal/40"
           />
@@ -237,7 +395,10 @@ function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
             Unlock
           </Button>
           <p className="mt-3 text-center font-mono text-[10px] text-dim">
-            Edits write to <code className="text-teal">src/data/</code> via the local mini-service.
+            {getEnv() === "github"
+              ? <>Enter your <code className="text-teal">GitHub PAT</code> to read & write <code className="text-teal">src/data/</code> via the GitHub API.</>
+              : <>Edits write to <code className="text-teal">src/data/</code> via the local mini-service.</>
+            }
           </p>
         </form>
         <div className="mt-4 text-center">
@@ -271,21 +432,10 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
   const loadAll = React.useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(apiUrl("/data"), {
-        headers: { "x-dashboard-password": password },
-      });
-      if (res.ok) {
-        const json = await res.json();
-        const data = json.files as Record<FileName, any>;
-        setAllData(data);
-        setOriginal(clone(data));
-        setBackendUp(true);
-      } else {
-        // auth failed or server error — fall back to baked-in data
-        setAllData(clone(FALLBACKS));
-        setOriginal(clone(FALLBACKS));
-        setBackendUp(false);
-      }
+      const { files, backendUp: up } = await fetchAllData(password);
+      setAllData(files as Record<FileName, any>);
+      setOriginal(clone(files));
+      setBackendUp(up);
     } catch {
       setAllData(clone(FALLBACKS));
       setOriginal(clone(FALLBACKS));
@@ -306,8 +456,11 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
 
   // Auto-save: debounce 2s after the last edit to the active file.
   // Only triggers if the backend is up and the active file is dirty.
+  // In GitHub Pages mode, auto-save is disabled (too many API calls).
   React.useEffect(() => {
     if (!allData || !original || !backendUp) return;
+    // Disable auto-save in GitHub Pages mode (would spam the GitHub API).
+    if (getEnv() === "github") return;
     const isDirtyNow =
       JSON.stringify(allData[active]) !== JSON.stringify(original[active]);
     if (!isDirtyNow) return;
@@ -316,24 +469,15 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
     const timer = setTimeout(async () => {
       setAutoSaveStatus("saving");
       try {
-        const res = await fetch(apiUrl(`/file/${active}`), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-dashboard-password": password,
-          },
-          body: JSON.stringify(allData[active]),
-        });
-        if (res.ok) {
+        const result = await saveFile(active, allData[active], password);
+        if (result.ok) {
           setOriginal((cur) =>
             cur ? { ...cur, [active]: clone(allData[active]) } : cur
           );
           setAutoSaveStatus("saved");
-          // Clear "saved" after 2s
           setTimeout(() => setAutoSaveStatus("idle"), 2000);
         }
       } catch {
-        // Silent fail — manual save will show the error toast
         setAutoSaveStatus("idle");
       }
     }, 2000);
@@ -357,23 +501,15 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
     if (!allData || !backendUp) return;
     setSaving(true);
     try {
-      const res = await fetch(apiUrl(`/file/${active}`), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-dashboard-password": password,
-        },
-        body: JSON.stringify(allData[active]),
-      });
-      if (res.ok) {
+      const result = await saveFile(active, allData[active], password);
+      if (result.ok) {
         setOriginal((cur) => (cur ? { ...cur, [active]: clone(allData[active]) } : cur));
-        toast.success(`${active}.json saved`);
+        toast.success(getEnv() === "github" ? `${active}.json committed to GitHub` : `${active}.json saved`);
       } else {
-        const j = await res.json().catch(() => ({}));
-        toast.error(j.error || "Save failed");
+        toast.error(result.error || "Save failed");
       }
     } catch {
-      toast.error("Backend unreachable — start the mini-service");
+      toast.error("Save failed — check your connection/token");
     }
     setSaving(false);
   };
