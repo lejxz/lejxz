@@ -118,7 +118,7 @@ export function ProjectModal({
                       </span>
                     )}
                   </div>
-                  <div className="absolute right-3 top-3 flex items-center gap-1.5">
+                  <div className="absolute right-3 top-3 z-20 flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={handleShare}

@@ -81,7 +81,7 @@ export function Gallery({
               <ChevronRight className="h-4 w-4" />
             </button>
 
-            <span className="absolute right-2 top-2 rounded-md border border-line bg-surface/70 px-2 py-0.5 font-mono text-[10px] text-foreground/80 backdrop-blur">
+            <span className="absolute bottom-2 left-2 rounded-md border border-line bg-surface/70 px-2 py-0.5 font-mono text-[10px] text-foreground/80 backdrop-blur">
               {index + 1}/{n}
             </span>
           </>
