@@ -11,17 +11,17 @@
         {
           "name": "Python",
           "level": 90,
-          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-        },
-        {
-          "name": "C++",
-          "level": 68,
-          "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+          "description": "Python enthusiast with a focus on problem-solving and automation. Adept at integrating APIs, managing data, and creating efficient scripts for real-world tasks."
         },
         {
           "name": "C",
-          "level": 50,
-          "description": ""
+          "level": 85,
+          "description": "Hands-on experience developing programs in C, emphasizing optimization, modular design, and debugging. Strong grasp of procedural programming and compiler behavior."
+        },
+        {
+          "name": "C++",
+          "level": 80,
+          "description": "Skilled in C++ with a focus on classes, inheritance, and polymorphism. Adept at building applications that balance speed, scalability, and maintainability."
         }
       ]
     },
@@ -42,11 +42,6 @@
           "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
         },
         {
-          "name": "scikit-learn",
-          "level": 84,
-          "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-        },
-        {
           "name": "Hugging Face",
           "level": 78,
           "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
@@ -55,44 +50,6 @@
           "name": "OpenCV",
           "level": 72,
           "description": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur."
-        },
-        {
-          "name": "LangChain",
-          "level": 66,
-          "description": "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit."
-        }
-      ]
-    },
-    {
-      "title": "Frontend",
-      "key": "frontend",
-      "icon": "layout",
-      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "items": [
-        {
-          "name": "React",
-          "level": 85,
-          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt."
-        },
-        {
-          "name": "Next.js",
-          "level": 82,
-          "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea."
-        },
-        {
-          "name": "Three.js / R3F",
-          "level": 64,
-          "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat."
-        },
-        {
-          "name": "Tailwind CSS",
-          "level": 88,
-          "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit."
-        },
-        {
-          "name": "Framer Motion",
-          "level": 76,
-          "description": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque."
         }
       ]
     },
@@ -103,24 +60,14 @@
       "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "items": [
         {
-          "name": "Docker",
-          "level": 72,
-          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor."
-        },
-        {
           "name": "Git",
           "level": 90,
           "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip."
         },
         {
           "name": "Linux",
-          "level": 80,
+          "level": 60,
           "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore."
-        },
-        {
-          "name": "FastAPI",
-          "level": 78,
-          "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia."
         },
         {
           "name": "PostgreSQL",
