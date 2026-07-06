@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ExternalLink, MapPin, Calendar, Briefcase, Share2 } from "lucide-react";
+import { CheckCircle2, ExternalLink, MapPin, Calendar, Briefcase, Share2, ArrowUp } from "lucide-react";
 import type { ExperienceItem, ExperienceType } from "@/lib/types";
 import {
   Dialog,
@@ -127,7 +127,10 @@ export function ExperienceModal({
             </div>
 
             {/* Scrollable body */}
-            <div className="max-h-[calc(92svh-12rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+            <div
+              className="max-h-[calc(92svh-12rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6"
+              id="experience-modal-scroll"
+            >
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -189,6 +192,22 @@ export function ExperienceModal({
                     </div>
                   </div>
                 )}
+
+                {/* Back-to-top button */}
+                <div className="mt-6 flex justify-center border-t border-line pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById("experience-modal-scroll");
+                      if (el) el.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="group inline-flex items-center gap-2 rounded-full border border-line px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-dim transition-colors hover:border-teal/40 hover:text-teal"
+                    aria-label="Scroll to top of experience details"
+                  >
+                    <ArrowUp className="h-3 w-3 transition-transform group-hover:-translate-y-0.5" />
+                    back to top
+                  </button>
+                </div>
               </motion.div>
             </div>
           </motion.div>

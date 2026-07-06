@@ -15,6 +15,8 @@ import {
   X,
   Check,
   CircleDot,
+  Code2,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -245,6 +247,10 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
   const [saving, setSaving] = React.useState(false);
   const [backendUp, setBackendUp] = React.useState(true);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  // Auto-save state: "idle" | "saving" | "saved"
+  const [autoSaveStatus, setAutoSaveStatus] = React.useState<"idle" | "saving" | "saved">("idle");
+  // Track which files are dirty (for per-file auto-save)
+  const [viewRaw, setViewRaw] = React.useState(false);
 
   // load all data on mount
   const loadAll = React.useCallback(async () => {
@@ -280,7 +286,45 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
   // edit handler for the active file
   const edit = (next: any) => {
     setAllData((cur) => (cur ? { ...cur, [active]: next } : cur));
+    setAutoSaveStatus("idle");
   };
+
+  // Auto-save: debounce 2s after the last edit to the active file.
+  // Only triggers if the backend is up and the active file is dirty.
+  React.useEffect(() => {
+    if (!allData || !original || !backendUp) return;
+    const isDirtyNow =
+      JSON.stringify(allData[active]) !== JSON.stringify(original[active]);
+    if (!isDirtyNow) return;
+
+    setAutoSaveStatus("idle");
+    const timer = setTimeout(async () => {
+      setAutoSaveStatus("saving");
+      try {
+        const res = await fetch(apiUrl(`/file/${active}`), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-dashboard-password": password,
+          },
+          body: JSON.stringify(allData[active]),
+        });
+        if (res.ok) {
+          setOriginal((cur) =>
+            cur ? { ...cur, [active]: clone(allData[active]) } : cur
+          );
+          setAutoSaveStatus("saved");
+          // Clear "saved" after 2s
+          setTimeout(() => setAutoSaveStatus("idle"), 2000);
+        }
+      } catch {
+        // Silent fail — manual save will show the error toast
+        setAutoSaveStatus("idle");
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [allData, original, active, backendUp, password]);
 
   // dirty check: compare active file to its original
   const isDirty = React.useMemo(() => {
@@ -436,12 +480,36 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
                 <p className="font-mono text-[11px] text-dim">{activeMeta.desc}</p>
               </div>
               <div className="flex items-center gap-2">
-                {isDirty && (
+                {/* Auto-save indicator: shows "saving…" or "saved" */}
+                {autoSaveStatus === "saving" && (
+                  <span className="flex items-center gap-1.5 font-mono text-[10px] text-violet">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    saving…
+                  </span>
+                )}
+                {autoSaveStatus === "saved" && (
+                  <span className="flex items-center gap-1.5 font-mono text-[10px] text-teal">
+                    <Check className="h-3 w-3" />
+                    saved
+                  </span>
+                )}
+                {isDirty && autoSaveStatus === "idle" && (
                   <span className="flex items-center gap-1 font-mono text-[10px] text-violet">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet" />
                     unsaved
                   </span>
                 )}
+                {/* View raw JSON toggle */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setViewRaw((v) => !v)}
+                  className="gap-1.5 font-mono text-xs text-dim hover:text-teal"
+                  aria-pressed={viewRaw}
+                >
+                  <Code2 className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{viewRaw ? "Editor" : "Raw JSON"}</span>
+                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -464,11 +532,13 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
               </div>
             </div>
 
-            {/* Editor body */}
+            {/* Editor body — shows raw JSON viewer when toggled */}
             {loading || !allData ? (
               <div className="flex items-center justify-center py-20">
                 <Loader2 className="h-6 w-6 animate-spin text-teal" />
               </div>
+            ) : viewRaw ? (
+              <RawJsonView data={allData[active]} />
             ) : (
               <Editor data={allData[active]} onChange={edit} />
             )}
@@ -527,5 +597,56 @@ function Sidebar({
         </button>
       ))}
     </nav>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// RawJsonView — read-only syntax-highlighted JSON viewer with copy button
+// ---------------------------------------------------------------------------
+
+function RawJsonView({ data }: { data: any }) {
+  const [copied, setCopied] = React.useState(false);
+  const jsonStr = React.useMemo(
+    () => JSON.stringify(data, null, 2),
+    [data]
+  );
+
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(jsonStr);
+      setCopied(true);
+      toast.success("JSON copied to clipboard");
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error("Couldn't copy");
+    }
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-line bg-surface/40">
+      <div className="flex items-center justify-between border-b border-line bg-surface-3/60 px-4 py-2.5">
+        <span className="font-mono text-xs text-dim">raw JSON · read-only</span>
+        <button
+          type="button"
+          onClick={onCopy}
+          className="flex items-center gap-1.5 rounded-md border border-line bg-surface/60 px-2 py-1 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
+        >
+          {copied ? (
+            <>
+              <Check className="h-3 w-3 text-teal" />
+              <span className="text-teal">copied</span>
+            </>
+          ) : (
+            <>
+              <Copy className="h-3 w-3" />
+              <span>copy</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="max-h-[60vh] overflow-auto p-4 font-mono text-xs leading-relaxed">
+        <code>{jsonStr}</code>
+      </pre>
+    </div>
   );
 }

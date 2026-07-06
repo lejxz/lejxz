@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, ArrowUpDown } from "lucide-react";
 import { skills } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -14,6 +14,7 @@ export function Skills() {
   const [activeGroup, setActiveGroup] = useState(0);
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [sortDesc, setSortDesc] = useState(true); // true = highest first
 
   const group = skills.groups[activeGroup];
   const q = query.trim().toLowerCase();
@@ -35,12 +36,23 @@ export function Skills() {
         }
       }
     }
+    // Sort by level (descending or ascending based on toggle)
+    results.sort((a, b) =>
+      sortDesc ? b.skill.level - a.skill.level : a.skill.level - b.skill.level
+    );
     return results;
-  }, [q]);
+  }, [q, sortDesc]);
 
   // The list to render: search results when searching, otherwise the active group's items.
   const isSearching = searchResults !== null;
-  const displayItems = isSearching ? searchResults! : (group?.items ?? []);
+  const displayItems = useMemo(() => {
+    const items = isSearching ? searchResults! : (group?.items ?? []);
+    if (isSearching) return items; // already sorted above
+    // Sort the group items by level
+    return [...items].sort((a, b) =>
+      sortDesc ? b.level - a.level : a.level - b.level
+    );
+  }, [isSearching, searchResults, group, sortDesc]);
 
   // When searching, the selected skill might be from a different group.
   const selected = isSearching
@@ -114,6 +126,17 @@ export function Skills() {
                     </button>
                   )}
                 </div>
+                {/* Sort-by-level toggle */}
+                <button
+                  type="button"
+                  onClick={() => setSortDesc((s) => !s)}
+                  aria-label={sortDesc ? "Sort ascending (lowest first)" : "Sort descending (highest first)"}
+                  title={sortDesc ? "Highest first" : "Lowest first"}
+                  className="flex h-8 items-center gap-1 rounded-full border border-line bg-surface/40 px-2.5 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
+                >
+                  <ArrowUpDown className={cn("h-3 w-3 transition-transform", !sortDesc && "rotate-180")} />
+                  <span className="hidden sm:inline">{sortDesc ? "high→low" : "low→high"}</span>
+                </button>
               </div>
             </Reveal>
 
