@@ -6,7 +6,11 @@
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db:push": "echo 'no-op: prisma not used in this project'",
+    "db:generate": "echo 'no-op: prisma not used in this project'",
+    "db:migrate": "echo 'no-op: prisma not used in this project'",
+    "db:reset": "echo 'no-op: prisma not used in this project'"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

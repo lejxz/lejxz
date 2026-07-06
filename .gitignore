@@ -1,12 +1,7 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 node_modules
 /.pnp
 .pnp.*
-
-# testing
-/coverage
 
 # next.js
 /.next/
@@ -19,13 +14,14 @@ node_modules
 .DS_Store
 *.pem
 
-# debug
+# debug logs
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+*.log
+dev.log
+server.log
 
-# env files (can opt-in for committing if needed)
+# env
 .env*
 
 # vercel
@@ -35,29 +31,31 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# logs
-*.log
-dev.log
-server.log
-
-# sandbox / dev tooling (NOT part of the deployed portfolio)
+# ---- SANDBOX-ONLY FILES (not part of the deployed portfolio) ----
+# dev tooling / supervisor
+/.zscripts/
+start-dev.sh
+/zscripts/
+# sandbox infra
+Caddyfile
+/.cache/
+# databases (portfolio has no DB)
+/db/
+/prisma/
+# uploaded assets / temp
+/upload/
+/download/
+# sandbox skills + examples
+/skills/
+/examples/
+# sandbox agent metadata
 .claude
 .z-ai-config
-/skills/
-/.zscripts/
-/upload/
-/examples/
-/download/
-/db/
-Caddyfile
+# handover docs (internal)
 worklog.md
+# screenshots
 screenshot-*.png
-local-*
-
-# mini-services: the dashboard-api is part of the project; ignore only its deps + other sandbox services
+# mini-services: the dashboard-api IS part of the project (keep source, ignore deps/logs)
 /mini-services/*/node_modules/
-/mini-services/.gitkeep
-
-# unused sandbox scaffold (portfolio has no database)
-/prisma/
-/src/lib/db.ts
+/mini-services/*/service.log
+/mini-services/*/*.log
