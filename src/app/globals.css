@@ -124,6 +124,29 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
+  /* Hide the default cursor everywhere on fine-pointer devices — the custom
+     dot cursor (CustomCursor component) replaces it. On touch devices the
+     default cursor is irrelevant, so this only applies to pointer: fine. */
+  @media (pointer: fine) {
+    body {
+      cursor: none;
+    }
+    /* Keep the text caret inside form fields so users can edit. */
+    input,
+    textarea,
+    select,
+    [contenteditable="true"] {
+      cursor: text !important;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    /* Disable text selection on everything else — no I-beam, no highlight. */
+    *, *::before, *::after {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+  }
   ::selection {
     background-color: rgba(94, 234, 212, 0.25);
     color: #ffffff;

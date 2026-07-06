@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Star, Search } from "lucide-react";
+import { ArrowUpRight, Star, Search, ArrowRight } from "lucide-react";
 import { projects, featuredProjects } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -13,6 +14,8 @@ import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
 const CATEGORIES = ["All", ...Array.from(new Set(projects.projects.map((p) => p.category)))];
+
+const PREVIEW_LIMIT = 3;
 
 const STATUSES: { key: "all" | "shipped" | "wip" | "archived"; label: string }[] = [
   { key: "all", label: "All" },
@@ -147,7 +150,7 @@ export function Work() {
           <AnimatePresence mode="popLayout">
             {filtered.length > 0 ? (
               <motion.div layout className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {filtered.map((p, i) => (
+                {filtered.slice(0, PREVIEW_LIMIT).map((p, i) => (
                   <ProjectCard
                     key={p.id}
                     project={p}
@@ -179,6 +182,19 @@ export function Work() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* View all link */}
+          {filtered.length > PREVIEW_LIMIT && (
+            <div className="mt-8 flex justify-center">
+              <Link
+                href="/projects/"
+                className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
+              >
+                View all {filtered.length} projects
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -28,39 +28,39 @@ export function StatsBand() {
     >
       <div className="pointer-events-none absolute inset-0 bg-aurora opacity-40" />
 
-      <div className="relative mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-12">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+      <div className="relative mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-8">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {stats.map((stat, i) => {
             const accent = ACCENTS[i % ACCENTS.length];
             return (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 18 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
                 transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="card-hover-glow group relative overflow-hidden rounded-2xl border border-line bg-surface/40 p-5 text-center sm:p-6"
+                className="card-hover-glow group relative overflow-hidden rounded-xl border border-line bg-surface/40 p-3 text-center sm:p-4"
               >
                 <div
                   className={cn(
-                    "pointer-events-none absolute -top-12 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full bg-gradient-to-b to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100",
+                    "pointer-events-none absolute -top-10 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full bg-gradient-to-b to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100",
                     accent.glow
                   )}
                 />
                 <div className="relative flex flex-col items-center">
-                  <span className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
+                  <span className="mb-0.5 font-mono text-[9px] uppercase tracking-[0.15em] text-dim sm:text-[10px]">
                     {stat.label}
                   </span>
                   <span
                     className={cn(
-                      "font-mono text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl",
+                      "font-mono text-xl font-bold tracking-tight sm:text-2xl",
                       accent.text
                     )}
-                    style={{ textShadow: "0 0 24px currentColor", filter: "brightness(1.1)" }}
+                    style={{ textShadow: "0 0 18px currentColor", filter: "brightness(1.1)" }}
                   >
                     {stat.prefix}
                     <CountUp to={stat.value} duration={1.8} suffix={stat.suffix ?? ""} />
                   </span>
-                  <span className="mt-3 h-0.5 w-10 overflow-hidden rounded-full bg-line">
+                  <span className="mt-2 h-0.5 w-8 overflow-hidden rounded-full bg-line">
                     <motion.span
                       className={cn("block h-full rounded-full", accent.text)}
                       style={{ backgroundColor: "currentColor" }}
