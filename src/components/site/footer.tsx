@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Printer } from "lucide-react";
 import { profile, footerLinks, site, nav } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { asset } from "@/lib/asset";
@@ -137,6 +137,17 @@ export function Footer() {
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal" />
               {footerLinks.builtWith ?? site.footer.builtWith ?? "Built with Next.js"}
             </span>
+            <span className="h-3 w-px bg-line" />
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="group flex items-center gap-1.5 font-mono text-[11px] text-dim transition-colors hover:text-teal"
+              aria-label="Print or save as PDF"
+              title="Print / Save as PDF"
+            >
+              <Printer className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" />
+              <span className="hidden sm:inline">print</span>
+            </button>
             <span className="h-3 w-px bg-line" />
             <button
               type="button"

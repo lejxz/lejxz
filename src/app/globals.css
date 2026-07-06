@@ -505,3 +505,145 @@ html.theme-anim * {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Print stylesheet — produces a clean, readable resume/PDF when the user
+   prints the page (Cmd/Ctrl+P → "Save as PDF"). The portfolio's animated
+   3D background, nav, and interactive chrome are hidden; sections are
+   laid out as a simple document with visible headings and borders.
+   --------------------------------------------------------------------------- */
+@media print {
+  /* Force light-theme colors on paper (dark backgrounds waste ink and are
+     hard to read). We don't toggle the `.light` class because the print
+     media query already overrides everything below. */
+  :root {
+    --background: #ffffff !important;
+    --foreground: #11151b !important;
+    --card: #ffffff !important;
+    --muted-foreground: #444c57 !important;
+    --color-dim: #444c57 !important;
+    --color-line: rgba(17, 21, 27, 0.18) !important;
+    --color-surface: #ffffff !important;
+    --color-teal: #0d9488 !important;
+    --color-violet: #6d28d9 !important;
+  }
+
+  /* Hide interactive/decorative chrome that doesn't belong on paper. */
+  [aria-hidden="true"],
+  nav[aria-label="Section navigation"],
+  header[role="banner"],
+  .fixed,
+  [data-cursor-layer],
+  #back-to-top,
+  canvas,
+  .bg-grid,
+  .bg-dots,
+  .marquee,
+  .animate-marquee,
+  .animate-marquee-rev,
+  .boot-overlay,
+  .grain-overlay {
+    display: none !important;
+  }
+
+  /* Reset the body for print. */
+  html, body {
+    background: #ffffff !important;
+    color: #11151b !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    overflow: visible !important;
+    cursor: auto !important;
+  }
+
+  /* Re-enable text selection + the default cursor for print. */
+  * {
+    cursor: auto !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+
+  /* Each major section becomes a clean block with a heading. */
+  main {
+    display: block !important;
+  }
+  section {
+    page-break-inside: avoid;
+    padding: 1rem 0 !important;
+    overflow: visible !important;
+  }
+  section > div {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Drop the glow/shadow effects — they don't print well. */
+  .card-hover-glow::before,
+  .glow-teal,
+  .glow-violet,
+  .text-glow,
+  .text-glow-soft,
+  [class*="blur-"],
+  [class*="shadow-"] {
+    display: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Headings: clear, dark, with a bottom border for the resume feel. */
+  h1, h2, h3 {
+    color: #11151b !important;
+    text-shadow: none !important;
+    page-break-after: avoid;
+  }
+  h1 { font-size: 22pt !important; }
+  h2 {
+    font-size: 14pt !important;
+    border-bottom: 1.5px solid #11151b !important;
+    padding-bottom: 2pt !important;
+    margin-top: 18pt !important;
+  }
+  h3 { font-size: 12pt !important; }
+
+  /* Links: show the URL in parentheses for external links (resume style). */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #444c57 !important;
+    text-decoration: none !important;
+  }
+  a {
+    color: #0d9488 !important;
+    text-decoration: none !important;
+  }
+
+  /* Cards: flatten to simple bordered boxes. */
+  [class*="rounded-2xl"],
+  [class*="rounded-xl"] {
+    border: 1px solid rgba(17, 21, 27, 0.2) !important;
+    border-radius: 4px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Force dark-on-light for any text that uses dim/foreground opacity. */
+  [class*="text-dim"],
+  [class*="text-foreground/"] {
+    color: #444c57 !important;
+  }
+  [class*="text-teal"] { color: #0d9488 !important; }
+  [class*="text-violet"] { color: #6d28d9 !important; }
+
+  /* Hide the footer's tip line and the dashboard link. */
+  footer [class*="tip"],
+  footer a[href*="dashboard"] {
+    display: none !important;
+  }
+
+  /* Expand the experience timeline to full width and drop the left rail. */
+  .absolute.left-\[7px\],
+  .absolute.left-\[9px\] {
+    display: none !important;
+  }
+}

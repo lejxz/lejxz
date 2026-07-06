@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 import { skills } from "@/lib/data";
 import { Icon } from "@/components/icon";
@@ -101,7 +101,7 @@ export function Skills() {
                 >
                   {selected ? (
                     <>
-                      <SkillGauge level={selected.level} />
+                      <SkillGauge level={selected.level} name={selected.name} />
                       <h3 className="mt-5 font-mono text-xl font-bold text-foreground">
                         {selected.name}
                       </h3>
@@ -211,49 +211,126 @@ function SkillBar({
   );
 }
 
-function SkillGauge({ level }: { level: number }) {
+/**
+ * SkillGauge — the radial proficiency gauge with a hover tooltip showing a
+ * qualitative level label (Beginner / Intermediate / Advanced / Expert).
+ * The gauge pulses subtly when hovered.
+ */
+function SkillGauge({ level, name }: { level: number; name?: string }) {
   const ref = useRef<SVGSVGElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [hovered, setHovered] = useState(false);
   const r = 52;
   const circ = 2 * Math.PI * r;
 
+  // Map the numeric level to a qualitative label + color.
+  const tier =
+    level >= 85
+      ? { label: "Expert", color: "var(--color-teal)" }
+      : level >= 70
+      ? { label: "Advanced", color: "var(--color-teal)" }
+      : level >= 50
+      ? { label: "Intermediate", color: "var(--color-violet)" }
+      : { label: "Beginner", color: "var(--color-violet)" };
+
   return (
-    <svg ref={ref} viewBox="0 0 128 128" className="h-32 w-32 -rotate-90">
-      <defs>
-        <linearGradient id="skill-gauge-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#5eead4" />
-          <stop offset="100%" stopColor="#a78bfa" />
-        </linearGradient>
-      </defs>
-      <circle cx="64" cy="64" r={r} fill="none" stroke="var(--color-line)" strokeWidth="8" />
-      <motion.circle
-        cx="64"
-        cy="64"
-        r={r}
-        fill="none"
-        stroke="url(#skill-gauge-grad)"
-        strokeWidth="8"
-        strokeLinecap="round"
-        strokeDasharray={circ}
-        initial={{ strokeDashoffset: circ }}
-        animate={inView ? { strokeDashoffset: circ * (1 - level / 100) } : { strokeDashoffset: circ }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-        style={{ filter: "drop-shadow(0 0 6px rgba(94,234,212,0.45))" }}
-      />
-      <text
-        x="64"
-        y="64"
-        textAnchor="middle"
-        dominantBaseline="central"
-        className="rotate-90"
-        transform="rotate(90 64 64)"
-        fill="var(--color-foreground)"
-        fontFamily="var(--font-space-mono), monospace"
-        fontSize="26"
-        fontWeight="700"
+    <div
+      className="relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <motion.svg
+        ref={ref}
+        viewBox="0 0 128 128"
+        className="h-32 w-32 -rotate-90"
+        animate={hovered ? { scale: 1.05 } : { scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        {level}
-      </text>
-    </svg>
+        <defs>
+          <linearGradient id="skill-gauge-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#5eead4" />
+            <stop offset="100%" stopColor="#a78bfa" />
+          </linearGradient>
+        </defs>
+        {/* track */}
+        <circle cx="64" cy="64" r={r} fill="none" stroke="var(--color-line)" strokeWidth="8" />
+        {/* progress arc */}
+        <motion.circle
+          cx="64"
+          cy="64"
+          r={r}
+          fill="none"
+          stroke="url(#skill-gauge-grad)"
+          strokeWidth="8"
+          strokeLinecap="round"
+          strokeDasharray={circ}
+          initial={{ strokeDashoffset: circ }}
+          animate={
+            inView
+              ? { strokeDashoffset: circ * (1 - level / 100) }
+              : { strokeDashoffset: circ }
+          }
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            filter: hovered
+              ? "drop-shadow(0 0 12px rgba(94,234,212,0.7))"
+              : "drop-shadow(0 0 6px rgba(94,234,212,0.45))",
+          }}
+        />
+        {/* level number (rotated back to upright) */}
+        <text
+          x="64"
+          y="64"
+          textAnchor="middle"
+          dominantBaseline="central"
+          className="rotate-90"
+          transform="rotate(90 64 64)"
+          fill="var(--color-foreground)"
+          fontFamily="var(--font-space-mono), monospace"
+          fontSize="26"
+          fontWeight="700"
+        >
+          {level}
+        </text>
+        {/* small "%" label under the number */}
+        <text
+          x="64"
+          y="82"
+          textAnchor="middle"
+          className="rotate-90"
+          transform="rotate(90 64 64)"
+          fill="var(--color-dim)"
+          fontFamily="var(--font-space-mono), monospace"
+          fontSize="9"
+          fontWeight="400"
+        >
+          proficiency
+        </text>
+      </motion.svg>
+
+      {/* Hover tooltip — qualitative tier label */}
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 4, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.9 }}
+            transition={{ duration: 0.15 }}
+            className="pointer-events-none absolute -top-9 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-md border border-line bg-surface/95 px-2.5 py-1 font-mono text-[10px] font-bold shadow-lg backdrop-blur-sm"
+            style={{ color: tier.color }}
+          >
+            {tier.label}
+            {/* arrow */}
+            <span
+              className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r"
+              style={{
+                borderColor: "var(--color-line)",
+                background: "var(--color-surface)",
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

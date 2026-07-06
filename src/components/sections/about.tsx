@@ -13,6 +13,7 @@ import {
   Copy,
   Check,
   Music2,
+  BookMarked,
 } from "lucide-react";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { profile, now } from "@/lib/data";
@@ -183,6 +184,12 @@ export function About() {
                 music API. The track cycles through a small playlist every 8s. */}
             <Reveal delay={0.18}>
               <NowPlaying />
+            </Reveal>
+
+            {/* Now reading widget — a mock "currently reading" card with a
+                book cover placeholder, progress bar, and cycling shelf. */}
+            <Reveal delay={0.22}>
+              <NowReading />
             </Reveal>
           </div>
         </div>
@@ -401,6 +408,90 @@ function NowPlaying() {
           />
         </div>
         <span className="font-mono text-[9px] tabular-nums text-dim">{track.duration}</span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * NowReading — a mock "currently reading" card with a book cover
+ * placeholder, an animated progress bar, and a cycling shelf of 3 books.
+ * Advances every 12 seconds. Placeholder titles to match the site's copy.
+ */
+const SHELF = [
+  { title: "Lorem Ipsum", author: "Cicero", progress: 0.62, pages: 320 },
+  { title: "Sed Do Eiusmod", author: "Tempor Incididunt", progress: 0.28, pages: 248 },
+  { title: "Ut Labore", author: "Magna Aliqua", progress: 0.85, pages: 410 },
+];
+
+function NowReading() {
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % SHELF.length), 12000);
+    return () => clearInterval(t);
+  }, []);
+
+  const book = SHELF[idx];
+  const currentPage = Math.round(book.progress * book.pages);
+
+  return (
+    <div className="mt-5 rounded-2xl border border-line bg-surface/40 p-4">
+      <div className="flex items-center gap-3">
+        {/* book cover placeholder with a spine + gradient */}
+        <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md border border-line shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet/50 to-teal/40" />
+          {/* spine */}
+          <div className="absolute inset-y-0 left-0 w-1 bg-black/20" />
+          {/* title on the cover */}
+          <div className="absolute inset-0 flex items-center justify-center p-1">
+            <span className="text-center font-mono text-[7px] font-bold leading-tight text-white">
+              {book.title}
+            </span>
+          </div>
+          <BookMarked className="absolute bottom-1 right-1 h-3 w-3 text-white/70" />
+        </div>
+
+        {/* book info */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <BookOpen className="h-3 w-3 text-violet" />
+            <span className="font-mono text-[9px] uppercase tracking-widest text-violet">
+              now reading
+            </span>
+          </div>
+          <div className="mt-0.5 truncate font-mono text-sm font-medium text-foreground">
+            {book.title}
+          </div>
+          <div className="truncate text-xs text-dim">by {book.author}</div>
+        </div>
+
+        {/* page count badge */}
+        <div className="shrink-0 text-right">
+          <div className="font-mono text-xs font-bold text-violet">
+            {currentPage}
+          </div>
+          <div className="font-mono text-[9px] text-dim">/ {book.pages}</div>
+        </div>
+      </div>
+
+      {/* progress bar */}
+      <div className="mt-3 flex items-center gap-2">
+        <span className="font-mono text-[9px] tabular-nums text-dim">
+          {Math.round(book.progress * 100)}%
+        </span>
+        <div className="relative h-1 flex-1 overflow-hidden rounded-full bg-line">
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-violet to-teal"
+            initial={{ width: 0 }}
+            animate={{ width: `${book.progress * 100}%` }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            key={idx}
+          />
+        </div>
+        <span className="font-mono text-[9px] tabular-nums text-dim">
+          {book.pages - currentPage} left
+        </span>
       </div>
     </div>
   );
