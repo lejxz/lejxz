@@ -30,19 +30,41 @@ export function ProjectsFull() {
   const [category, setCategory] = useState("All");
   const [status, setStatus] = useState<"all" | ProjectStatus>("all");
   const [query, setQuery] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+
+  // Build the list of all tech tags across projects, sorted by frequency.
+  const ALL_TAGS = useState(() => {
+    const counts = new Map<string, number>();
+    for (const p of projects.projects) {
+      for (const t of p.tech ?? p.tags) {
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([t]) => t);
+  })[0];
 
   const q = query.trim().toLowerCase();
   const filtered = projects.projects.filter((p) => {
     const matchCat = category === "All" || p.category === category;
     const matchStatus = status === "all" || p.status === status;
+    const matchTag = !activeTag || (p.tech ?? p.tags).includes(activeTag);
     const matchQuery =
       !q ||
       p.title.toLowerCase().includes(q) ||
       (p.subtitle ?? "").toLowerCase().includes(q) ||
       p.tags.some((t) => t.toLowerCase().includes(q)) ||
       (p.tech ?? []).some((t) => t.toLowerCase().includes(q));
-    return matchCat && matchStatus && matchQuery;
+    return matchCat && matchStatus && matchTag && matchQuery;
   });
+
+  const resetAll = () => {
+    setCategory("All");
+    setStatus("all");
+    setQuery("");
+    setActiveTag(null);
+  };
 
   return (
     <section className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -132,6 +154,37 @@ export function ProjectsFull() {
               {filtered.length} / {projects.projects.length} shown
             </span>
           </div>
+
+          {/* Tech-tag cloud — click a tag to filter */}
+          {ALL_TAGS.length > 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-1.5">
+              <span className="mr-1 font-mono text-[10px] uppercase tracking-wider text-dim/70">tech:</span>
+              {ALL_TAGS.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setActiveTag((cur) => (cur === t ? null : t))}
+                  className={cn(
+                    "rounded-full border px-2 py-0.5 font-mono text-[10px] transition-colors",
+                    activeTag === t
+                      ? "border-teal/50 bg-teal/15 text-teal"
+                      : "border-line text-dim hover:border-teal/30 hover:text-foreground"
+                  )}
+                >
+                  {t}
+                </button>
+              ))}
+              {activeTag && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTag(null)}
+                  className="ml-1 rounded-full px-2 py-0.5 font-mono text-[10px] text-violet hover:underline"
+                >
+                  clear tag
+                </button>
+              )}
+            </div>
+          )}
         </Reveal>
 
         {/* Grid — all filtered projects */}
@@ -154,7 +207,7 @@ export function ProjectsFull() {
                 <p className="text-sm text-dim">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 <button
                   type="button"
-                  onClick={() => { setCategory("All"); setStatus("all"); setQuery(""); }}
+                  onClick={resetAll}
                   className="mt-3 rounded-full border border-teal/40 bg-teal/10 px-4 py-1.5 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
                 >
                   Reset filters

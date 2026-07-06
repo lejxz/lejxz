@@ -189,7 +189,16 @@ const server = Bun.serve({
   port: PORT,
   async fetch(req: Request): Promise<Response> {
     const url = new URL(req.url);
-    const { pathname } = url;
+    // Normalize trailing slash. Next.js with `trailingSlash: true` 308-redirects
+    // `/api/dashboard/data` to `/api/dashboard/data/`, but the redirect is
+    // issued by the Next dev server BEFORE the request reaches Caddy's
+    // XTransformPort proxy rule, so the browser ends up hitting the mini-
+    // service with a trailing slash that the route matchers below didn't
+    // expect. Strip the trailing slash here so both forms resolve.
+    let { pathname } = url;
+    if (pathname.length > 1 && pathname.endsWith("/")) {
+      pathname = pathname.slice(0, -1);
+    }
     const method = req.method.toUpperCase();
 
     // Preflight — open, CORS-only
