@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowUpRight, Link2, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { ArrowUpRight, Link2, Check, ChevronDown } from "lucide-react";
 import type { ExperienceItem, ExperienceType } from "@/lib/types";
 import { useModals } from "@/lib/modals";
 import { useCopy } from "@/hooks/use-copy";
@@ -43,6 +44,7 @@ export function ExperienceCard({
 
   const type = (experience.type ?? "work") as ExperienceType;
   const org = experience.org ?? experience.organization ?? "";
+  const [expanded, setExpanded] = useState(false);
 
   const open = () => openExperience(experience);
 
@@ -84,6 +86,8 @@ export function ExperienceCard({
     );
   }
 
+  const hasDescription = experience.description && experience.description.length > 0;
+
   return (
     <motion.div
       role="button"
@@ -99,10 +103,10 @@ export function ExperienceCard({
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: (index % 5) * 0.08 }}
-      className="card-hover-glow group relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-center gap-4 rounded-2xl border border-line bg-surface/40 p-4 transition-colors hover:border-teal/30 sm:gap-5 sm:p-5"
+      className="card-hover-glow group relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-start gap-4 rounded-2xl border border-line bg-surface/40 p-4 transition-colors hover:border-teal/30 sm:gap-5 sm:p-5"
     >
       {/* timeline node */}
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center pt-1">
         <span className={cn("h-3.5 w-3.5 rounded-full bg-gradient-to-br", TYPE_COLOR[type])} style={{ boxShadow: "0 0 12px rgba(94,234,212,0.5)" }} />
         {experience.current && (
           <motion.span
@@ -148,11 +152,65 @@ export function ExperienceCard({
           <span className="text-dim/50">·</span>
           <span>{experience.location}</span>
         </div>
-        <p className="mt-1.5 line-clamp-1 text-xs text-dim/80 sm:text-sm">{experience.summary}</p>
+        <p className={cn("mt-1.5 text-xs text-dim/80 sm:text-sm", !expanded && "line-clamp-1")}>
+          {experience.summary}
+        </p>
+
+        {/* Expandable description — toggle with the chevron button below */}
+        <AnimatePresence initial={false}>
+          {expanded && hasDescription && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="mt-3 space-y-2 border-l-2 border-line pl-3">
+                {experience.description.map((p, i) => (
+                  <p key={i} className="text-xs leading-relaxed text-foreground/70">
+                    {p}
+                  </p>
+                ))}
+              </div>
+              {/* tech tags */}
+              {experience.tech && experience.tech.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {experience.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-md border border-line bg-surface-2/60 px-2 py-0.5 font-mono text-[10px] text-foreground/70"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* expand/collapse toggle — only shows if there's a description */}
+        {hasDescription && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpanded((x) => !x);
+            }}
+            className="mt-2 inline-flex items-center gap-1 font-mono text-[10px] text-dim transition-colors hover:text-teal"
+            aria-label={expanded ? "Collapse description" : "Expand description"}
+          >
+            <ChevronDown
+              className={cn("h-3 w-3 transition-transform", expanded && "rotate-180")}
+            />
+            {expanded ? "less" : "more"}
+          </button>
+        )}
       </div>
 
       {/* actions */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 pt-0.5">
         <button
           type="button"
           onClick={handleCopy}

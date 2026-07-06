@@ -58,6 +58,12 @@ export function Hero() {
   const yDiorama = useTransform(scrollYProgress, [0, 1], [0, 140]);
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.75], [1, 0.96]);
+  // Parallax for the background orbs — they drift at different rates than
+  // the content, adding depth to the scroll.
+  const yOrb1 = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const yOrb2 = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const orb1Opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const orb2Opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   const socials = [
     { icon: Github, href: profile.socials.github ?? "#", label: "GitHub" },
@@ -72,8 +78,14 @@ export function Hero() {
       ref={ref}
       className="relative flex min-h-screen items-center overflow-hidden"
     >
-      <div className="pointer-events-none absolute -left-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/10 blur-[130px]" />
-      <div className="pointer-events-none absolute -right-40 bottom-1/4 h-[26rem] w-[26rem] rounded-full bg-violet/10 blur-[130px]" />
+      <motion.div
+        style={{ y: yOrb1, opacity: orb1Opacity }}
+        className="pointer-events-none absolute -left-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/10 blur-[130px]"
+      />
+      <motion.div
+        style={{ y: yOrb2, opacity: orb2Opacity }}
+        className="pointer-events-none absolute -right-40 bottom-1/4 h-[26rem] w-[26rem] rounded-full bg-violet/10 blur-[130px]"
+      />
 
       <motion.div
         style={{ y: yContent, opacity, scale }}

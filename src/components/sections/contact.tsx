@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Mail, Send, ArrowUpRight } from "lucide-react";
+import { Mail, Send, ArrowUpRight, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { profile } from "@/lib/data";
 import { Icon } from "@/components/icon";
@@ -87,23 +87,27 @@ export function Contact() {
               </Reveal>
 
               <Reveal delay={0.14}>
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="group mt-6 flex items-center gap-4 rounded-2xl border border-line bg-surface/50 p-4 transition-colors hover:border-teal/30"
-                >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/15 text-teal">
-                    <Mail className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-mono text-[10px] uppercase tracking-wider text-dim">
-                      Email
+                <div className="group relative mt-6 flex items-center gap-4 rounded-2xl border border-line bg-surface/50 p-4 transition-colors hover:border-teal/30">
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="flex flex-1 items-center gap-4"
+                    aria-label={`Email ${profile.email}`}
+                  >
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/15 text-teal">
+                      <Mail className="h-5 w-5" />
                     </span>
-                    <span className="block truncate font-mono text-sm font-medium text-foreground transition-colors group-hover:text-teal">
-                      {profile.email}
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-mono text-[10px] uppercase tracking-wider text-dim">
+                        Email
+                      </span>
+                      <span className="block truncate font-mono text-sm font-medium text-foreground transition-colors group-hover:text-teal">
+                        {profile.email}
+                      </span>
                     </span>
-                  </span>
-                  <ArrowUpRight className="h-5 w-5 shrink-0 text-dim transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-teal" />
-                </a>
+                    <ArrowUpRight className="h-5 w-5 shrink-0 text-dim transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-teal" />
+                  </a>
+                  <CopyEmailButton email={profile.email} />
+                </div>
               </Reveal>
 
               <Reveal delay={0.2}>
@@ -283,5 +287,45 @@ function Field({
         </span>
       )}
     </label>
+  );
+}
+
+/**
+ * CopyEmailButton — a small icon button that copies the email address to the
+ * clipboard. Shows a checkmark for 1.5s on success. Stops click propagation
+ * so it doesn't trigger the parent mailto link.
+ */
+function CopyEmailButton({ email }: { email: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      try {
+        await navigator.clipboard.writeText(email);
+        setCopied(true);
+        toast.success("Email copied to clipboard");
+        setTimeout(() => setCopied(false), 1500);
+      } catch {
+        toast.error("Couldn't copy — try selecting manually");
+      }
+    },
+    [email]
+  );
+
+  return (
+    <button
+      type="button"
+      onClick={onCopy}
+      aria-label={copied ? "Email copied" : "Copy email address"}
+      className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface/60 text-dim transition-colors hover:border-teal/40 hover:text-teal"
+    >
+      {copied ? (
+        <Check className="h-4 w-4 text-teal" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}
+    </button>
   );
 }

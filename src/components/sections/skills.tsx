@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
+import { Search, X } from "lucide-react";
 import { skills } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -12,9 +13,39 @@ import { cn } from "@/lib/utils";
 export function Skills() {
   const [activeGroup, setActiveGroup] = useState(0);
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   const group = skills.groups[activeGroup];
-  const selected = group?.items.find((s) => s.name === activeSkill) ?? null;
+  const q = query.trim().toLowerCase();
+
+  // When searching, filter skills across ALL groups (not just the active one).
+  // This gives a global search experience — the user can find any skill
+  // without remembering which group it's in.
+  const searchResults = useMemo(() => {
+    if (!q) return null;
+    const results: { groupName: string; skill: { name: string; level: number; description?: string } }[] = [];
+    for (const g of skills.groups) {
+      for (const item of g.items) {
+        if (
+          item.name.toLowerCase().includes(q) ||
+          (item.description ?? "").toLowerCase().includes(q) ||
+          g.title.toLowerCase().includes(q)
+        ) {
+          results.push({ groupName: g.title, skill: item });
+        }
+      }
+    }
+    return results;
+  }, [q]);
+
+  // The list to render: search results when searching, otherwise the active group's items.
+  const isSearching = searchResults !== null;
+  const displayItems = isSearching ? searchResults! : (group?.items ?? []);
+
+  // When searching, the selected skill might be from a different group.
+  const selected = isSearching
+    ? searchResults!.find((r) => r.skill.name === activeSkill)?.skill ?? null
+    : group?.items.find((s) => s.name === activeSkill) ?? null;
 
   return (
     <section id="skills" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -33,9 +64,9 @@ export function Skills() {
         <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left: group tabs + skill bars */}
           <div>
-            {/* group tabs */}
+            {/* group tabs + search */}
             <Reveal>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {skills.groups.map((g, i) => (
                   <button
                     key={g.key}
@@ -43,15 +74,16 @@ export function Skills() {
                     onClick={() => {
                       setActiveGroup(i);
                       setActiveSkill(null);
+                      setQuery("");
                     }}
                     className={cn(
                       "relative flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
-                      i === activeGroup
+                      i === activeGroup && !isSearching
                         ? "border-teal/40 text-teal"
                         : "border-line text-dim hover:border-teal/30 hover:text-foreground"
                     )}
                   >
-                    {i === activeGroup && (
+                    {i === activeGroup && !isSearching && (
                       <motion.span
                         layoutId="skill-group-active"
                         className="absolute inset-0 -z-10 rounded-full bg-teal/10"
@@ -62,28 +94,64 @@ export function Skills() {
                     {g.title}
                   </button>
                 ))}
+                {/* Search input — filters skills across ALL groups */}
+                <div className="relative ml-auto w-full sm:w-44">
+                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-dim" />
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="search skills…"
+                    className="w-full rounded-full border border-line bg-surface/40 py-1.5 pl-8 pr-7 font-mono text-xs text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none"
+                  />
+                  {query && (
+                    <button
+                      type="button"
+                      onClick={() => setQuery("")}
+                      aria-label="Clear search"
+                      className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center rounded text-dim hover:text-teal"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
               </div>
             </Reveal>
 
-            {group?.blurb && (
-              <Reveal delay={0.05}>
+            {/* Blurb (hidden when searching) + search result count */}
+            {isSearching ? (
+              <p className="mt-3 font-mono text-[11px] text-dim">
+                {searchResults!.length} match{searchResults!.length === 1 ? "" : "es"} for &ldquo;{query}&rdquo;
+              </p>
+            ) : (
+              group?.blurb && (
                 <p className="mt-3 text-sm text-dim">{group.blurb}</p>
-              </Reveal>
+              )
             )}
 
-            {/* skill bars */}
+            {/* skill bars — shows search results when searching, otherwise the active group's items */}
             <div className="mt-6 space-y-2">
-              {group?.items.map((skill, i) => (
-                <SkillBar
-                  key={skill.name}
-                  skill={skill}
-                  active={activeSkill === skill.name}
-                  delay={i * 0.05}
-                  onClick={() =>
-                    setActiveSkill((cur) => (cur === skill.name ? null : skill.name))
-                  }
-                />
-              ))}
+              {displayItems.length > 0 ? (
+                displayItems.map((item, i) => {
+                  const skill = isSearching ? item.skill : item;
+                  const groupName = isSearching ? (item as { groupName: string }).groupName : group?.title;
+                  return (
+                    <SkillBar
+                      key={skill.name}
+                      skill={skill}
+                      groupName={isSearching ? groupName : undefined}
+                      active={activeSkill === skill.name}
+                      delay={i * 0.05}
+                      onClick={() =>
+                        setActiveSkill((cur) => (cur === skill.name ? null : skill.name))
+                      }
+                    />
+                  );
+                })
+              ) : (
+                <div className="rounded-xl border border-dashed border-line p-6 text-center font-mono text-xs text-dim">
+                  No skills match &ldquo;{query}&rdquo;.
+                </div>
+              )}
             </div>
           </div>
 
@@ -110,7 +178,9 @@ export function Skills() {
                       </p>
                       <div className="mt-4 flex items-center gap-2 rounded-full border border-teal/20 bg-teal/8 px-3 py-1">
                         <span className="font-mono text-[10px] uppercase tracking-wider text-teal">
-                          {group.title}
+                          {isSearching
+                            ? searchResults!.find((r) => r.skill.name === selected.name)?.groupName ?? group.title
+                            : group.title}
                         </span>
                       </div>
                     </>
@@ -160,11 +230,13 @@ function SkillBar({
   active,
   delay,
   onClick,
+  groupName,
 }: {
   skill: { name: string; level: number; description?: string };
   active: boolean;
   delay: number;
   onClick: () => void;
+  groupName?: string;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
@@ -186,15 +258,22 @@ function SkillBar({
       )}
     >
       <div className="flex items-center justify-between">
-        <span
-          className={cn(
-            "font-mono text-sm font-medium transition-colors",
-            active ? "text-teal" : "text-foreground/90 group-hover:text-foreground"
+        <div className="flex items-center gap-2 min-w-0">
+          <span
+            className={cn(
+              "font-mono text-sm font-medium transition-colors truncate",
+              active ? "text-teal" : "text-foreground/90 group-hover:text-foreground"
+            )}
+          >
+            {skill.name}
+          </span>
+          {groupName && (
+            <span className="shrink-0 rounded border border-line bg-surface/60 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-dim">
+              {groupName}
+            </span>
           )}
-        >
-          {skill.name}
-        </span>
-        <span className="font-mono text-[11px] text-dim">{skill.level}%</span>
+        </div>
+        <span className="font-mono text-[11px] text-dim shrink-0">{skill.level}%</span>
       </div>
       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-line">
         <motion.div
