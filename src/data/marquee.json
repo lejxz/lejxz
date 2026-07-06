@@ -5,23 +5,17 @@
       "duration": 15,
       "items": [
         "Python",
-        "TypeScript",
         "PyTorch",
         "TensorFlow",
-        "React",
         "Next.js",
         "scikit-learn",
         "Hugging Face",
         "OpenCV",
-        "Rust",
         "C++",
         "SQL",
-        "Docker",
         "Linux",
-        "FastAPI",
         "NumPy",
-        "Pandas",
-        "LangChain"
+        "C"
       ]
     },
     {
