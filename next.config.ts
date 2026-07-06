@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  allowedDevOrigins: [
+    "*.space-z.ai",
+    "*.z.ai",
+    "localhost",
+    "127.0.0.1",
+  ],
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },

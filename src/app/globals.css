@@ -48,6 +48,17 @@
   --color-line: rgba(216, 222, 230, 0.08);
 }
 
+/*
+ * Theme tokens.
+ *
+ * `:root` is the DARK theme (the portfolio's default). A `.light` class on the
+ * <html> element overrides every token for the light theme. There is no longer
+ * a separate "soft" overlay — the toggle performs a real dark/light switch.
+ *
+ * The accent identity (teal + violet) is preserved in both themes, but the
+ * light theme uses deeper shades so text/strokes stay legible on bright
+ * surfaces.
+ */
 :root {
   --radius: 0.5rem;
   --background: #0b0d10;
@@ -76,8 +87,73 @@
   --sidebar-accent-foreground: #d8dee6;
   --sidebar-border: rgba(216, 222, 230, 0.08);
   --sidebar-ring: #5eead4;
+
+  /* theme-aware custom tokens (overridden in .light) */
+  --nn-node: #5eead4;
+  --nn-node-alt: #a78bfa;
+  --nn-line: rgba(94, 234, 212, 0.18);
+  --grid-color: rgba(216, 222, 230, 0.04);
+  --scrollbar-track: #0b0d10;
+  --scrollbar-thumb: #1b2027;
+  --scrollbar-thumb-hover: #2a313a;
+  --selection-bg: rgba(94, 234, 212, 0.25);
+  --selection-fg: #ffffff;
+  --shadow-color: 0 0% 0%;
 }
 
+/* Light theme — activated by `<html class="light">`. */
+:root.light {
+  --background: #f4f6f9;
+  --foreground: #11151b;
+  --card: #ffffff;
+  --card-foreground: #11151b;
+  --popover: #ffffff;
+  --popover-foreground: #11151b;
+  --primary: #0d9488;
+  --primary-foreground: #ffffff;
+  --secondary: #eef1f5;
+  --secondary-foreground: #11151b;
+  --muted: #eef1f5;
+  --muted-foreground: #5b6675;
+  --accent: #e3e8ef;
+  --accent-foreground: #11151b;
+  --destructive: #dc2626;
+  --border: rgba(17, 21, 27, 0.10);
+  --input: rgba(17, 21, 27, 0.12);
+  --ring: #0d9488;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #11151b;
+  --sidebar-primary: #0d9488;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e3e8ef;
+  --sidebar-accent-foreground: #11151b;
+  --sidebar-border: rgba(17, 21, 27, 0.10);
+  --sidebar-ring: #0d9488;
+
+  /* custom tokens — deeper accents for contrast on light surfaces */
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f4f8;
+  --color-surface-3: #e7ebf1;
+  --color-dim: #5b6675;
+  --color-teal: #0d9488;
+  --color-violet: #7c3aed;
+  --color-line: rgba(17, 21, 27, 0.10);
+
+  --nn-node: #0d9488;
+  --nn-node-alt: #7c3aed;
+  --nn-line: rgba(13, 148, 136, 0.18);
+  --grid-color: rgba(17, 21, 27, 0.045);
+  --scrollbar-track: #eef1f5;
+  --scrollbar-thumb: #cbd3dd;
+  --scrollbar-thumb-hover: #aab4c2;
+  --selection-bg: rgba(13, 148, 136, 0.22);
+  --selection-fg: #0b0d10;
+  --shadow-color: 220 30% 20%;
+}
+
+/* Keep the shadcn `.dark` variant working for any component that uses dark:
+   prefixes — it simply re-asserts the dark tokens. Components in this app
+   mostly use CSS variables directly, so this is a safety net. */
 .dark {
   --background: #0b0d10;
   --foreground: #d8dee6;
@@ -97,14 +173,6 @@
   --border: rgba(216, 222, 230, 0.08);
   --input: rgba(216, 222, 230, 0.1);
   --ring: #5eead4;
-  --sidebar: #12151a;
-  --sidebar-foreground: #d8dee6;
-  --sidebar-primary: #5eead4;
-  --sidebar-primary-foreground: #0b0d10;
-  --sidebar-accent: #1b2027;
-  --sidebar-accent-foreground: #d8dee6;
-  --sidebar-border: rgba(216, 222, 230, 0.08);
-  --sidebar-ring: #5eead4;
 }
 
 @layer base {
@@ -148,23 +216,23 @@
     }
   }
   ::selection {
-    background-color: rgba(94, 234, 212, 0.25);
-    color: #ffffff;
+    background-color: var(--selection-bg);
+    color: var(--selection-fg);
   }
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #0b0d10;
+    background: var(--scrollbar-track);
   }
   ::-webkit-scrollbar-thumb {
-    background: #1b2027;
+    background: var(--scrollbar-thumb);
     border-radius: 6px;
-    border: 2px solid #0b0d10;
+    border: 2px solid var(--scrollbar-track);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #2a313a;
+    background: var(--scrollbar-thumb-hover);
   }
   h1, h2, h3, h4, h5 {
     font-family: var(--font-space-mono), ui-monospace, monospace;
@@ -180,21 +248,16 @@
   }
 }
 
-/* Soft contrast theme — lifts surfaces + text for reduced-glare reading. */
-:root[data-theme="soft"] {
-  --background: #11141a;
-  --foreground: #e6ebf2;
-  --card: #181c23;
-  --popover: #181c23;
-  --secondary: #1c2129;
-  --muted: #1c2129;
-  --muted-foreground: #8a94a3;
-  --accent: #21272f;
-  --border: rgba(216, 222, 230, 0.12);
-  --input: rgba(216, 222, 230, 0.14);
+/* Theme-aware transitions — fade color changes when toggling dark/light so
+   the switch feels intentional rather than jarring. Only colors transition,
+   never layout/opacity (to avoid slowing down hover/scroll animations). */
+:root {
+  --theme-transition: background-color 0.45s ease, border-color 0.45s ease,
+    color 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
 }
-:root[data-theme="soft"] body {
-  background-color: var(--background);
+html.theme-anim,
+html.theme-anim * {
+  transition: var(--theme-transition) !important;
 }
 
 @layer utilities {
@@ -209,18 +272,18 @@
   }
   .bg-grid {
     background-image:
-      linear-gradient(to right, rgba(216, 222, 230, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(216, 222, 230, 0.04) 1px, transparent 1px);
+      linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
     background-size: 56px 56px;
   }
   .bg-grid-sm {
     background-image:
-      linear-gradient(to right, rgba(216, 222, 230, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(216, 222, 230, 0.05) 1px, transparent 1px);
+      linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
     background-size: 28px 28px;
   }
   .bg-dots {
-    background-image: radial-gradient(rgba(216, 222, 230, 0.08) 1px, transparent 1px);
+    background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
     background-size: 22px 22px;
   }
   .glow-teal {

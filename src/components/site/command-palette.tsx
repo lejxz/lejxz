@@ -21,6 +21,7 @@ import {
   Folder,
   Hash,
   Briefcase,
+  SunMoon,
 } from "lucide-react";
 import { nav, profile, projects, experience } from "@/lib/data";
 import { useModals } from "@/lib/modals";
@@ -145,6 +146,25 @@ export function CommandPalette() {
       icon: Mail,
       run: () => (window.location.href = `mailto:${profile.email}`),
       group: "Links",
+    },
+    {
+      id: "toggle-theme",
+      label: "Toggle theme",
+      hint: "Dark / Light",
+      icon: SunMoon,
+      run: () => {
+        const root = document.documentElement;
+        const isLight = root.classList.contains("light");
+        const next = isLight ? "dark" : "light";
+        if (next === "light") root.classList.add("light");
+        else root.classList.remove("light");
+        try {
+          localStorage.setItem("lejxz-theme", next);
+        } catch {
+          /* ignore */
+        }
+      },
+      group: "Settings",
     },
   ];
 

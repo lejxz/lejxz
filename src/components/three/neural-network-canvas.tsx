@@ -12,12 +12,16 @@ interface Node {
 }
 
 /**
- * NeuralNetworkCanvas — lightweight Canvas 2D particle network.
+ * NeuralNetworkCanvas — lightweight Canvas 2D particle network (mobile +
+ * reduced-motion fallback for the 3D version).
  *
- * Works everywhere (desktop, mobile, static export). No WebGL/three.js deps.
- * - Mobile: fewer nodes, lower opacity, coarser links
- * - Reduced-motion: renders a single static frame (no RAF loop)
- * - Resilient: handles 0×0 canvas, resize, and visibility without crashing
+ * Theme-aware: reads `--nn-node`, `--nn-node-alt`, `--nn-line` from the
+ * document root and re-reads when the theme class changes, so the network
+ * matches the active dark/light palette.
+ *
+ * Interaction: nodes within `POINTER_RADIUS` of the cursor are attracted
+ * toward it and brighten; nearby node pairs form temporary highlighted
+ * edges. This mirrors the 3D version's mouse activation in 2D.
  */
 export function NeuralNetworkCanvas({
   className,
@@ -27,7 +31,7 @@ export function NeuralNetworkCanvas({
   linkDistance?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointer = useRef({ x: -9999, y: -9999 });
+  const pointer = useRef({ x: -9999, y: -9999, active: false });
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
@@ -48,8 +52,57 @@ export function NeuralNetworkCanvas({
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const teal = { r: 94, g: 234, b: 212 };
-    const violet = { r: 167, g: 139, b: 250 };
+    // Theme colors — read from CSS variables, re-read on theme change.
+    let teal = { r: 94, g: 234, b: 212 };
+    let violet = { r: 167, g: 139, b: 250 };
+    let lineAlpha = 0.5;
+
+    const readColors = () => {
+      const cs = getComputedStyle(document.documentElement);
+      const parse = (v: string) => {
+        const c = v.trim();
+        if (!c) return null;
+        // accept #rrggbb or rgb(...)
+        const m =
+          /^#([0-9a-f]{6})$/i.exec(c) ||
+          /^#([0-9a-f]{3})$/i.exec(c);
+        if (m) {
+          let hex = m[1];
+          if (hex.length === 3)
+            hex = hex
+              .split("")
+              .map((ch) => ch + ch)
+              .join("");
+          return {
+            r: parseInt(hex.slice(0, 2), 16),
+            g: parseInt(hex.slice(2, 4), 16),
+            b: parseInt(hex.slice(4, 6), 16),
+          };
+        }
+        const rgb = /rgba?\(([^)]+)\)/.exec(c);
+        if (rgb) {
+          const parts = rgb[1].split(",").map((s) => parseFloat(s.trim()));
+          return { r: parts[0] || 0, g: parts[1] || 0, b: parts[2] || 0 };
+        }
+        return null;
+      };
+      const t = parse(cs.getPropertyValue("--nn-node") || "");
+      const v = parse(cs.getPropertyValue("--nn-node-alt") || "");
+      if (t) teal = t;
+      if (v) violet = v;
+      const lineVar = cs.getPropertyValue("--nn-line").trim();
+      const lm = /rgba?\(([^)]+)\)/.exec(lineVar);
+      if (lm) {
+        const parts = lm[1].split(",").map((s) => parseFloat(s.trim()));
+        lineAlpha = parts.length >= 4 ? parts[3] : parts[3] || 0.5;
+      }
+    };
+    readColors();
+    const obs = new MutationObserver(readColors);
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -76,9 +129,20 @@ export function NeuralNetworkCanvas({
     };
 
     const linkDistance = isMobile ? 110 : 150;
+    const POINTER_RADIUS = 160;
 
     const drawFrame = (t: number) => {
       ctx.clearRect(0, 0, width, height);
+
+      // pointer proximity boost per node (for brightening)
+      const proximity = (x: number, y: number) => {
+        if (!pointer.current.active) return 0;
+        const dx = pointer.current.x - x;
+        const dy = pointer.current.y - y;
+        const d = Math.hypot(dx, dy);
+        if (d > POINTER_RADIUS) return 0;
+        return 1 - d / POINTER_RADIUS;
+      };
 
       // Update + draw links
       for (let i = 0; i < nodes.length; i++) {
@@ -87,14 +151,14 @@ export function NeuralNetworkCanvas({
         a.y += a.vy;
         a.pulse += 0.02;
 
-        // pointer attraction (subtle, desktop only — mobile has no pointer)
-        if (!isMobile) {
+        // pointer attraction (desktop only — mobile has no pointer)
+        if (!isMobile && pointer.current.active) {
           const dxp = pointer.current.x - a.x;
           const dyp = pointer.current.y - a.y;
           const dp = Math.hypot(dxp, dyp);
-          if (dp < 160 && dp > 0) {
-            a.vx += (dxp / dp) * 0.012;
-            a.vy += (dyp / dp) * 0.012;
+          if (dp < POINTER_RADIUS && dp > 0) {
+            a.vx += (dxp / dp) * 0.014;
+            a.vy += (dyp / dp) * 0.014;
           }
         }
         a.vx *= 0.99;
@@ -105,16 +169,27 @@ export function NeuralNetworkCanvas({
         if (a.y < -20) a.y = height + 20;
         if (a.y > height + 20) a.y = -20;
 
+        const aProx = proximity(a.x, a.y);
+
         for (let j = i + 1; j < nodes.length; j++) {
           const b = nodes[j];
           const dx = a.x - b.x;
           const dy = a.y - b.y;
           const dist = Math.hypot(dx, dy);
           if (dist < linkDistance) {
-            const alpha = (1 - dist / linkDistance) * (isMobile ? 0.35 : 0.5);
-            const isSignal = Math.sin(t * 1.3 + i * 0.7 + j * 0.3) > 0.93;
+            const bProx = proximity(b.x, b.y);
+            const boost = Math.max(aProx, bProx);
+            const alpha =
+              (1 - dist / linkDistance) *
+              (isMobile ? 0.35 : lineAlpha) *
+              (1 + boost * 1.5);
+            const isSignal =
+              Math.sin(t * 1.3 + i * 0.7 + j * 0.3) > 0.93 || boost > 0.3;
             const c = isSignal ? violet : teal;
-            ctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha})`;
+            ctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${Math.min(
+              alpha,
+              1
+            )})`;
             ctx.lineWidth = isSignal ? 1.1 : 0.6;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -137,13 +212,43 @@ export function NeuralNetworkCanvas({
       // Draw nodes
       for (const n of nodes) {
         const glow = 0.5 + Math.sin(n.pulse) * 0.5;
-        ctx.fillStyle = `rgba(${teal.r}, ${teal.g}, ${teal.b}, ${0.4 + glow * 0.6})`;
+        const prox = proximity(n.x, n.y);
+        const r = n.r + glow * 0.8 + prox * 2.2;
+        ctx.fillStyle = `rgba(${teal.r}, ${teal.g}, ${teal.b}, ${
+          0.4 + glow * 0.6 + prox * 0.4
+        })`;
         ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r + glow * 0.8, 0, Math.PI * 2);
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = `rgba(${teal.r}, ${teal.g}, ${teal.b}, ${glow * 0.08})`;
+        ctx.fillStyle = `rgba(${teal.r}, ${teal.g}, ${teal.b}, ${
+          glow * 0.08 + prox * 0.12
+        })`;
         ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r + 6, 0, Math.PI * 2);
+        ctx.arc(n.x, n.y, r + 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Soft pointer halo
+      if (!isMobile && pointer.current.active) {
+        const grad = ctx.createRadialGradient(
+          pointer.current.x,
+          pointer.current.y,
+          0,
+          pointer.current.x,
+          pointer.current.y,
+          POINTER_RADIUS
+        );
+        grad.addColorStop(0, `rgba(${violet.r}, ${violet.g}, ${violet.b}, 0.06)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(
+          pointer.current.x,
+          pointer.current.y,
+          POINTER_RADIUS,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
       }
     };
@@ -159,10 +264,14 @@ export function NeuralNetworkCanvas({
 
     const onMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
-      pointer.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      pointer.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        active: true,
+      };
     };
     const onLeave = () => {
-      pointer.current = { x: -9999, y: -9999 };
+      pointer.current.active = false;
     };
     if (!isMobile) {
       window.addEventListener("pointermove", onMove);
@@ -188,6 +297,7 @@ export function NeuralNetworkCanvas({
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      obs.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);

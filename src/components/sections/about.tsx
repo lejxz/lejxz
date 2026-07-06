@@ -64,7 +64,7 @@ export function About() {
               <motion.div style={{ y: yCode }} className="mt-8">
                 <Reveal>
                   <div className="overflow-hidden rounded-xl border border-line bg-surface/60 shadow-2xl shadow-black/40">
-                    <div className="flex items-center gap-2 border-b border-line bg-black/30 px-4 py-2.5">
+                    <div className="flex items-center gap-2 border-b border-line bg-surface-3/60 px-4 py-2.5">
                       <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
                       <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
                       <span className="h-3 w-3 rounded-full bg-[#28c840]" />

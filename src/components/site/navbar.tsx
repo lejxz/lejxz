@@ -145,7 +145,7 @@ export function Navbar() {
             </Button>
           </Link>
 
-          <ThemeToggle className="hidden sm:flex" />
+          <ThemeToggle className="flex" />
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
