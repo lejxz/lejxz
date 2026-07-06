@@ -9,6 +9,7 @@ import { ShortcutsHelp } from "@/components/site/shortcuts-help";
 import { SectionProgress } from "@/components/site/section-progress";
 import { RouteProgress } from "@/components/site/route-progress";
 import { CursorTrail } from "@/components/motion/cursor-trail";
+import { BootOverlay } from "@/components/site/boot-overlay";
 import { BASE_PATH } from "@/lib/asset";
 
 const inter = Inter({
@@ -103,6 +104,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
+        <BootOverlay />
         <SkipLink />
         <CustomCursor />
         <CursorTrail />

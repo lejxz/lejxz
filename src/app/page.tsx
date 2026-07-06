@@ -3,7 +3,6 @@ import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { CommandPalette } from "@/components/site/command-palette";
 import { SideRail } from "@/components/site/side-rail";
-import { BootOverlay } from "@/components/site/boot-overlay";
 import { GrainOverlay } from "@/components/site/grain-overlay";
 import { DeepLinkHandler } from "@/components/site/deep-link-handler";
 import { ModalsProvider } from "@/lib/modals";
@@ -22,7 +21,6 @@ export default function Home() {
   return (
     <>
       <GrainOverlay />
-      <BootOverlay />
       <Background />
       <Navbar />
       <ModalsProvider>
