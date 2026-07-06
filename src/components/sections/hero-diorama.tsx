@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform, animate } from "framer-motion";
 import { Brain, Cpu, Boxes, Sparkles, Binary, Network } from "lucide-react";
 
 const ORBIT_CHIPS = ["PyTorch", "R3F", "TypeScript", "CUDA", "Next.js"];
@@ -16,6 +17,7 @@ export function HeroDiorama() {
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 18, restDelta: 0.001 });
   const sy = useSpring(my, { stiffness: 60, damping: 18, restDelta: 0.001 });
+  const [idle, setIdle] = useState(true);
 
   const rotY = useTransform(sx, [-0.5, 0.5], [18, -18]);
   const rotX = useTransform(sy, [-0.5, 0.5], [-14, 14]);
@@ -29,7 +31,30 @@ export function HeroDiorama() {
   const layer4X = useTransform(sx, [-0.5, 0.5], [44, -44]);
   const layer4Y = useTransform(sy, [-0.5, 0.5], [36, -36]);
 
+  // Idle animation: when no pointer is interacting (idle === true), gently
+  // oscillate mx/my so the diorama drifts on its own. Stop oscillating the
+  // moment the user interacts (onMove sets idle=false).
+  useEffect(() => {
+    if (!idle) return;
+    // Gentle figure-8 drift using two sine waves at different frequencies.
+    const xAnim = animate(mx, [0, 0.18, 0, -0.18, 0], {
+      duration: 12,
+      repeat: Infinity,
+      ease: "easeInOut",
+    });
+    const yAnim = animate(my, [0, -0.12, 0, 0.12, 0], {
+      duration: 9,
+      repeat: Infinity,
+      ease: "easeInOut",
+    });
+    return () => {
+      xAnim.stop();
+      yAnim.stop();
+    };
+  }, [idle, mx, my]);
+
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIdle(false);
     const rect = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - rect.left) / rect.width - 0.5);
     my.set((e.clientY - rect.top) / rect.height - 0.5);
@@ -37,6 +62,8 @@ export function HeroDiorama() {
   const onLeave = () => {
     mx.set(0);
     my.set(0);
+    // Resume idle after a short delay.
+    setTimeout(() => setIdle(true), 1500);
   };
 
   return (

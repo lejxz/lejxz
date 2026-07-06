@@ -229,23 +229,58 @@ export function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.button
-        style={{ opacity }}
-        onClick={() =>
-          document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })
-        }
-        className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1.5 text-dim transition-colors hover:text-teal"
-        aria-label="Scroll down"
-      >
-        <span className="font-mono text-[10px] uppercase tracking-widest">scroll</span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6 }}
-        >
-          <ArrowDown className="h-4 w-4" />
-        </motion.div>
-      </motion.button>
+      {/* Scroll-to-explore hint — disappears after the user scrolls for the
+          first time. More prominent than the old plain "scroll" label. */}
+      <ScrollHint opacity={opacity} />
     </section>
+  );
+}
+
+/**
+ * ScrollHint — the bottom-center "scroll to explore" indicator. Fades out
+ * permanently once the user scrolls past 80px (first scroll), so it never
+ * lingers after the user has engaged with the page.
+ */
+function ScrollHint({ opacity }: { opacity: ReturnType<typeof useTransform> }) {
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY > 80) setDismissed(true);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (dismissed) return null;
+
+  return (
+    <motion.button
+      style={{ opacity }}
+      onClick={() =>
+        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })
+      }
+      className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-dim transition-colors hover:text-teal"
+      aria-label="Scroll down to explore"
+    >
+      <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-dim/80">
+        scroll to explore
+      </span>
+      {/* animated mouse-wheel illustration */}
+      <span className="relative flex h-7 w-4 items-start justify-center rounded-full border border-dim/50 p-1">
+        <motion.span
+          animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
+          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+          className="h-1.5 w-1 rounded-full bg-teal"
+        />
+      </span>
+      <motion.div
+        animate={{ y: [0, 4, 0] }}
+        transition={{ repeat: Infinity, duration: 1.6 }}
+        className="flex items-center gap-1"
+      >
+        <ArrowDown className="h-3 w-3" />
+      </motion.div>
+    </motion.button>
   );
 }
