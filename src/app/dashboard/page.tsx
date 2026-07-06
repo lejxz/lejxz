@@ -58,7 +58,6 @@ const GH_REPO = "lejxz";
 const GH_BRANCH = "main";
 const GH_DATA_DIR = "src/data";
 const RAW_BASE = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_DATA_DIR}`;
-const API_GH = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_DIR}`;
 
 type FileName =
   | "profile"
@@ -294,7 +293,7 @@ export default function DashboardPage() {
 // Password gate
 // ---------------------------------------------------------------------------
 
-function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
+function PasswordGate({ onUnlock }: { onUnlock: (password: string) => void }) {
   const [value, setValue] = React.useState("");
   const [checking, setChecking] = React.useState(false);
 

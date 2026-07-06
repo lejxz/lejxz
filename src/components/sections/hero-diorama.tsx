@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform, animate } from "framer-motion";
 import { Brain, Cpu, Boxes, Sparkles, Binary, Network } from "lucide-react";
 
@@ -59,12 +59,21 @@ export function HeroDiorama() {
     mx.set((e.clientX - rect.left) / rect.width - 0.5);
     my.set((e.clientY - rect.top) / rect.height - 0.5);
   };
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onLeave = () => {
     mx.set(0);
     my.set(0);
     // Resume idle after a short delay.
-    setTimeout(() => setIdle(true), 1500);
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => setIdle(true), 1500);
   };
+
+  // Clean up the idle timer on unmount.
+  useEffect(() => {
+    return () => {
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, []);
 
   return (
     <div
