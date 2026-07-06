@@ -8,11 +8,11 @@ import { asset } from "@/lib/asset";
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const socials = profile.socialLinks ?? [
+  const socials = [
     { label: "GitHub", icon: "github", url: profile.socials.github ?? "#" },
     { label: "LinkedIn", icon: "linkedin", url: profile.socials.linkedin ?? "#" },
     { label: "Instagram", icon: "instagram", url: profile.socials.instagram ?? "#" },
-    { label: "Email", icon: "mail", url: `mailto:${profile.email}` },
+    { label: "Email", icon: "mail", url: profile.socials.email ?? `mailto:${profile.email}` },
   ];
 
   return (

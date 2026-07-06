@@ -99,6 +99,46 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
           )}
         />
       </SectionCard>
+
+      {/* Profile facts (shown in the About section profile card) */}
+      <SectionCard title="Profile facts (About section card)">
+        <ListEditor
+          items={data.facts ?? []}
+          onChange={(facts) => set({ facts })}
+          makeNew={() => ({ label: "New", value: "—" })}
+          itemLabel={(f) => `${f.label}: ${f.value}`}
+          addLabel="Add fact"
+          renderItem={(item, up) => (
+            <div className="grid grid-cols-2 gap-3">
+              <TextField label="Label" value={item.label} onChange={(v) => up({ label: v })} />
+              <TextField label="Value" value={item.value} onChange={(v) => up({ value: v })} />
+            </div>
+          )}
+        />
+      </SectionCard>
+
+      {/* Code block (terminal-style block in About section) */}
+      <SectionCard title="Code block (terminal in About section)">
+        <TextField label="Variable name" value={data.codeBlock?.variableName ?? "profile"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, variableName: v } })} />
+        <TextField label="Closing status" value={data.codeBlock?.closing ?? "building"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, closing: v } })} />
+        <div className="rounded-lg border border-line p-2">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-dim">Fields (key-value pairs)</p>
+          <ListEditor
+            items={data.codeBlock?.fields ?? []}
+            onChange={(v) => set({ codeBlock: { ...data.codeBlock, fields: v } })}
+            makeNew={() => ({ key: "new", value: "—" })}
+            itemLabel={(f) => `${f.key}: ${f.value}`}
+            addLabel="Add field"
+            renderItem={(item, up) => (
+              <div className="grid grid-cols-2 gap-3">
+                <TextField label="Key" value={item.key} onChange={(v) => up({ key: v })} />
+                <TextField label="Value" value={item.value} onChange={(v) => up({ value: v })} />
+              </div>
+            )}
+          />
+        </div>
+        <TagInput label="Interests" values={data.codeBlock?.interests ?? []} onChange={(v) => set({ codeBlock: { ...data.codeBlock, interests: v } })} />
+      </SectionCard>
     </div>
   );
 }

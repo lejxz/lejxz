@@ -64,11 +64,11 @@ export function Contact() {
     toast.success("Opening your email client…");
   };
 
-  const socials = profile.socialLinks ?? [
+  const socials = [
     { label: "GitHub", icon: "github", url: profile.socials.github ?? "#" },
     { label: "LinkedIn", icon: "linkedin", url: profile.socials.linkedin ?? "#" },
     { label: "Instagram", icon: "instagram", url: profile.socials.instagram ?? "#" },
-    { label: "Email", icon: "mail", url: `mailto:${profile.email}` },
+    { label: "Email", icon: "mail", url: profile.socials.email ?? `mailto:${profile.email}` },
   ];
 
   return (

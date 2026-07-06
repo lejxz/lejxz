@@ -17,28 +17,6 @@
     "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/",
     "email": "mailto:lejxz.dev@gmail.com"
   },
-  "socialLinks": [
-    {
-      "label": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/lejxz"
-    },
-    {
-      "label": "LinkedIn",
-      "icon": "linkedin",
-      "url": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/"
-    },
-    {
-      "label": "Instagram",
-      "icon": "instagram",
-      "url": "https://www.instagram.com/lejxz.exe/"
-    },
-    {
-      "label": "Email",
-      "icon": "mail",
-      "url": "mailto:lejxz.dev@gmail.com"
-    }
-  ],
   "tagline": "<Change the world/>",
   "bio": [
     "I am a Computer Science student majoring in Artificial Intelligence. My passion and research are dedicated to Machine Learning and Computer Vision."
@@ -59,7 +37,7 @@
     },
     {
       "label": "Focus",
-      "value": "Research · ML systems"
+      "value": "Research \u00b7 ML systems"
     }
   ],
   "codeBlock": {
@@ -75,7 +53,7 @@
       },
       {
         "key": "role",
-        "value": "CS · AI"
+        "value": "CS \u00b7 AI"
       },
       {
         "key": "location",
