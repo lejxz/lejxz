@@ -18,6 +18,7 @@ import {
   Code2,
   Copy,
   Download,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -426,6 +427,7 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
   const [autoSaveStatus, setAutoSaveStatus] = React.useState<"idle" | "saving" | "saved">("idle");
   // Track which files are dirty (for per-file auto-save)
   const [viewRaw, setViewRaw] = React.useState(false);
+  const [guideOpen, setGuideOpen] = React.useState(false);
 
   // load all data on mount
   const loadAll = React.useCallback(async () => {
@@ -555,6 +557,10 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
                 <span className="hidden sm:inline">Back to site</span>
               </Button>
             </Link>
+            <Button variant="ghost" size="sm" onClick={() => setGuideOpen(true)} className="gap-1.5 font-mono text-xs text-dim hover:text-teal">
+              <HelpCircle className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Guide</span>
+            </Button>
             <Button variant="ghost" size="sm" onClick={onLock} className="gap-1.5 font-mono text-xs text-dim hover:text-teal">
               <Lock className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Lock</span>
@@ -706,6 +712,117 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
           </p>
         </div>
       </footer>
+
+      {/* Setup Guide modal */}
+      <GuideModal open={guideOpen} onClose={() => setGuideOpen(false)} />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// GuideModal — setup guide with image URL formats, editing tips, etc.
+// ---------------------------------------------------------------------------
+
+function GuideModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-background/80 backdrop-blur" />
+      <div
+        className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-line bg-surface/95 p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-foreground">
+            Setup Guide
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-line text-dim hover:text-teal"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="space-y-5 font-mono text-xs leading-relaxed text-dim">
+
+          {/* Image URLs */}
+          <section>
+            <h3 className="mb-2 font-bold text-teal">IMAGE LINKS</h3>
+            <p className="mb-2">Cover images and logos accept two formats:</p>
+            <div className="space-y-1.5 rounded-lg border border-line bg-surface/50 p-3">
+              <p className="text-foreground/80">1. Local path (from the repo):</p>
+              <code className="block rounded bg-background/60 px-2 py-1 text-teal">/assets/projects/my-image.png</code>
+              <p className="mt-2 text-foreground/80">2. External URL (any direct image link):</p>
+              <code className="block rounded bg-background/60 px-2 py-1 text-teal">https://i.imgur.com/abc123.png</code>
+              <code className="block rounded bg-background/60 px-2 py-1 text-teal">https://raw.githubusercontent.com/user/repo/main/image.png</code>
+            </div>
+            <div className="mt-2 space-y-1">
+              <p className="text-foreground/60">✅ Works: Imgur, GitHub raw, Unsplash, any CDN</p>
+              <p className="text-foreground/60">✅ Works: Any URL that shows just the image in the browser</p>
+              <p className="text-destructive/80">❌ Doesn't work: Google Drive share links, Dropbox share links</p>
+              <p className="text-foreground/40">  (they show a webpage, not a direct image)</p>
+            </div>
+          </section>
+
+          {/* Editing */}
+          <section>
+            <h3 className="mb-2 font-bold text-teal">EDITING</h3>
+            <div className="space-y-1.5 rounded-lg border border-line bg-surface/50 p-3">
+              <p>• Edit fields directly — changes are tracked automatically.</p>
+              <p>• The <span className="text-violet">unsaved</span> dot means the file has pending changes.</p>
+              <p>• Click <span className="text-teal">Save</span> to commit to GitHub (GitHub Pages mode) or write to disk (dev mode).</p>
+              <p>• Click <span className="text-teal">Raw JSON</span> to view the raw JSON output.</p>
+              <p>• Click <span className="text-teal">Reload</span> to discard changes and reload from the source.</p>
+              <p>• Auto-save runs every 60s in dev mode (disabled on GitHub Pages).</p>
+            </div>
+          </section>
+
+          {/* Tags */}
+          <section>
+            <h3 className="mb-2 font-bold text-teal">TAGS &amp; LISTS</h3>
+            <div className="space-y-1.5 rounded-lg border border-line bg-surface/50 p-3">
+              <p>• <span className="text-foreground/80">Tag inputs:</span> Type text, press Enter or click Add.</p>
+              <p>• Click the × on a tag to remove it.</p>
+              <p>• Backspace on an empty tag input removes the last tag.</p>
+              <p>• <span className="text-foreground/80">List editors:</span> Click an item to expand/collapse it.</p>
+              <p>• Use the ↑/↓ buttons to reorder items.</p>
+              <p>• Click the trash icon to delete an item (confirms first).</p>
+            </div>
+          </section>
+
+          {/* Authentication */}
+          <section>
+            <h3 className="mb-2 font-bold text-teal">AUTHENTICATION</h3>
+            <div className="space-y-1.5 rounded-lg border border-line bg-surface/50 p-3">
+              <p>• <span className="text-foreground/80">Dev mode (localhost):</span> Use the password <code className="text-teal">lejxz-edit-2026</code>.</p>
+              <p>• <span className="text-foreground/80">GitHub Pages mode:</span> Use your GitHub PAT (Personal Access Token).</p>
+              <p>• The PAT needs <code className="text-teal">repo</code> scope (or <code className="text-teal">contents: write</code> for fine-grained tokens).</p>
+              <p>• Create a PAT at: <code className="text-teal">github.com/settings/tokens</code></p>
+              <p>• The token is stored only in your browser's sessionStorage (cleared on tab close).</p>
+            </div>
+          </section>
+
+          {/* Files */}
+          <section>
+            <h3 className="mb-2 font-bold text-teal">DATA FILES</h3>
+            <div className="space-y-1.5 rounded-lg border border-line bg-surface/50 p-3">
+              <p>• <span className="text-foreground/80">profile.json</span> — Name, hero lines, role, bio, stats, socials</p>
+              <p>• <span className="text-foreground/80">marquee.json</span> — Scrolling ticker text (duration + direction per row)</p>
+              <p>• <span className="text-foreground/80">skills.json</span> — Skill groups, levels, descriptions</p>
+              <p>• <span className="text-foreground/80">experience.json</span> — Timeline entries (work, education, research, awards)</p>
+              <p>• <span className="text-foreground/80">projects.json</span> — Project cards (cover, tech, links, highlights)</p>
+              <p>• <span className="text-foreground/80">now.json</span> — "Currently" status widget</p>
+              <p>• <span className="text-foreground/80">footer.json</span> — Footer note + link columns</p>
+              <p>• <span className="text-foreground/80">site.json</span> — Navigation items + footer meta</p>
+              <p>• <span className="text-foreground/80">uses.json</span> — Gear/setup categories</p>
+            </div>
+          </section>
+
+        </div>
+      </div>
     </div>
   );
 }
