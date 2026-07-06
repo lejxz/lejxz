@@ -217,7 +217,10 @@ export function TagInput({
 
   return (
     <Field label={label} hint={hint}>
-      <div className="rounded-md border border-line bg-surface/50 p-2 focus-within:border-teal/40">
+      <div
+        className="rounded-md border border-line bg-surface/50 p-2 focus-within:border-teal/40"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* tag chips */}
         <div className="flex flex-wrap gap-1.5">
           {values.map((v, i) => (
@@ -388,7 +391,10 @@ export function ListEditor<T>({
               </div>
             </div>
             {isOpen && (
-              <div className="space-y-3 border-t border-line p-3">
+              <div
+                className="space-y-3 border-t border-line p-3"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {renderItem(item, (patch) => update(i, patch))}
               </div>
             )}

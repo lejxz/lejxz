@@ -3,9 +3,22 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
+/**
+ * CustomCursor — a white dot with mixBlendMode: difference that inverts the
+ * colors underneath (see-through contrast effect). Enlarges when hovering
+ * interactive elements (buttons, links) and text elements.
+ *
+ * Three hover states:
+ * - default (10px): over empty/structural areas
+ * - text (20px): over headings, paragraphs, labels, spans, list items
+ * - interactive (44px): over buttons, links, inputs — the original big enlarge
+ *
+ * The default OS cursor is hidden globally via CSS (cursor: none on body).
+ */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
-  const [hovering, setHovering] = useState(false);
+  // "idle" | "text" | "interactive"
+  const [mode, setMode] = useState<"idle" | "text" | "interactive">("idle");
   const [down, setDown] = useState(false);
 
   const x = useMotionValue(-100);
@@ -26,17 +39,18 @@ export function CustomCursor() {
       y.set(e.clientY);
       const t = e.target as HTMLElement | null;
       if (!t) return;
-      // Enlarge over anything interactive OR any text-like element (so the
-      // cursor grows when hovering headings, paragraphs, labels, etc.).
+      // Don't react to the cursor's own layer.
+      if (t.closest("[data-cursor-layer]")) {
+        setMode("idle");
+        return;
+      }
       const interactive = !!t.closest(
         'a, button, [role="button"], input, textarea, select, [cmdk-input], [data-cursor="hover"]'
       );
       const textish = !!t.closest(
         'h1, h2, h3, h4, h5, h6, p, span, label, li, td, th, blockquote, code, pre, [data-cursor="text"]'
       );
-      // Don't enlarge over the cursor's own layer or empty body.
-      const ownLayer = !!t.closest("[data-cursor-layer]");
-      setHovering(!ownLayer && (interactive || textish));
+      setMode(interactive ? "interactive" : textish ? "text" : "idle");
     };
     const onDown = () => setDown(true);
     const onUp = () => setDown(false);
@@ -53,15 +67,19 @@ export function CustomCursor() {
 
   if (!enabled) return null;
 
+  // sizes: idle 10, text 20, interactive 44
+  const size = mode === "interactive" ? 44 : mode === "text" ? 20 : 10;
+
   return (
     <div
       aria-hidden
       data-cursor-layer
       className="pointer-events-none fixed inset-0 z-[90] hidden md:block"
+      style={{ mixBlendMode: "difference" }}
     >
-      {/* Enlarging ring — grows over interactive + text elements */}
+      {/* Enlarging white circle — the signature see-through contrast dot */}
       <motion.div
-        className="absolute rounded-full border border-teal/60"
+        className="absolute rounded-full bg-white"
         style={{
           x: sx,
           y: sy,
@@ -69,23 +87,11 @@ export function CustomCursor() {
           translateY: "-50%",
         }}
         animate={{
-          width: hovering ? 36 : 16,
-          height: hovering ? 36 : 16,
-          opacity: down ? 0.5 : 1,
-          backgroundColor: hovering ? "rgba(94,234,212,0.08)" : "rgba(94,234,212,0)",
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      />
-      {/* Center dot — always visible, precise pointer */}
-      <motion.div
-        className="absolute rounded-full bg-teal"
-        style={{ x, y, translateX: "-50%", translateY: "-50%" }}
-        animate={{
-          width: hovering ? 4 : 6,
-          height: hovering ? 4 : 6,
+          width: size,
+          height: size,
           opacity: down ? 0.6 : 1,
         }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
       />
     </div>
   );
