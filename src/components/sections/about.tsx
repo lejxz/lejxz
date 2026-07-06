@@ -31,7 +31,16 @@ export function About() {
   const yOrb = useTransform(scrollYProgress, [0, 1], [80, -80]);
   const yCode = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
-  const facts = (profile.facts ?? []).map((f, i) => ({
+  // Auto-derive facts from top-level profile fields (no duplicate editing).
+  // Falls back to profile.facts if it exists (backward compat).
+  const derivedFacts = [
+    { label: "Location", value: profile.location },
+    { label: "Field", value: profile.field },
+    { label: "Status", value: profile.availability },
+    { label: "Role", value: profile.role },
+  ].filter((f) => f.value);
+
+  const facts = (derivedFacts.length > 0 ? derivedFacts : (profile.facts ?? [])).map((f, i) => ({
     ...f,
     icon: FACT_ICONS[i % FACT_ICONS.length],
   }));
@@ -67,7 +76,13 @@ export function About() {
               <motion.div style={{ y: yCode }} className="mt-8">
                 <Reveal>
                   <TiltCard max={3} className="rounded-xl">
-                    <CodeBlock codeBlock={profile.codeBlock} penname={profile.penname} />
+                    <CodeBlock
+                      codeBlock={profile.codeBlock}
+                      penname={profile.penname}
+                      name={profile.name}
+                      role={profile.role}
+                      location={profile.location}
+                    />
                   </TiltCard>
                 </Reveal>
               </motion.div>
@@ -198,17 +213,33 @@ export function About() {
 function CodeBlock({
   codeBlock,
   penname,
+  name,
+  role,
+  location,
 }: {
   codeBlock: NonNullable<typeof profile.codeBlock>;
   penname: string;
+  name: string;
+  role: string;
+  location: string;
 }) {
   const [copied, setCopied] = useState(false);
+
+  // Auto-derive fields from top-level profile data (no duplicate editing).
+  // Only fall back to codeBlock.fields if the top-level fields are empty.
+  const derivedFields = [
+    { key: "name", value: name },
+    { key: "handle", value: penname },
+    { key: "role", value: role },
+    { key: "location", value: location },
+  ].filter((f) => f.value);
+  const fields = derivedFields.length > 0 ? derivedFields : codeBlock.fields;
 
   // Build the plain-text version once.
   const plainText = (() => {
     const lines: string[] = [];
     lines.push(`const ${codeBlock.variableName} = {`);
-    for (const f of codeBlock.fields) {
+    for (const f of fields) {
       lines.push(`  ${f.key}: '${f.value}',`);
     }
     lines.push("  interests: {");
@@ -265,7 +296,7 @@ function CodeBlock({
           <span className="text-teal">{codeBlock.variableName}</span>{" "}
           <span className="text-dim">=</span> {"{"}
           {"\n"}
-          {codeBlock.fields.map((f, i) => (
+          {fields.map((f, i) => (
             <span key={i}>
               {"  "}
               <span className="text-teal/80">{f.key}</span>

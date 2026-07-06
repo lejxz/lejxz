@@ -100,43 +100,36 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
         />
       </SectionCard>
 
-      {/* Profile facts (shown in the About section profile card) */}
-      <SectionCard title="Profile facts (About section card)">
-        <ListEditor
-          items={data.facts ?? []}
-          onChange={(facts) => set({ facts })}
-          makeNew={() => ({ label: "New", value: "—" })}
-          itemLabel={(f) => `${f.label}: ${f.value}`}
-          addLabel="Add fact"
-          renderItem={(item, up) => (
-            <div className="grid grid-cols-2 gap-3">
-              <TextField label="Label" value={item.label} onChange={(v) => up({ label: v })} />
-              <TextField label="Value" value={item.value} onChange={(v) => up({ value: v })} />
-            </div>
-          )}
-        />
+      {/* Profile facts — auto-derived from top-level fields.
+          Location, Field, Status, Focus are generated from the Identity
+          fields above. No separate editing needed. */}
+      <SectionCard title="Profile facts (auto-derived from Identity fields above)">
+        <p className="font-mono text-[11px] text-dim">
+          These are auto-generated from the fields above:
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Location → {data.location ?? "—"}
+          </div>
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Field → {data.field ?? "—"}
+          </div>
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Status → {data.availability ?? "—"}
+          </div>
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Role → {data.role ?? "—"}
+          </div>
+        </div>
       </SectionCard>
 
-      {/* Code block (terminal-style block in About section) */}
+      {/* Code block — fields are auto-derived, only interests + closing are editable */}
       <SectionCard title="Code block (terminal in About section)">
+        <p className="font-mono text-[11px] text-dim">
+          Fields are auto-derived from Identity above (name, handle, role, location).
+        </p>
         <TextField label="Variable name" value={data.codeBlock?.variableName ?? "profile"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, variableName: v } })} />
         <TextField label="Closing status" value={data.codeBlock?.closing ?? "building"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, closing: v } })} />
-        <div className="rounded-lg border border-line p-2">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-dim">Fields (key-value pairs)</p>
-          <ListEditor
-            items={data.codeBlock?.fields ?? []}
-            onChange={(v) => set({ codeBlock: { ...data.codeBlock, fields: v } })}
-            makeNew={() => ({ key: "new", value: "—" })}
-            itemLabel={(f) => `${f.key}: ${f.value}`}
-            addLabel="Add field"
-            renderItem={(item, up) => (
-              <div className="grid grid-cols-2 gap-3">
-                <TextField label="Key" value={item.key} onChange={(v) => up({ key: v })} />
-                <TextField label="Value" value={item.value} onChange={(v) => up({ value: v })} />
-              </div>
-            )}
-          />
-        </div>
         <TagInput label="Interests" values={data.codeBlock?.interests ?? []} onChange={(v) => set({ codeBlock: { ...data.codeBlock, interests: v } })} />
       </SectionCard>
     </div>
