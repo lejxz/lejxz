@@ -2,6 +2,8 @@
   "name": "Lejuene Delantar",
   "penname": "lejxz",
   "alias": "lejxz",
+  "heroLine1": "lejxz",
+  "heroLine2": ".dev",
   "role": "Computer Science Student",
   "field": "Artificial Intelligence",
   "location": "Philippines",
@@ -16,10 +18,26 @@
     "email": "mailto:lejxz.dev@gmail.com"
   },
   "socialLinks": [
-    { "label": "GitHub", "icon": "github", "url": "https://github.com/lejxz" },
-    { "label": "LinkedIn", "icon": "linkedin", "url": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/" },
-    { "label": "Instagram", "icon": "instagram", "url": "https://www.instagram.com/lejxz.exe/" },
-    { "label": "Email", "icon": "mail", "url": "mailto:lejxz.dev@gmail.com" }
+    {
+      "label": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/lejxz"
+    },
+    {
+      "label": "LinkedIn",
+      "icon": "linkedin",
+      "url": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/"
+    },
+    {
+      "label": "Instagram",
+      "icon": "instagram",
+      "url": "https://www.instagram.com/lejxz.exe/"
+    },
+    {
+      "label": "Email",
+      "icon": "mail",
+      "url": "mailto:lejxz.dev@gmail.com"
+    }
   ],
   "tagline": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   "bio": [
@@ -28,33 +46,89 @@
   ],
   "quote": "Lorem ipsum dolor sit amet — consectetur adipiscing elit, sed do eiusmod tempor.",
   "facts": [
-    { "label": "Location", "value": "Philippines" },
-    { "label": "Field", "value": "Artificial Intelligence" },
-    { "label": "Status", "value": "Open to opportunities" },
-    { "label": "Focus", "value": "Research · ML systems" }
+    {
+      "label": "Location",
+      "value": "Philippines"
+    },
+    {
+      "label": "Field",
+      "value": "Artificial Intelligence"
+    },
+    {
+      "label": "Status",
+      "value": "Open to opportunities"
+    },
+    {
+      "label": "Focus",
+      "value": "Research · ML systems"
+    }
   ],
   "codeBlock": {
     "variableName": "profile",
     "fields": [
-      { "key": "name", "value": "Lejuene Delantar" },
-      { "key": "handle", "value": "lejxz" },
-      { "key": "role", "value": "CS · AI" },
-      { "key": "location", "value": "Philippines" }
+      {
+        "key": "name",
+        "value": "Lejuene Delantar"
+      },
+      {
+        "key": "handle",
+        "value": "lejxz"
+      },
+      {
+        "key": "role",
+        "value": "CS · AI"
+      },
+      {
+        "key": "location",
+        "value": "Philippines"
+      }
     ],
-    "interests": ["ml", "cv", "nlp", "systems", "webgl"],
+    "interests": [
+      "ml",
+      "cv",
+      "nlp",
+      "systems",
+      "webgl"
+    ],
     "closing": "building"
   },
   "stats": [
-    { "label": "Focus", "value": "AI / ML" },
-    { "label": "Status", "value": "Student" },
-    { "label": "Stack", "value": "Python · TS" },
-    { "label": "Based", "value": "PH" }
+    {
+      "label": "Focus",
+      "value": "AI / ML"
+    },
+    {
+      "label": "Status",
+      "value": "Student"
+    },
+    {
+      "label": "Stack",
+      "value": "Python · TS"
+    },
+    {
+      "label": "Based",
+      "value": "PH"
+    }
   ],
   "numericStats": [
-    { "label": "Projects", "value": 24, "suffix": "+" },
-    { "label": "Years coding", "value": 5 },
-    { "label": "Models trained", "value": 18, "suffix": "+" },
-    { "label": "Coffees / week", "value": 12 }
+    {
+      "label": "Projects",
+      "value": 24,
+      "suffix": "+"
+    },
+    {
+      "label": "Years coding",
+      "value": 5
+    },
+    {
+      "label": "Models trained",
+      "value": 18,
+      "suffix": "+"
+    },
+    {
+      "label": "Coffees / week",
+      "value": 12
+    }
   ],
   "avatar": "/assets/avatar.svg"
 }

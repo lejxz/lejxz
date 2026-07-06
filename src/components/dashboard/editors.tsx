@@ -37,6 +37,8 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <TextField label="Name" value={data.name ?? ""} onChange={(v) => set({ name: v })} />
           <TextField label="Penname / Handle" value={data.penname ?? ""} onChange={(v) => set({ penname: v, alias: v })} />
+          <TextField label="Hero line 1 (big text)" value={data.heroLine1 ?? ""} onChange={(v) => set({ heroLine1: v })} />
+          <TextField label="Hero line 2 (gradient text)" value={data.heroLine2 ?? ""} onChange={(v) => set({ heroLine2: v })} />
           <TextField label="Role" value={data.role ?? ""} onChange={(v) => set({ role: v })} />
           <TextField label="Field" value={data.field ?? ""} onChange={(v) => set({ field: v })} />
           <TextField label="Location" value={data.location ?? ""} onChange={(v) => set({ location: v })} />

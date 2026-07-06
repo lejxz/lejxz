@@ -123,9 +123,9 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.16 }}
             className="font-mono text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
           >
-            <ScrambleText text={profile.penname ?? profile.alias ?? "lejxz"} duration={500} />
+            <ScrambleText text={profile.heroLine1 ?? profile.penname ?? "lejxz"} duration={500} />
             <span className="text-gradient-shimmer text-glow-soft">
-              <ScrambleText text=".dev" duration={700} />
+              <ScrambleText text={profile.heroLine2 ?? ".dev"} duration={700} />
             </span>
           </motion.h1>
 
