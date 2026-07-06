@@ -24,9 +24,10 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("top");
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.3,
+    stiffness: 200,
+    damping: 40,
+    mass: 0.2,
+    restDelta: 0.001,
   });
 
   useEffect(() => {

@@ -42,10 +42,10 @@ export function HomeTicker() {
 
 function Track({ items }: { items: string[] }) {
   return (
-    <div className="flex shrink-0 items-center gap-8 pr-8" aria-hidden>
+    <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden>
       {items.map((item, i) => (
-        <span key={i} className="flex items-center gap-8">
-          <span className="font-mono text-2xl font-bold tracking-tight text-foreground/90 sm:text-3xl">
+        <span key={i} className="flex items-center gap-6">
+          <span className="font-mono text-base font-bold tracking-tight text-foreground/90 sm:text-lg">
             {item}
           </span>
           <span className="text-teal/60">/</span>

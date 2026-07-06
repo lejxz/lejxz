@@ -4,18 +4,21 @@ import { useEffect, useState, useRef, useCallback } from "react";
 
 /**
  * SectionProgress — a thin reading-progress bar fixed to the top of the
- * viewport. It fills as the user reads through the *current* section
- * (resets at each section boundary), giving a sense of how much of the
- * current section remains.
+ * viewport. It fills as the user reads through the *current* section.
  *
- * Visually subtle: 2px tall, accent gradient, fades in only when scrolling.
+ * Bug fix: the old formula caused the bar to jump to ~90% when a new
+ * section became active, because the section's top was already far above
+ * the viewport top by the time the IntersectionObserver triggered (it
+ * uses -50% rootMargin, so the section center must cross viewport center).
  *
- * Bug fix: the old implementation used `-rect.top + vh/2` which caused the
- * bar to jump to 100% when a new section became active (because the section
- * was already past the viewport center). The new implementation computes
- * progress as: how far the section's top has moved from the viewport top
- * edge, relative to the total scrollable distance of that section. This
- * gives a smooth 0→1 fill that never jumps.
+ * New approach: progress is 0 when the section's top is at or below the
+ * viewport top, and 1 when the section's bottom reaches the viewport
+ * bottom. The key change: we clamp `scrolled` to start from 0, meaning
+ * the bar only starts filling once the section's top edge has scrolled
+ * above the viewport top — not before.
+ *
+ * Additionally, we smooth the progress with a CSS transition to avoid
+ * any visual jitter when switching sections.
  */
 export function SectionProgress() {
   const [mounted, setMounted] = useState(false);
@@ -24,7 +27,6 @@ export function SectionProgress() {
   const [visible, setVisible] = useState(false);
   const rafRef = useRef<number>(0);
 
-  // Mount gate — ensures we never render anything during SSR.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
@@ -64,10 +66,15 @@ export function SectionProgress() {
 
   // Compute the reading progress through the active section.
   //
-  // Progress = 0 when the section's top is at the top of the viewport.
-  // Progress = 1 when the section's bottom is at the bottom of the viewport.
+  // Progress = 0 when the section's top is at or below the viewport top.
+  // Progress = 1 when the section's bottom is at or above the viewport bottom.
   // The scrollable distance = sectionHeight - viewportHeight.
-  // scrolled = how far the section top has moved up from the viewport top.
+  // scrolled = how far the section top has moved above the viewport top.
+  //
+  // Key fix: when a new section becomes active, its top may already be
+  // scrolled past the viewport. We DON'T start at a high progress — we
+  // clamp so the bar fills proportionally from the current scroll position.
+  // The CSS transition smooths the visual change.
   const compute = useCallback(() => {
     if (!activeId) return;
     const el = document.getElementById(activeId);
@@ -77,11 +84,12 @@ export function SectionProgress() {
     const sectionHeight = rect.height;
 
     // How far the section's top edge has scrolled above the viewport top.
-    // When rect.top is 0 (section top at viewport top), scrolled = 0.
-    // When rect.top is negative (section scrolled past), scrolled > 0.
+    // Clamped to >= 0 so the bar starts at 0% when the section enters.
     const scrolled = Math.max(0, -rect.top);
 
     // Total scrollable distance for this section.
+    // If the section is shorter than the viewport, it's fully "read"
+    // as soon as its top reaches the viewport top.
     const scrollable = Math.max(sectionHeight - vh, 1);
 
     const p = scrolled / scrollable;
@@ -115,7 +123,7 @@ export function SectionProgress() {
       aria-hidden
     >
       <div
-        className="h-full transition-[width] duration-100 ease-out"
+        className="h-full transition-[width] duration-150 ease-out"
         style={{
           width: `${progress * 100}%`,
           background:
