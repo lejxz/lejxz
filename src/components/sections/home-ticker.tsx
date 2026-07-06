@@ -5,25 +5,20 @@ import { marquee } from "@/lib/data";
 /**
  * HomeTicker — a full-width news-ticker that rolls endlessly and seamlessly.
  *
- * The animation uses TWO identical track copies side by side inside a flex
- * container. The container translates from 0 → -50% (one track width) over
- * the duration, then snaps back to 0 — because the two tracks are identical,
- * the snap is invisible, creating a seamless infinite loop.
+ * Uses the FIRST marquee row only (tech stack names). The second row
+ * (specialization areas) is used in the Contact section as a separate
+ * ticker above the contact card.
  *
- * Hovering pauses the animation.
- *
- * NOTE: We use the `animate-marquee` class from globals.css (which defines
- * the `marquee-x` keyframe: 0 → -50% translate). styled-jsx `<style jsx>`
- * doesn't work reliably in Next.js 16 Turbopack dev mode, so we rely on the
- * global CSS class + a CSS variable for the duration.
+ * The animation uses the global `animate-marquee` CSS class from
+ * globals.css with a `--marquee-duration` CSS variable for the speed.
  */
 export function HomeTicker() {
-  // Flatten all marquee rows into one stream of items.
-  const items = marquee.rows.flatMap((r) => r.items);
-  const stream = items.length ? items : ["code", "ml", "ship"];
+  // Use only the first row for the home ticker.
+  const row = marquee.rows[0];
+  const stream = row?.items ?? ["code", "ml", "ship"];
 
-  // Use a shorter duration based on item count so the movement is visible.
-  const duration = Math.max(20, Math.min(40, stream.length * 2.5));
+  // Fast duration so movement is clearly visible.
+  const duration = Math.max(10, Math.min(18, stream.length * 0.8));
 
   return (
     <section
@@ -34,9 +29,6 @@ export function HomeTicker() {
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
 
-      {/* The flex container holds two identical tracks. We animate the
-          CONTAINER from 0 → -50% using the global `animate-marquee` class.
-          The `--marquee-duration` CSS var controls the speed. */}
       <div
         className="group flex w-max animate-marquee items-center will-change-transform hover:[animation-play-state:paused]"
         style={{ ["--marquee-duration" as string]: `${duration}s` }}
@@ -59,6 +51,59 @@ function Track({ items }: { items: string[] }) {
           <span className="text-teal/60">/</span>
         </span>
       ))}
+    </div>
+  );
+}
+
+/**
+ * ContactTicker — a marquee using the SECOND marquee row (specialization
+ * areas like "Computer Vision", "NLP", etc.). Placed above the contact
+ * card to add visual interest and reinforce the AI/ML focus.
+ *
+ * Uses `animate-marquee-rev` (right → left reverse = left → right movement)
+ * to contrast with the home ticker's direction.
+ */
+export function ContactTicker() {
+  const row = marquee.rows[1];
+  if (!row) return null;
+  const stream = row.items;
+
+  const duration = Math.max(10, Math.min(18, stream.length * 0.8));
+  // Use the reverse animation class (moves right → left = opposite direction
+  // from the home ticker for visual variety).
+  const animClass = row.direction === "right" ? "animate-marquee-rev" : "animate-marquee";
+
+  return (
+    <div className="relative overflow-hidden border-y border-line bg-surface/40 backdrop-blur-sm py-3">
+      {/* edge fades */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent" />
+
+      <div
+        className={`group flex w-max ${animClass} items-center will-change-transform hover:[animation-play-state:paused]`}
+        style={{ ["--marquee-duration" as string]: `${duration}s` }}
+      >
+        <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden>
+          {stream.map((item, i) => (
+            <span key={i} className="flex items-center gap-6">
+              <span className="font-mono text-lg font-bold tracking-tight text-violet/80 sm:text-xl">
+                {item}
+              </span>
+              <span className="text-teal/40">·</span>
+            </span>
+          ))}
+        </div>
+        <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden>
+          {stream.map((item, i) => (
+            <span key={i} className="flex items-center gap-6">
+              <span className="font-mono text-lg font-bold tracking-tight text-violet/80 sm:text-xl">
+                {item}
+              </span>
+              <span className="text-teal/40">·</span>
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

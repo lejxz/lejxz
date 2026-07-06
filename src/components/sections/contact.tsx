@@ -9,6 +9,7 @@ import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { ConfettiBurst } from "@/components/motion/confetti-burst";
+import { ContactTicker } from "@/components/sections/home-ticker";
 import { asset } from "@/lib/asset";
 
 export function Contact() {
@@ -72,6 +73,11 @@ export function Contact() {
 
   return (
     <section id="contact" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
+      {/* Contact ticker — second marquee row, above the contact card */}
+      <div className="mb-8">
+        <ContactTicker />
+      </div>
+
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="card-hover-glow relative overflow-hidden rounded-[2rem] border border-line bg-surface/75 backdrop-blur-sm p-6 sm:p-10 lg:p-14">
           {/* glow blobs */}

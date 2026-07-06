@@ -81,10 +81,7 @@ function SpotlightCard({ project, onOpen }: { project: Project; onOpen: () => vo
   const accentGlow = project.accent === "violet" ? "bg-violet/15" : "bg-teal/15";
 
   return (
-    <TiltCard
-      max={4}
-      className="mt-10 rounded-3xl"
-    >
+    <TiltCard max={4} className="mt-10 rounded-3xl">
       <motion.button
         type="button"
         onClick={onOpen}

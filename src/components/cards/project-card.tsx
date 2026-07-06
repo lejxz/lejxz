@@ -5,6 +5,7 @@ import { ArrowUpRight, Link2, Check, Star } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { useModals } from "@/lib/modals";
 import { useCopy } from "@/hooks/use-copy";
+import { TiltCard } from "@/components/motion/tilt-card";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
@@ -87,22 +88,23 @@ export function ProjectCard({
   }
 
   return (
-    <motion.div
-      role="button"
-      tabIndex={0}
-      onClick={open}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          open();
-        }
-      }}
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
-      className="card-hover-glow group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm transition-colors hover:border-teal/30"
-    >
+    <TiltCard max={5} className="h-full rounded-2xl">
+      <motion.div
+        role="button"
+        tabIndex={0}
+        onClick={open}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            open();
+          }
+        }}
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
+        className="card-hover-glow group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm transition-colors hover:border-teal/30"
+      >
       {/* Thumbnail */}
       <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">
         {project.cover || project.thumbnail ? (
@@ -184,6 +186,7 @@ export function ProjectCard({
           )}
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </TiltCard>
   );
 }

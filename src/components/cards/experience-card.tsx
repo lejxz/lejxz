@@ -6,6 +6,7 @@ import { ArrowUpRight, Link2, Check, ChevronDown } from "lucide-react";
 import type { ExperienceItem, ExperienceType } from "@/lib/types";
 import { useModals } from "@/lib/modals";
 import { useCopy } from "@/hooks/use-copy";
+import { TiltCard } from "@/components/motion/tilt-card";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
@@ -89,22 +90,23 @@ export function ExperienceCard({
   const hasDescription = experience.description && experience.description.length > 0;
 
   return (
-    <motion.div
-      role="button"
-      tabIndex={0}
-      onClick={open}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          open();
-        }
-      }}
-      initial={{ opacity: 0, x: -16 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, delay: (index % 5) * 0.08 }}
-      className="card-hover-glow group relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-start gap-4 rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-4 transition-colors hover:border-teal/30 sm:gap-5 sm:p-5"
-    >
+    <TiltCard max={3} className="rounded-2xl">
+      <motion.div
+        role="button"
+        tabIndex={0}
+        onClick={open}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            open();
+          }
+        }}
+        initial={{ opacity: 0, x: -16 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.5, delay: (index % 5) * 0.08 }}
+        className="card-hover-glow group relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-start gap-4 rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-4 transition-colors hover:border-teal/30 sm:gap-5 sm:p-5"
+      >
       {/* timeline node */}
       <div className="relative flex items-center justify-center pt-1">
         <span className={cn("h-3.5 w-3.5 rounded-full bg-gradient-to-br", TYPE_COLOR[type])} style={{ boxShadow: "0 0 12px rgba(94,234,212,0.5)" }} />
@@ -223,6 +225,7 @@ export function ExperienceCard({
           <ArrowUpRight className="h-4 w-4" />
         </span>
       </div>
-    </motion.div>
+      </motion.div>
+    </TiltCard>
   );
 }

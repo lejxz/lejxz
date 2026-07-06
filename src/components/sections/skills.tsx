@@ -233,7 +233,7 @@ export function Skills() {
               <div
                 className="group flex w-max animate-marquee items-center gap-3 hover:[animation-play-state:paused]"
                 style={{
-                  ["--marquee-duration" as string]: `${Math.max(15, skills.marquee.length * 1.8)}s`,
+                  ["--marquee-duration" as string]: `${Math.max(8, skills.marquee.length * 0.7)}s`,
                 }}
               >
                 {[...skills.marquee, ...skills.marquee].map((tag, i) => (
