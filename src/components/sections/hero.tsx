@@ -124,10 +124,10 @@ export function Hero() {
             className="font-mono text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
           >
             <span className="block text-foreground">
-              <ScrambleText text={profile.name.split(" ")[0]} duration={500} />
+              <ScrambleText text={profile.penname ?? profile.alias ?? profile.name.split(" ")[0]} duration={500} />
             </span>
             <span className="block text-gradient-shimmer text-glow-soft">
-              <ScrambleText text={profile.name.split(" ").slice(1).join(" ")} duration={700} />
+              <ScrambleText text=".dev" duration={700} />
             </span>
           </motion.h1>
 

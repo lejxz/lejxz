@@ -16,9 +16,6 @@ interface Node {
  * resembles a neural network. Nodes drift, connect to nearby nodes, and
  * occasionally "fire" signal pulses along edges. Pointer-reactive.
  *
- * This is the original Canvas 2D version from the early commits — simple,
- * clean, performant, and works everywhere (no WebGL/three.js dependency).
- *
  * Theme-aware: reads --nn-node and --nn-node-alt CSS variables and
  * re-reads when the theme class on <html> changes.
  */
@@ -79,10 +76,10 @@ export function NeuralNetworkCanvas({
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const target = Math.max(
         20,
@@ -99,7 +96,21 @@ export function NeuralNetworkCanvas({
       }));
     };
 
+    // Initial resize + a delayed second resize to catch the case where the
+    // container hasn't reached its final size on the first layout pass
+    // (common with fixed inset-0 elements during initial render / boot overlay).
     resize();
+    requestAnimationFrame(() => {
+      resize();
+      // One more after a short delay to catch any late layout shifts.
+      setTimeout(resize, 200);
+    });
+
+    // Use ResizeObserver to catch container size changes (more reliable than
+    // window resize for fixed-position elements).
+    const resizeObserver = new ResizeObserver(() => resize());
+    resizeObserver.observe(canvas);
+
     window.addEventListener("resize", resize);
 
     const onMove = (e: PointerEvent) => {
@@ -203,6 +214,7 @@ export function NeuralNetworkCanvas({
     return () => {
       cancelAnimationFrame(rafRef.current);
       colorObserver.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
