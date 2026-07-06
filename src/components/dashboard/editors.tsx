@@ -259,7 +259,7 @@ export function ExperienceEditor({ data, onChange }: EditorProps<any>) {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <TextField label="Location" value={item.location} onChange={(v) => up({ location: v })} />
-              <TextField label="Logo path" value={item.logo ?? ""} onChange={(v) => up({ logo: v })} />
+              <TextField label="Logo (path or URL)" value={item.logo ?? ""} onChange={(v) => up({ logo: v })} hint="/assets/experiences/x.svg or https://..." />
             </div>
             <TextField label="Org URL (optional)" value={item.orgUrl ?? ""} onChange={(v) => up({ orgUrl: v })} />
             <ToggleField label="Current" value={item.current ?? false} onChange={(v) => up({ current: v })} />
@@ -345,7 +345,7 @@ export function ProjectsEditor({ data, onChange }: EditorProps<any>) {
               <TextField label="Role" value={item.role ?? ""} onChange={(v) => up({ role: v })} />
               <TextField label="Duration" value={item.duration ?? ""} onChange={(v) => up({ duration: v })} />
             </div>
-            <TextField label="Cover image path" value={item.cover ?? ""} onChange={(v) => up({ cover: v, thumbnail: v })} />
+            <TextField label="Cover image (path or URL)" value={item.cover ?? ""} onChange={(v) => up({ cover: v, thumbnail: v })} hint="/assets/projects/x.png or https://..." />
             <TextAreaField label="Summary" value={item.summary ?? ""} onChange={(v) => up({ summary: v })} rows={2} />
             <TextAreaField label="Description (one per line)" value={(item.description ?? []).join("\n")} onChange={(v) => up({ description: v.split("\n") })} rows={4} />
             <ToggleField label="Featured" value={item.featured ?? false} onChange={(v) => up({ featured: v })} />
