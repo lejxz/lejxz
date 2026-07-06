@@ -99,7 +99,7 @@ function SpotlightCard({ project, onOpen }: { project: Project; onOpen: () => vo
             <img
               src={asset(project.cover ?? project.thumbnail!)}
               alt={project.title}
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
             <div className={cn("flex h-full w-full items-center justify-center bg-gradient-to-br", accentGlow)}>

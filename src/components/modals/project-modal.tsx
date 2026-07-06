@@ -93,7 +93,7 @@ export function ProjectModal({
         <DialogDescription className="sr-only">
           Detailed view of {project?.title}.
         </DialogDescription>
-        <DialogContent className="max-h-[92svh] max-w-3xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
+        <DialogContent className="max-h-[92svh] max-w-5xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
           <AnimatePresence mode="wait">
             {project && (
               <motion.div

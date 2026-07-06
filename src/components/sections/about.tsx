@@ -17,6 +17,7 @@ import { useRef, useState, useCallback } from "react";
 import { profile, now } from "@/lib/data";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
+import { TiltCard } from "@/components/motion/tilt-card";
 
 const FACT_ICONS = [MapPin, GraduationCap, Activity, Coffee];
 const NOW_ICONS = [Cpu, BookOpen, Coffee];
@@ -65,7 +66,9 @@ export function About() {
             {profile.codeBlock && (
               <motion.div style={{ y: yCode }} className="mt-8">
                 <Reveal>
-                  <CodeBlock codeBlock={profile.codeBlock} penname={profile.penname} />
+                  <TiltCard max={3} className="rounded-xl">
+                    <CodeBlock codeBlock={profile.codeBlock} penname={profile.penname} />
+                  </TiltCard>
                 </Reveal>
               </motion.div>
             )}
@@ -85,7 +88,8 @@ export function About() {
           {/* Right: profile card + now widget */}
           <div className="lg:col-span-5">
             <Reveal delay={0.1}>
-              <div className="overflow-hidden rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-6 shadow-2xl shadow-black/40">
+              <TiltCard max={4} className="rounded-2xl">
+                <div className="overflow-hidden rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-6 shadow-2xl shadow-black/40">
                 <div className="mb-5 flex items-center gap-4">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-teal/40 to-violet/30 ring-2 ring-teal/30">
                     <div className="flex h-full w-full items-center justify-center font-mono text-3xl font-bold text-primary-foreground">
@@ -136,12 +140,14 @@ export function About() {
                     {now.items[0]?.value ?? "—"}
                   </span>
                 </div>
-              </div>
+                </div>
+              </TiltCard>
             </Reveal>
 
             {/* Now widget */}
             <Reveal delay={0.14}>
-              <div className="mt-5 rounded-2xl border border-line bg-surface/70 backdrop-blur-sm p-5">
+              <TiltCard max={3} className="mt-5 rounded-2xl">
+                <div className="rounded-2xl border border-line bg-surface/70 backdrop-blur-sm p-5">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-2 w-2">
@@ -174,7 +180,8 @@ export function About() {
                     );
                   })}
                 </ul>
-              </div>
+                </div>
+              </TiltCard>
             </Reveal>
           </div>
         </div>

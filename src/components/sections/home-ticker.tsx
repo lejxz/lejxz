@@ -9,15 +9,15 @@ import { marquee } from "@/lib/data";
  * (specialization areas) is used in the Contact section as a separate
  * ticker above the contact card.
  *
- * The animation uses the global `animate-marquee` CSS class from
- * globals.css with a `--marquee-duration` CSS variable for the speed.
+ * NOTE: We use an INLINE animation style rather than the `animate-marquee`
+ * CSS class + `--marquee-duration` variable. The CSS `var()` inside an
+ * `animation` shorthand doesn't work reliably across all browsers/build
+ * pipelines (especially Next.js static export). Inline style is the most
+ * robust approach.
  */
 export function HomeTicker() {
-  // Use only the first row for the home ticker.
   const row = marquee.rows[0];
   const stream = row?.items ?? ["code", "ml", "ship"];
-
-  // Fast duration so movement is clearly visible.
   const duration = Math.max(10, Math.min(18, stream.length * 0.8));
 
   return (
@@ -30,8 +30,10 @@ export function HomeTicker() {
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
 
       <div
-        className="group flex w-max animate-marquee items-center will-change-transform hover:[animation-play-state:paused]"
-        style={{ ["--marquee-duration" as string]: `${duration}s` }}
+        className="group flex w-max items-center will-change-transform hover:[animation-play-state:paused]"
+        style={{
+          animation: `marquee-x ${duration}s linear infinite`,
+        }}
       >
         <Track items={stream} />
         <Track items={stream} />
@@ -60,18 +62,18 @@ function Track({ items }: { items: string[] }) {
  * areas like "Computer Vision", "NLP", etc.). Placed above the contact
  * card to add visual interest and reinforce the AI/ML focus.
  *
- * Uses `animate-marquee-rev` (right → left reverse = left → right movement)
- * to contrast with the home ticker's direction.
+ * Uses the reverse direction (left → right) to contrast with the home
+ * ticker.
  */
 export function ContactTicker() {
   const row = marquee.rows[1];
   if (!row) return null;
   const stream = row.items;
-
   const duration = Math.max(10, Math.min(18, stream.length * 0.8));
-  // Use the reverse animation class (moves right → left = opposite direction
-  // from the home ticker for visual variety).
-  const animClass = row.direction === "right" ? "animate-marquee-rev" : "animate-marquee";
+
+  // Determine direction: "right" in the data means the track should move
+  // right-to-left visually, which is the `marquee-x-rev` keyframe.
+  const keyframe = row.direction === "right" ? "marquee-x-rev" : "marquee-x";
 
   return (
     <div className="relative overflow-hidden border-y border-line bg-surface/40 backdrop-blur-sm py-3">
@@ -80,30 +82,29 @@ export function ContactTicker() {
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent" />
 
       <div
-        className={`group flex w-max ${animClass} items-center will-change-transform hover:[animation-play-state:paused]`}
-        style={{ ["--marquee-duration" as string]: `${duration}s` }}
+        className="group flex w-max items-center will-change-transform hover:[animation-play-state:paused]"
+        style={{
+          animation: `${keyframe} ${duration}s linear infinite`,
+        }}
       >
-        <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden>
-          {stream.map((item, i) => (
-            <span key={i} className="flex items-center gap-6">
-              <span className="font-mono text-lg font-bold tracking-tight text-violet/80 sm:text-xl">
-                {item}
-              </span>
-              <span className="text-teal/40">·</span>
-            </span>
-          ))}
-        </div>
-        <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden>
-          {stream.map((item, i) => (
-            <span key={i} className="flex items-center gap-6">
-              <span className="font-mono text-lg font-bold tracking-tight text-violet/80 sm:text-xl">
-                {item}
-              </span>
-              <span className="text-teal/40">·</span>
-            </span>
-          ))}
-        </div>
+        <ContactTrack items={stream} />
+        <ContactTrack items={stream} />
       </div>
+    </div>
+  );
+}
+
+function ContactTrack({ items }: { items: string[] }) {
+  return (
+    <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden>
+      {items.map((item, i) => (
+        <span key={i} className="flex items-center gap-6">
+          <span className="font-mono text-lg font-bold tracking-tight text-violet/80 sm:text-xl">
+            {item}
+          </span>
+          <span className="text-teal/40">·</span>
+        </span>
+      ))}
     </div>
   );
 }

@@ -231,9 +231,9 @@ export function Skills() {
           <Reveal delay={0.1}>
             <div className="mask-fade-edges mt-14 overflow-hidden">
               <div
-                className="group flex w-max animate-marquee items-center gap-3 hover:[animation-play-state:paused]"
+                className="group flex w-max items-center gap-3 hover:[animation-play-state:paused]"
                 style={{
-                  ["--marquee-duration" as string]: `${Math.max(8, skills.marquee.length * 0.7)}s`,
+                  animation: `marquee-x ${Math.max(8, skills.marquee.length * 0.7)}s linear infinite`,
                 }}
               >
                 {[...skills.marquee, ...skills.marquee].map((tag, i) => (

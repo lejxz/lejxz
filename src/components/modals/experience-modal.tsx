@@ -64,7 +64,7 @@ export function ExperienceModal({
       <DialogDescription className="sr-only">
         Detailed view of {experience.role} experience.
       </DialogDescription>
-      <DialogContent className="max-h-[92svh] max-w-2xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
+      <DialogContent className="max-h-[92svh] max-w-4xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={experience.id}
