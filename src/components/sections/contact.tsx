@@ -18,6 +18,7 @@ export function Contact() {
   const [emailTouched, setEmailTouched] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [burstOrigin, setBurstOrigin] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [submitted, setSubmitted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   // Simple but practical email regex — not RFC-perfect, but catches the
@@ -50,6 +51,9 @@ export function Contact() {
       });
     }
     setConfettiTrigger((c) => c + 1);
+    setSubmitted(true);
+    // Clear the success banner after 4s.
+    setTimeout(() => setSubmitted(false), 4000);
 
     const subject = encodeURIComponent(`Portfolio message from ${name || "a visitor"}`);
     const body = encodeURIComponent(
@@ -143,7 +147,14 @@ export function Contact() {
               >
                 {/* Confetti burst overlay — originates from the submit button */}
                 <ConfettiBurst trigger={confettiTrigger} originX={burstOrigin.x} originY={burstOrigin.y} />
-                <Field label="Your name">
+                {/* Success banner — shows for 4s after submit */}
+                {submitted && (
+                  <div className="flex items-center gap-2 rounded-xl border border-teal/40 bg-teal/10 px-4 py-2.5 font-mono text-xs text-teal">
+                    <Check className="h-4 w-4 shrink-0" />
+                    <span>Opening your email client — your message is ready to send!</span>
+                  </div>
+                )}
+                <Field label="Your name" required>
                   <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -173,7 +184,7 @@ export function Contact() {
                     }
                   />
                 </Field>
-                <Field label="Message">
+                <Field label="Message" required>
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -260,16 +271,19 @@ function Field({
   children,
   error,
   valid,
+  required,
 }: {
   label: string;
   children: React.ReactNode;
   error?: string;
   valid?: boolean;
+  required?: boolean;
 }) {
   return (
     <label className="block">
       <span className="mb-1.5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-dim">
         {label}
+        {required && <span className="text-violet" aria-label="required">*</span>}
         {valid && (
           <span className="inline-flex items-center gap-1 text-teal normal-case tracking-normal">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>

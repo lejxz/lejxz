@@ -8,6 +8,7 @@ import { BackToTop } from "@/components/site/back-to-top";
 import { ShortcutsHelp } from "@/components/site/shortcuts-help";
 import { SectionProgress } from "@/components/site/section-progress";
 import { RouteProgress } from "@/components/site/route-progress";
+import { CursorTrail } from "@/components/motion/cursor-trail";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -103,6 +104,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground antialiased">
         <SkipLink />
         <CustomCursor />
+        <CursorTrail />
         <BackToTop />
         <ShortcutsHelp />
         <SectionProgress />

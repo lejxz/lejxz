@@ -17,6 +17,7 @@ import {
   CircleDot,
   Code2,
   Copy,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -552,7 +553,7 @@ function Dashboard({ password, onLock }: { password: string; onLock: () => void 
                 <Loader2 className="h-6 w-6 animate-spin text-teal" />
               </div>
             ) : viewRaw ? (
-              <RawJsonView data={allData[active]} />
+              <RawJsonView data={allData[active]} fileName={active} />
             ) : (
               <Editor data={allData[active]} onChange={edit} />
             )}
@@ -618,7 +619,7 @@ function Sidebar({
 // RawJsonView — read-only syntax-highlighted JSON viewer with copy button
 // ---------------------------------------------------------------------------
 
-function RawJsonView({ data }: { data: any }) {
+function RawJsonView({ data, fileName }: { data: any; fileName: string }) {
   const [copied, setCopied] = React.useState(false);
   const jsonStr = React.useMemo(
     () => JSON.stringify(data, null, 2),
@@ -636,27 +637,50 @@ function RawJsonView({ data }: { data: any }) {
     }
   };
 
+  const onDownload = () => {
+    const blob = new Blob([jsonStr + "\n"], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${fileName}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${fileName}.json`);
+  };
+
   return (
     <div className="relative overflow-hidden rounded-xl border border-line bg-surface/40">
       <div className="flex items-center justify-between border-b border-line bg-surface-3/60 px-4 py-2.5">
         <span className="font-mono text-xs text-dim">raw JSON · read-only</span>
-        <button
-          type="button"
-          onClick={onCopy}
-          className="flex items-center gap-1.5 rounded-md border border-line bg-surface/60 px-2 py-1 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
-        >
-          {copied ? (
-            <>
-              <Check className="h-3 w-3 text-teal" />
-              <span className="text-teal">copied</span>
-            </>
-          ) : (
-            <>
-              <Copy className="h-3 w-3" />
-              <span>copy</span>
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={onDownload}
+            className="flex items-center gap-1.5 rounded-md border border-line bg-surface/60 px-2 py-1 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
+          >
+            <Download className="h-3 w-3" />
+            <span>download</span>
+          </button>
+          <button
+            type="button"
+            onClick={onCopy}
+            className="flex items-center gap-1.5 rounded-md border border-line bg-surface/60 px-2 py-1 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3 w-3 text-teal" />
+                <span className="text-teal">copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3 w-3" />
+                <span>copy</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
       <pre className="max-h-[60vh] overflow-auto p-4 font-mono text-xs leading-relaxed">
         <code>{jsonStr}</code>
