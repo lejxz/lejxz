@@ -1,9 +1,23 @@
 {
   "updated": "2026-07",
   "items": [
-    { "label": "Learning", "value": "AI agent workflows", "detail": "Refining a personal AI-agent workflow system, including a reusable /concept-init slash command and a planning-depth framework to avoid over-documenting before building.", "icon": "graduation-cap" },
-    { "label": "Building", "value": "This portfolio", "detail": "Building lejxz.dev with Next.js, Framer Motion, and Tailwind CSS — content-as-JSON with a hidden local dashboard for editing.", "icon": "cpu" },
-    { "label": "Refining", "value": "Hira", "detail": "Iterating on Hira, a persona-aware Filipino labor-matching platform for HCI coursework, and adapting its research paper into competition proposals.", "icon": "book" },
-    { "label": "Exploring", "value": "AR/VR & computer vision", "detail": "Digging into vision-language model integration, sign language recognition, and AI systems that perceive the real world through a camera.", "icon": "sparkles" }
+    {
+      "label": "Learning",
+      "value": "AI agent workflows",
+      "detail": "Refining a personal AI-agent workflow system, including a reusable /concept-init slash command and a planning-depth framework to avoid over-documenting before building.",
+      "icon": "graduation-cap"
+    },
+    {
+      "label": "Building",
+      "value": "Project-Hira",
+      "detail": "Project-Hira a persona-aware Filipino labor-matching platform",
+      "icon": "cpu"
+    },
+    {
+      "label": "Exploring",
+      "value": "AR/VR & computer vision",
+      "detail": "Digging into vision-language model integration, sign language recognition, and AI systems that perceive the real world through a camera.",
+      "icon": "sparkles"
+    }
   ]
 }
