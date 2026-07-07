@@ -10,7 +10,7 @@
       "items": [
         {
           "name": "Python",
-          "level": 90,
+          "level": 95,
           "description": "Python enthusiast with a focus on problem-solving and automation. Adept at integrating APIs, managing data, and creating efficient scripts for real-world tasks."
         },
         {
@@ -22,6 +22,11 @@
           "name": "C++",
           "level": 80,
           "description": "Skilled in C++ with a focus on classes, inheritance, and polymorphism. Adept at building applications that balance speed, scalability, and maintainability."
+        },
+        {
+          "name": "Next.js",
+          "level": 76,
+          "description": ""
         }
       ]
     },
@@ -48,7 +53,7 @@
         },
         {
           "name": "TensorFlow",
-          "level": 55,
+          "level": 65,
           "description": "Studied through structured coursework and notes; PyTorch and YOLOv8 are the primary tools for shipped CV work."
         },
         {
@@ -71,13 +76,13 @@
         },
         {
           "name": "Linux",
-          "level": 65,
-          "description": "Used for day-to-day development and for hosting always-on personal tools like Discord bots."
+          "level": 40,
+          "description": "Used for day-to-day development and for hosting always-on personal tools."
         },
         {
-          "name": "SQLite",
-          "level": 65,
-          "description": "Persistence layer behind LoadSense's fleet state and telemetry."
+          "name": "Agents",
+          "level": 95,
+          "description": "Used for day-to-day development and personal assistant."
         }
       ]
     }
@@ -90,6 +95,10 @@
     "Next.js",
     "OpenCV",
     "Linux",
-    "scikit-learn"
+    "scikit-learn",
+    "Luau",
+    "C",
+    "C++",
+    "Java"
   ]
 }
