@@ -39,12 +39,16 @@ start-dev.sh
 # sandbox infra
 Caddyfile
 /.cache/
+# the original cloned repo (sandbox working copy, not a submodule)
+/repo/
 # databases (portfolio has no DB)
 /db/
 /prisma/
 # uploaded assets / temp
 /upload/
 /download/
+# tool-results from agent runs
+/tool-results/
 # sandbox skills + examples
 /skills/
 /examples/
@@ -53,8 +57,9 @@ Caddyfile
 .z-ai-config
 # handover docs (internal)
 worklog.md
-# screenshots
+# screenshots / temporary page captures
 screenshot-*.png
+page.html
 # mini-services: the dashboard-api IS part of the project (keep source, ignore deps/logs)
 /mini-services/*/node_modules/
 /mini-services/*/service.log
