@@ -18,45 +18,46 @@ export function Skills() {
   const group = skills.groups[activeGroup];
   const q = query.trim().toLowerCase();
 
-  // When searching, filter skills across ALL groups (not just the active one).
-  // This gives a global search experience — the user can find any skill
-  // without remembering which group it's in.
+  // Flatten all skills with their group index for the hex grid.
+  const allSkills = useMemo(
+    () =>
+      skills.groups.flatMap((g, gi) =>
+        g.items.map((item) => ({
+          ...item,
+          groupIdx: gi,
+          groupKey: g.key,
+          groupTitle: g.title,
+          groupIcon: g.icon,
+        }))
+      ),
+    []
+  );
+
+  // When searching, filter skills across ALL groups.
   const searchResults = useMemo(() => {
     if (!q) return null;
-    const results: { groupName: string; skill: { name: string; level: number; description?: string } }[] = [];
-    for (const g of skills.groups) {
-      for (const item of g.items) {
-        if (
-          item.name.toLowerCase().includes(q) ||
-          (item.description ?? "").toLowerCase().includes(q) ||
-          g.title.toLowerCase().includes(q)
-        ) {
-          results.push({ groupName: g.title, skill: item });
-        }
-      }
-    }
-    // Sort by level (descending or ascending based on toggle)
-    results.sort((a, b) =>
-      sortDesc ? b.skill.level - a.skill.level : a.skill.level - b.skill.level
+    const results = allSkills.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        (s.description ?? "").toLowerCase().includes(q) ||
+        s.groupTitle.toLowerCase().includes(q)
     );
-    return results;
-  }, [q, sortDesc]);
-
-  // The list to render: search results when searching, otherwise the active group's items.
-  const isSearching = searchResults !== null;
-  const displayItems = useMemo(() => {
-    const items = isSearching ? searchResults! : (group?.items ?? []);
-    if (isSearching) return items; // already sorted above
-    // Sort the group items by level
-    return [...items].sort((a, b) =>
+    results.sort((a, b) =>
       sortDesc ? b.level - a.level : a.level - b.level
     );
-  }, [isSearching, searchResults, group, sortDesc]);
+    return results;
+  }, [q, sortDesc, allSkills]);
 
-  // When searching, the selected skill might be from a different group.
+  const isSearching = searchResults !== null;
+
+  // The hexes to render: search results when searching, otherwise ALL skills
+  // (with non-active-group hexes dimmed instead of hidden).
+  const hexItems = isSearching ? searchResults! : allSkills;
+
+  // The selected skill object (from search or the active group).
   const selected = isSearching
-    ? searchResults!.find((r) => r.skill.name === activeSkill)?.skill ?? null
-    : group?.items.find((s) => s.name === activeSkill) ?? null;
+    ? searchResults!.find((s) => s.name === activeSkill) ?? null
+    : allSkills.find((s) => s.name === activeSkill && s.groupIdx === activeGroup) ?? null;
 
   return (
     <section id="skills" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -72,10 +73,10 @@ export function Skills() {
           </Reveal>
         )}
 
-        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Left: group tabs + skill bars */}
+        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_20rem] lg:gap-10">
+          {/* Left: group tabs + hex grid */}
           <div>
-            {/* group tabs + search */}
+            {/* group tabs + search + sort */}
             <Reveal>
               <div className="flex flex-wrap items-center gap-2">
                 {skills.groups.map((g, i) => (
@@ -105,7 +106,7 @@ export function Skills() {
                     {g.title}
                   </button>
                 ))}
-                {/* Search input — filters skills across ALL groups */}
+                {/* Search input */}
                 <div className="relative ml-auto w-full sm:w-44">
                   <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-dim" />
                   <input
@@ -139,7 +140,7 @@ export function Skills() {
               </div>
             </Reveal>
 
-            {/* Blurb (hidden when searching) + search result count */}
+            {/* Blurb / search result count */}
             {isSearching ? (
               <p className="mt-3 font-mono text-[11px] text-dim">
                 {searchResults!.length} match{searchResults!.length === 1 ? "" : "es"} for &ldquo;{query}&rdquo;
@@ -150,31 +151,43 @@ export function Skills() {
               )
             )}
 
-            {/* skill bars — shows search results when searching, otherwise the active group's items */}
-            <div className="mt-6 space-y-2">
-              {displayItems.length > 0 ? (
-                displayItems.map((item, i) => {
-                  const skill = isSearching ? item.skill : item;
-                  const groupName = isSearching ? (item as { groupName: string }).groupName : group?.title;
+            {/* Hex grid — honeycomb of skill chips.
+                Each hex shows a mini radial gauge + skill name.
+                Non-active-group hexes dim to 20% (instead of disappearing). */}
+            <div className="mt-8 flex flex-wrap justify-center gap-x-1 gap-y-0">
+              {hexItems.length > 0 ? (
+                hexItems.map((skill, i) => {
+                  const inActiveGroup = isSearching || skill.groupIdx === activeGroup;
+                  const isActive = activeSkill === skill.name && inActiveGroup;
                   return (
-                    <SkillBar
-                      key={skill.name}
+                    <HexChip
+                      key={skill.groupKey + "-" + skill.name}
                       skill={skill}
-                      groupName={isSearching ? groupName : undefined}
-                      active={activeSkill === skill.name}
-                      delay={i * 0.05}
+                      active={isActive}
+                      dimmed={!inActiveGroup}
+                      groupName={isSearching ? skill.groupTitle : undefined}
+                      delay={(i % 8) * 0.05}
                       onClick={() =>
-                        setActiveSkill((cur) => (cur === skill.name ? null : skill.name))
+                        setActiveSkill((cur) =>
+                          cur === skill.name && inActiveGroup ? null : skill.name
+                        )
                       }
                     />
                   );
                 })
               ) : (
-                <div className="rounded-xl border border-dashed border-line p-6 text-center font-mono text-xs text-dim">
+                <div className="w-full rounded-xl border border-dashed border-line p-6 text-center font-mono text-xs text-dim">
                   No skills match &ldquo;{query}&rdquo;.
                 </div>
               )}
             </div>
+
+            {/* Legend for the dimmed hexes */}
+            {!isSearching && (
+              <p className="mt-4 text-center font-mono text-[10px] text-dim/60">
+                Other groups are dimmed — click a hex to focus it, or switch tabs above.
+              </p>
+            )}
           </div>
 
           {/* Right: sticky detail panel with radial gauge */}
@@ -200,9 +213,7 @@ export function Skills() {
                       </p>
                       <div className="mt-4 flex items-center gap-2 rounded-full border border-teal/20 bg-teal/8 px-3 py-1">
                         <span className="font-mono text-[10px] uppercase tracking-wider text-teal">
-                          {isSearching
-                            ? searchResults!.find((r) => r.skill.name === selected.name)?.groupName ?? group.title
-                            : group.title}
+                          {selected.groupTitle}
                         </span>
                       </div>
                     </>
@@ -215,7 +226,7 @@ export function Skills() {
                         Select a skill
                       </h3>
                       <p className="mt-2 text-center text-sm text-dim">
-                        Tap any skill on the left to see a proficiency breakdown.
+                        Tap any hex to see a proficiency breakdown.
                       </p>
                     </>
                   )}
@@ -225,7 +236,7 @@ export function Skills() {
           </div>
         </div>
 
-        {/* Tech marquee — uses framer-motion for JS-driven animation */}
+        {/* Tech marquee */}
         {skills.marquee && skills.marquee.length > 0 && (
           <Reveal delay={0.1}>
             <div className="mask-fade-edges mt-14 overflow-hidden">
@@ -238,75 +249,176 @@ export function Skills() {
   );
 }
 
-function SkillBar({
+/**
+ * HexChip — a hexagonal skill chip with a mini radial gauge.
+ * The hex shape is created via CSS clip-path. Each chip shows the skill
+ * name at the bottom and a tiny circular progress gauge (with the level
+ * number) at the top. Hovering reveals a description tooltip.
+ *
+ * Layout: hexes stagger in a flex-wrap — odd-indexed chips are offset
+ * down by ~30px to create a honeycomb-like interlocking pattern.
+ */
+function HexChip({
   skill,
   active,
+  dimmed,
   delay,
   onClick,
   groupName,
 }: {
   skill: { name: string; level: number; description?: string };
   active: boolean;
+  dimmed: boolean;
   delay: number;
   onClick: () => void;
   groupName?: string;
 }) {
+  const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    if (inView) {
+      const raf = requestAnimationFrame(() => setAnimate(true));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [inView]);
+
+  // Tier color for the mini-gauge arc.
+  const tierColor =
+    skill.level >= 70 ? "var(--color-teal)" : "var(--color-violet)";
 
   return (
-    <motion.button
-      ref={ref}
-      type="button"
-      onClick={onClick}
-      initial={{ opacity: 0, x: -12 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4, delay }}
-      className={cn(
-        "group w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors",
-        active
-          ? "border-teal/40 bg-teal/8"
-          : "border-line bg-surface/60 hover:border-teal/25 hover:bg-surface/80"
-      )}
+    <div
+      className="relative"
+      style={{ marginTop: "0" }}
+      // Stagger odd chips down for the honeycomb effect.
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 min-w-0">
+      <motion.button
+        ref={ref}
+        type="button"
+        onClick={onClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        initial={{ opacity: 0, scale: 0.7 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-20px" }}
+        transition={{ duration: 0.35, delay, type: "spring", stiffness: 200, damping: 18 }}
+        whileHover={{ scale: 1.08, zIndex: 10 }}
+        whileTap={{ scale: 0.95 }}
+        className={cn(
+          "relative flex flex-col items-center justify-center transition-colors duration-300",
+          dimmed && "opacity-20 hover:opacity-60"
+        )}
+        style={{
+          width: "104px",
+          height: "120px",
+          clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+          background: active
+            ? "color-mix(in oklab, var(--color-teal) 18%, var(--color-surface))"
+            : "var(--color-surface)",
+        }}
+        aria-label={`${skill.name}: ${skill.level}%`}
+      >
+        {/* Glow ring on active/hover — drawn as a pseudo hex behind via box-shadow */}
+        {(active || hovered) && !dimmed && (
+          <span
+            className="pointer-events-none absolute inset-0"
+            style={{
+              clipPath: "inherit",
+              background: active
+                ? "color-mix(in oklab, var(--color-teal) 12%, transparent)"
+                : "transparent",
+            }}
+          />
+        )}
+
+        {/* Mini radial gauge — top half of the hex */}
+        <div className="relative mb-1 flex h-9 w-9 items-center justify-center">
+          <svg viewBox="0 0 36 36" className="h-9 w-9 -rotate-90">
+            {/* track */}
+            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--color-line)" strokeWidth="3" />
+            {/* progress arc */}
+            <motion.circle
+              cx="18"
+              cy="18"
+              r="14"
+              fill="none"
+              stroke={active ? "var(--color-teal)" : tierColor}
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeDasharray={2 * Math.PI * 14}
+              initial={{ strokeDashoffset: 2 * Math.PI * 14 }}
+              animate={
+                animate
+                  ? { strokeDashoffset: 2 * Math.PI * 14 * (1 - skill.level / 100) }
+                  : { strokeDashoffset: 2 * Math.PI * 14 }
+              }
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                filter: active
+                  ? "drop-shadow(0 0 4px color-mix(in oklab, var(--color-teal) 60%, transparent))"
+                  : "none",
+              }}
+            />
+          </svg>
+          {/* Level number in the center of the mini-gauge */}
           <span
             className={cn(
-              "font-mono text-sm font-medium transition-colors truncate",
-              active ? "text-teal" : "text-foreground/90 group-hover:text-foreground"
+              "absolute font-mono text-[11px] font-bold tabular-nums",
+              active ? "text-teal" : "text-foreground/80"
             )}
           >
-            {skill.name}
+            {skill.level}
           </span>
-          {groupName && (
-            <span className="shrink-0 rounded border border-line bg-surface/60 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-dim">
-              {groupName}
-            </span>
-          )}
         </div>
-        <span className="font-mono text-[11px] text-dim shrink-0">{skill.level}%</span>
-      </div>
-      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-line">
-        <motion.div
+
+        {/* Skill name — bottom half of the hex */}
+        <span
           className={cn(
-            "h-full rounded-full",
-            active ? "bg-gradient-to-r from-teal to-violet" : "bg-gradient-to-r from-violet/70 to-teal/70"
+            "px-3 text-center font-mono text-[10px] font-medium leading-tight transition-colors",
+            active ? "text-teal" : "text-foreground/85"
           )}
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${skill.level}%` } : { width: 0 }}
-          transition={{ duration: 0.9, delay: delay + 0.1, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </div>
-    </motion.button>
+        >
+          {skill.name}
+        </span>
+
+        {/* Group badge (search mode) */}
+        {groupName && (
+          <span className="mt-0.5 font-mono text-[7px] uppercase tracking-wider text-dim">
+            {groupName}
+          </span>
+        )}
+      </motion.button>
+
+      {/* Hover tooltip — description */}
+      <AnimatePresence>
+        {hovered && skill.description && !dimmed && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.9 }}
+            transition={{ duration: 0.15 }}
+            className="pointer-events-none absolute left-1/2 top-full z-30 mt-2 w-48 -translate-x-1/2 rounded-lg border border-line bg-surface/95 p-2.5 text-center font-mono text-[10px] leading-relaxed text-foreground/80 shadow-lg backdrop-blur-sm"
+          >
+            {skill.description}
+            <span
+              className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-l border-t"
+              style={{
+                borderColor: "var(--color-line)",
+                background: "var(--color-surface)",
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
 /**
  * useCountUp — animates a number from 0 to `target` over `duration` ms.
- * Starts when `active` becomes true. Returns the current displayed value.
- * Uses requestAnimationFrame with an ease-out curve for a satisfying fill.
  */
 function useCountUp(target: number, active: boolean, duration = 1100) {
   const [value, setValue] = useState(0);
@@ -316,7 +428,6 @@ function useCountUp(target: number, active: boolean, duration = 1100) {
   const lastTargetRef = useRef(target);
 
   useEffect(() => {
-    // Reset the animation start when the target changes or activation flips on.
     const targetChanged = lastTargetRef.current !== target;
     const justActivated = active && !lastActiveRef.current;
     lastActiveRef.current = active;
@@ -327,12 +438,11 @@ function useCountUp(target: number, active: boolean, duration = 1100) {
       return;
     }
 
-    // On a fresh activation or target change, restart from 0.
     if (justActivated || targetChanged) {
       startRef.current = null;
     }
 
-    const ease = (t: number) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
     const tick = (now: number) => {
       if (startRef.current === null) startRef.current = now;
       const elapsed = now - startRef.current;
@@ -350,32 +460,20 @@ function useCountUp(target: number, active: boolean, duration = 1100) {
 }
 
 /**
- * SkillGauge — the radial proficiency gauge. The percentage is displayed
- * prominently in the center (e.g. "90%") with a count-up animation that
- * syncs with the arc fill. A hover tooltip shows the qualitative tier
- * (Beginner / Intermediate / Advanced / Expert).
- *
- * The gauge only renders when a skill is selected (it lives in a sticky
- * panel that's always in the viewport), so the animation starts on mount
- * rather than waiting for an IntersectionObserver.
+ * SkillGauge — the large radial proficiency gauge in the sticky detail panel.
  */
 function SkillGauge({ level, name }: { level: number; name?: string }) {
   const [hovered, setHovered] = useState(false);
-  // Start the animation on mount — the gauge is always visible when rendered.
   const [animate, setAnimate] = useState(false);
   useEffect(() => {
-    // Defer one frame so the initial state (0% fill) paints first,
-    // then the animation triggers for a satisfying fill effect.
     const raf = requestAnimationFrame(() => setAnimate(true));
     return () => cancelAnimationFrame(raf);
   }, []);
   const r = 52;
   const circ = 2 * Math.PI * r;
 
-  // Count up the displayed percentage in sync with the arc fill.
   const displayLevel = useCountUp(level, animate, 1100);
 
-  // Map the numeric level to a qualitative label + color.
   const tier =
     level >= 85
       ? { label: "Expert", color: "var(--color-teal)" }
@@ -403,9 +501,7 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
             <stop offset="100%" stopColor="#a78bfa" />
           </linearGradient>
         </defs>
-        {/* track */}
         <circle cx="64" cy="64" r={r} fill="none" stroke="var(--color-line)" strokeWidth="8" />
-        {/* progress arc */}
         <motion.circle
           cx="64"
           cy="64"
@@ -430,9 +526,6 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
         />
       </motion.svg>
 
-      {/* Center percentage overlay — HTML for crisp, controllable typography.
-          The SVG is rotated -90°, so we overlay a absolutely-positioned div
-          on top (not inside the SVG) to avoid rotation counter-transforms. */}
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
         <div className="flex items-baseline gap-0.5">
           <motion.span
@@ -458,7 +551,6 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
         </span>
       </div>
 
-      {/* Hover tooltip — qualitative tier label */}
       <AnimatePresence>
         {hovered && (
           <motion.div
@@ -470,7 +562,6 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
             style={{ color: tier.color }}
           >
             {tier.label}
-            {/* arrow */}
             <span
               className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r"
               style={{
@@ -486,9 +577,7 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
 }
 
 /**
- * SkillsMarquee — a JS-driven (framer-motion) marquee for the tech tags.
- * Uses useAnimationFrame to translate the container. Two copies of the
- * items ensure a seamless loop.
+ * SkillsMarquee — a JS-driven marquee for the tech tags.
  */
 function SkillsMarquee({ items }: { items: string[] }) {
   const ref = useRef<HTMLDivElement>(null);

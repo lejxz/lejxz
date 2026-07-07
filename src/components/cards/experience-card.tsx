@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ArrowUpRight, Link2, Check, ChevronDown } from "lucide-react";
+import { ArrowUpRight, Link2, Check, ChevronDown, CheckCircle2 } from "lucide-react";
 import type { ExperienceItem, ExperienceType } from "@/lib/types";
 import { useModals } from "@/lib/modals";
 import { useCopy } from "@/hooks/use-copy";
@@ -88,6 +88,10 @@ export function ExperienceCard({
   }
 
   const hasDescription = experience.description && experience.description.length > 0;
+  // Callout badges — show the first 1-2 achievements as inline callouts
+  // that "branch off" the timeline. These give visitors a highlight without
+  // needing to click into the detail modal.
+  const callouts = (experience.achievements ?? []).slice(0, 2);
 
   return (
     <TiltCard max={3} className="rounded-2xl">
@@ -158,6 +162,38 @@ export function ExperienceCard({
           {experience.summary}
         </p>
 
+        {/* Achievement callouts — small badges that branch off the timeline.
+            Shown inline below the summary. Each badge has a left accent bar
+            (the "connector" to the timeline node) and a trophy/award icon. */}
+        {callouts.length > 0 && !expanded && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {callouts.map((c, ci) => (
+              <motion.span
+                key={ci}
+                initial={{ opacity: 0, x: -8 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-20px" }}
+                transition={{ duration: 0.3, delay: 0.15 + ci * 0.08 }}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 font-mono text-[10px] leading-tight",
+                  type === "award"
+                    ? "border-violet/30 bg-violet/8 text-violet"
+                    : "border-teal/25 bg-teal/8 text-teal"
+                )}
+              >
+                {/* Connector nub — the visual link to the timeline */}
+                <span
+                  className={cn(
+                    "h-1 w-1 shrink-0 rounded-full",
+                    type === "award" ? "bg-violet" : "bg-teal"
+                  )}
+                />
+                <span className="line-clamp-1">{c}</span>
+              </motion.span>
+            ))}
+          </div>
+        )}
+
         {/* Expandable description — toggle with the chevron button below */}
         <AnimatePresence initial={false}>
           {expanded && hasDescription && (
@@ -175,6 +211,28 @@ export function ExperienceCard({
                   </p>
                 ))}
               </div>
+              {/* All achievements (full list) when expanded */}
+              {(experience.achievements ?? []).length > 0 && (
+                <div className="mt-3 space-y-1.5">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                    Key achievements
+                  </p>
+                  {(experience.achievements ?? []).map((a, ai) => (
+                    <div
+                      key={ai}
+                      className={cn(
+                        "flex items-start gap-2 rounded-md border px-2.5 py-1.5 text-xs",
+                        type === "award"
+                          ? "border-violet/25 bg-violet/8 text-foreground/80"
+                          : "border-teal/20 bg-teal/8 text-foreground/80"
+                      )}
+                    >
+                      <CheckCircle2 className={cn("mt-0.5 h-3 w-3 shrink-0", TYPE_TEXT[type])} />
+                      <span>{a}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               {/* tech tags */}
               {experience.tech && experience.tech.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
