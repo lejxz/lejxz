@@ -4,28 +4,57 @@
       "title": "Hardware",
       "key": "hardware",
       "items": [
-        { "name": "Add your PC/laptop model", "detail": "Fill in your actual specs here — I don't have verified details on your hardware." },
-        { "name": "Add your peripherals", "detail": "Keyboard, mouse, monitor, etc." },
-        { "name": "Add anything DIY", "detail": "You maintain your own hardware — worth a mention if there's a build story here." }
+        {
+          "name": "Add your PC/laptop model",
+          "detail": "Fill in your actual specs here \u2014 I don't have verified details on your hardware."
+        },
+        {
+          "name": "Add your peripherals",
+          "detail": "Keyboard, mouse, monitor, etc."
+        },
+        {
+          "name": "Add anything DIY",
+          "detail": "You maintain your own hardware \u2014 worth a mention if there's a build story here."
+        }
       ]
     },
     {
       "title": "Editor",
       "key": "editor",
       "items": [
-        { "name": "VS Code", "detail": "Primary editor for nearly all development work." },
-        { "name": "Cursor / Claude Code", "detail": "Used for agentic development on larger builds — delegating scoped, well-specified work to AI agents." },
-        { "name": "Figma", "detail": "Used for UI design work on Hira and other frontend projects." }
+        {
+          "name": "VS Code",
+          "detail": "Primary editor for nearly all development work."
+        },
+        {
+          "name": "Cursor / Claude Code",
+          "detail": "Used for agentic development on larger builds \u2014 delegating scoped, well-specified work to AI agents."
+        },
+        {
+          "name": "Figma",
+          "detail": "Used for UI design work on Hira and other frontend projects."
+        }
       ]
     },
     {
       "title": "Stack",
       "key": "stack",
       "items": [
-        { "name": "Python", "detail": "Primary language for ML, computer vision, and backend work." },
-        { "name": "Next.js / TypeScript", "detail": "Frontend stack for this portfolio and the Hira frontend." },
-        { "name": "FastAPI + SQLite", "detail": "Backend stack behind LoadSense's cloud layer." }
+        {
+          "name": "Python",
+          "detail": "Primary language for ML, computer vision, and backend work."
+        },
+        {
+          "name": "Next.js / TypeScript",
+          "detail": "Frontend stack for this portfolio and the Hira frontend."
+        },
+        {
+          "name": "FastAPI + SQLite",
+          "detail": "Backend stack behind LoadSense's cloud layer."
+        }
       ]
     }
-  ]
+  ],
+  "heading": "Uses",
+  "subtitle": "The hardware, editor, and stack behind my day-to-day work."
 }

@@ -143,6 +143,7 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
 export function MarqueeEditor({ data, onChange }: EditorProps<any>) {
   const set = (patch: Record<string, any>) => onChange({ ...data, ...patch });
   return (
+    <div className="space-y-4">
     <SectionCard title="Ticker rows">
       <ListEditor
         items={data.rows ?? []}
@@ -168,7 +169,8 @@ export function MarqueeEditor({ data, onChange }: EditorProps<any>) {
           </div>
         )}
       />
-    </SectionCard>
+      </SectionCard>
+    </div>
   );
 }
 
@@ -248,7 +250,12 @@ export function SkillsEditor({ data, onChange }: EditorProps<any>) {
 export function ExperienceEditor({ data, onChange }: EditorProps<any>) {
   const set = (patch: Record<string, any>) => onChange({ ...data, ...patch });
   return (
-    <SectionCard title="Experience items">
+    <div className="space-y-4">
+      <SectionCard title="Heading">
+        <TextField label="Heading" value={data.heading ?? ""} onChange={(v) => set({ heading: v })} />
+        <TextAreaField label="Subtitle" value={data.subtitle ?? ""} onChange={(v) => set({ subtitle: v })} rows={2} />
+      </SectionCard>
+      <SectionCard title="Experience items">
       <ListEditor
         items={data.items ?? []}
         onChange={(items) => set({ items })}
@@ -304,7 +311,8 @@ export function ExperienceEditor({ data, onChange }: EditorProps<any>) {
           </div>
         )}
       />
-    </SectionCard>
+      </SectionCard>
+    </div>
   );
 }
 
@@ -315,7 +323,12 @@ export function ExperienceEditor({ data, onChange }: EditorProps<any>) {
 export function ProjectsEditor({ data, onChange }: EditorProps<any>) {
   const set = (patch: Record<string, any>) => onChange({ ...data, ...patch });
   return (
-    <SectionCard title="Projects">
+    <div className="space-y-4">
+      <SectionCard title="Heading">
+        <TextField label="Heading" value={data.heading ?? ""} onChange={(v) => set({ heading: v })} />
+        <TextAreaField label="Subtitle" value={data.subtitle ?? ""} onChange={(v) => set({ subtitle: v })} rows={2} />
+      </SectionCard>
+      <SectionCard title="Projects">
       <ListEditor
         items={data.projects ?? []}
         onChange={(projects) => set({ projects })}
@@ -436,7 +449,8 @@ export function ProjectsEditor({ data, onChange }: EditorProps<any>) {
           </div>
         )}
       />
-    </SectionCard>
+      </SectionCard>
+    </div>
   );
 }
 
@@ -573,7 +587,12 @@ export function SiteEditor({ data, onChange }: EditorProps<any>) {
 export function UsesEditor({ data, onChange }: EditorProps<any>) {
   const set = (patch: Record<string, any>) => onChange({ ...data, ...patch });
   return (
-    <SectionCard title="Categories">
+    <div className="space-y-4">
+      <SectionCard title="Heading">
+        <TextField label="Heading" value={data.heading ?? ""} onChange={(v) => set({ heading: v })} />
+        <TextAreaField label="Subtitle" value={data.subtitle ?? ""} onChange={(v) => set({ subtitle: v })} rows={2} />
+      </SectionCard>
+      <SectionCard title="Categories">
       <ListEditor
         items={data.categories ?? []}
         onChange={(categories) => set({ categories })}
@@ -605,6 +624,7 @@ export function UsesEditor({ data, onChange }: EditorProps<any>) {
           </div>
         )}
       />
-    </SectionCard>
+      </SectionCard>
+    </div>
   );
 }

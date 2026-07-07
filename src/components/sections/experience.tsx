@@ -32,14 +32,15 @@ export function Experience() {
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/8 blur-[150px]" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="03" kicker="Timeline" title="Experience" />
+        <SectionHeading index="03" kicker="Timeline" title={experience.heading ?? "Experience"} />
 
-        <Reveal delay={0.06}>
-          <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            A running record of coursework, hackathons, and the projects that came out of
-            them.
-          </p>
-        </Reveal>
+        {(experience.subtitle ?? "") && (
+          <Reveal delay={0.06}>
+            <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
+              {experience.subtitle}
+            </p>
+          </Reveal>
+        )}
 
         {/* Timeline — the vertical line fills as the user scrolls through it */}
         <div ref={timelineRef} className="mt-10 relative">

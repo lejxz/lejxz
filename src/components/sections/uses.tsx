@@ -48,12 +48,14 @@ export function Uses() {
       <div className="pointer-events-none absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-violet/8 blur-[150px]" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="05" kicker="Setup" title="Uses" />
-        <Reveal delay={0.06}>
-          <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            The hardware, editor, and stack behind my day-to-day work.
-          </p>
-        </Reveal>
+        <SectionHeading index="05" kicker="Setup" title={uses.heading ?? "Uses"} />
+        {(uses.subtitle ?? "") && (
+          <Reveal delay={0.06}>
+            <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
+              {uses.subtitle}
+            </p>
+          </Reveal>
+        )}
 
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
           {uses.categories.map((cat, i) => {

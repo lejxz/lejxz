@@ -3,11 +3,11 @@
     {
       "id": "exp-1",
       "type": "award",
-      "role": "AI/ML Lead — LoadSense",
+      "role": "AI/ML Lead \u2014 LoadSense",
       "org": "ASEAN AI Hackathon 2026",
-      "organization": "ASEAN AI Hackathon 2026 · Team FlowerBoys",
+      "organization": "ASEAN AI Hackathon 2026 \u00b7 Team FlowerBoys",
       "orgUrl": "https://github.com/lejxz/LoadSense",
-      "period": "Apr 2026 — Jun 2026",
+      "period": "Apr 2026 \u2014 Jun 2026",
       "location": "Cebu, Philippines (virtual finals)",
       "current": false,
       "summary": "Built LoadSense, an edge-AI + cloud occupancy platform for Philippine jeepneys, with Team FlowerBoys. Placed Top 6 in the Smart Cities track and Top 40 overall.",
@@ -21,20 +21,30 @@
         "Built the operator console, live fleet map, and alert verification workflow"
       ],
       "achievements": [
-        "Top 6, Smart Cities track — ASEAN AI Hackathon 2026",
+        "Top 6, Smart Cities track \u2014 ASEAN AI Hackathon 2026",
         "Top 40 overall, ASEAN AI Hackathon 2026",
         "Advanced to and competed in the virtual semi-finals"
       ],
-      "tech": ["Python", "YOLOv8", "FastAPI", "SQLite", "Leaflet"],
-      "tags": ["Computer Vision", "Edge AI", "FastAPI"],
+      "tech": [
+        "Python",
+        "YOLOv8",
+        "FastAPI",
+        "SQLite",
+        "Leaflet"
+      ],
+      "tags": [
+        "Computer Vision",
+        "Edge AI",
+        "FastAPI"
+      ],
       "logo": "/assets/experiences/exp-01.svg"
     },
     {
       "id": "exp-2",
       "type": "research",
-      "role": "Architecture & Research Lead — Hira",
-      "org": "HCI Coursework · USJR",
-      "organization": "HCI Coursework · University of San Jose-Recoletos",
+      "role": "Architecture & Research Lead \u2014 Hira",
+      "org": "HCI Coursework \u00b7 USJR",
+      "organization": "HCI Coursework \u00b7 University of San Jose-Recoletos",
       "orgUrl": "https://github.com/lejxz/Hira-Frontend-Only",
       "period": "2026",
       "location": "Cebu, Philippines",
@@ -53,16 +63,25 @@
         "Shipped a working frontend demo running entirely on mock data",
         "Completed a full DSR paper draft for independent publication"
       ],
-      "tech": ["Next.js", "TypeScript", "Tailwind CSS", "Figma"],
-      "tags": ["HCI", "Design Research", "Frontend"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Figma"
+      ],
+      "tags": [
+        "HCI",
+        "Design Research",
+        "Frontend"
+      ],
       "logo": "/assets/experiences/exp-02.svg"
     },
     {
       "id": "exp-3",
       "type": "work",
-      "role": "Developer — Email Security Classifier",
+      "role": "Developer \u2014 Email Security Classifier",
       "org": "Intelligent Systems Finals",
-      "organization": "Intelligent Systems Coursework · USJR",
+      "organization": "Intelligent Systems Coursework \u00b7 USJR",
       "orgUrl": "https://github.com/lejxz/IntSys-Finals-Project",
       "period": "2026",
       "location": "Cebu, Philippines",
@@ -80,17 +99,25 @@
       "achievements": [
         "Completed as a solo finals project for Intelligent Systems"
       ],
-      "tech": ["Python", "scikit-learn", "Streamlit"],
-      "tags": ["NLP", "Naive Bayes", "Security"],
+      "tech": [
+        "Python",
+        "scikit-learn",
+        "Streamlit"
+      ],
+      "tags": [
+        "NLP",
+        "Naive Bayes",
+        "Security"
+      ],
       "logo": "/assets/experiences/exp-03.svg"
     },
     {
       "id": "exp-4",
       "type": "education",
-      "role": "B.S. Computer Science — AI/ML Specialization",
+      "role": "B.S. Computer Science \u2014 AI/ML Specialization",
       "org": "University of San Jose-Recoletos",
       "organization": "University of San Jose-Recoletos",
-      "period": "2022 — 2026 (expected)",
+      "period": "2022 \u2014 2026 (expected)",
       "location": "Cebu City, Philippines",
       "current": true,
       "summary": "Studying Computer Science with a specialization in AI/ML, working across HCI, data analytics, algorithms, and IP/privacy law coursework alongside a small competition team, FlowerBoys.",
@@ -106,9 +133,18 @@
       "achievements": [
         "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (with FlowerBoys)"
       ],
-      "tech": ["Python", "C", "Algorithms"],
-      "tags": ["Education", "AI/ML"],
+      "tech": [
+        "Python",
+        "C",
+        "Algorithms"
+      ],
+      "tags": [
+        "Education",
+        "AI/ML"
+      ],
       "logo": "/assets/experiences/exp-04.svg"
     }
-  ]
+  ],
+  "heading": "Experience",
+  "subtitle": "A running record of coursework, hackathons, and the projects that came out of them."
 }

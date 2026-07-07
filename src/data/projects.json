@@ -8,36 +8,66 @@
       "year": "2026",
       "status": "shipped",
       "role": "AI/ML Lead",
-      "duration": "Apr 2026 — Jun 2026",
-      "timeline": "Apr 2026 — Jun 2026",
-      "summary": "Edge-AI + cloud occupancy platform for Philippine jeepneys, built with Team FlowerBoys for the ASEAN AI Hackathon 2026 Smart Cities track — Top 6 in track, Top 40 overall.",
+      "duration": "Apr 2026 \u2014 Jun 2026",
+      "timeline": "Apr 2026 \u2014 Jun 2026",
+      "summary": "Edge-AI + cloud occupancy platform for Philippine jeepneys, built with Team FlowerBoys for the ASEAN AI Hackathon 2026 Smart Cities track \u2014 Top 6 in track, Top 40 overall.",
       "description": [
         "Commuters, operators, and regulators all operate blind on one variable that matters most: how full is the next jeepney. LoadSense turns every public utility vehicle into a real-time occupancy sensor, closing a gap that Google Maps and existing transit apps don't cover.",
         "A YOLOv8-nano model runs fully offline on an overhead camera, performing bidirectional passenger counting and mapping the live count to a four-tier occupancy state shown on a windshield LED strip. A FastAPI + SQLite cloud layer ingests GPS and occupancy telemetry to predict ETA, forecast demand, detect route deviations and driving anomalies, and power an operator console with a live fleet map and an alert verification workflow."
       ],
       "highlights": [
-        { "label": "Result", "value": "Top 6, Smart Cities track" },
-        { "label": "Overall", "value": "Top 40, ASEAN AI Hackathon 2026" },
-        { "label": "Edge model", "value": "YOLOv8-nano" },
-        { "label": "Stack", "value": "FastAPI · SQLite · Leaflet" }
+        {
+          "label": "Result",
+          "value": "Top 6, Smart Cities track"
+        },
+        {
+          "label": "Overall",
+          "value": "Top 40, ASEAN AI Hackathon 2026"
+        },
+        {
+          "label": "Edge model",
+          "value": "YOLOv8-nano"
+        },
+        {
+          "label": "Stack",
+          "value": "FastAPI \u00b7 SQLite \u00b7 Leaflet"
+        }
       ],
       "highlightList": [
         "Bidirectional passenger counting with an offline YOLOv8-nano model",
         "Four-tier occupancy state reflected on a windshield LED strip and live map",
         "ETA prediction, demand forecasting, and route-deviation/anomaly alerts on the cloud layer",
-        "Operator console with an ack → verify → escalate alert workflow, not black-box auto-escalation"
+        "Operator console with an ack \u2192 verify \u2192 escalate alert workflow, not black-box auto-escalation"
       ],
-      "tech": ["Python", "YOLOv8", "FastAPI", "SQLite", "Leaflet", "XGBoost", "Prophet"],
-      "tags": ["Computer Vision", "Edge AI", "FastAPI"],
+      "tech": [
+        "Python",
+        "YOLOv8",
+        "FastAPI",
+        "SQLite",
+        "Leaflet",
+        "XGBoost",
+        "Prophet"
+      ],
+      "tags": [
+        "Computer Vision",
+        "Edge AI",
+        "FastAPI"
+      ],
       "links": [
-        { "label": "Source", "url": "https://github.com/lejxz/LoadSense" }
+        {
+          "label": "Source",
+          "url": "https://github.com/lejxz/LoadSense"
+        }
       ],
       "featured": true,
       "accent": "teal",
       "cover": "/assets/projects/loadsense.png",
       "thumbnail": "/assets/projects/loadsense.png",
       "gallery": [
-        { "caption": "Cover", "src": "/assets/projects/loadsense.png" }
+        {
+          "caption": "Cover",
+          "src": "/assets/projects/loadsense.png"
+        }
       ],
       "galleryImages": [
         "/assets/projects/loadsense.png"
@@ -51,37 +81,67 @@
       "year": "2026",
       "status": "wip",
       "role": "Architecture & Research Lead",
-      "duration": "2026 — Present",
-      "timeline": "2026 — Present",
-      "summary": "A persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs — built as HCI coursework and drafted into an independent Design Science Research paper.",
+      "duration": "2026 \u2014 Present",
+      "timeline": "2026 \u2014 Present",
+      "summary": "A persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs \u2014 built as HCI coursework and drafted into an independent Design Science Research paper.",
       "description": [
-        "Hira matches distinct personas — blue-collar workers, fresh graduates, returning OFWs, employers, and government agencies — against tailored flows rather than a one-size-fits-all job board.",
+        "Hira matches distinct personas \u2014 blue-collar workers, fresh graduates, returning OFWs, employers, and government agencies \u2014 against tailored flows rather than a one-size-fits-all job board.",
         "The current build is a frontend-only demo running entirely on mock data, styled with a forest-green design system and built in Next.js 16 + Tailwind v4 + TypeScript. Government API integrations (TESDA, SSS, Pag-IBIG, DMW) are deferred to a later phase."
       ],
       "highlights": [
-        { "label": "Personas", "value": "5 (worker · grad · OFW · employer · gov)" },
-        { "label": "Phase", "value": "Frontend-first, mock data" },
-        { "label": "Research", "value": "DSR paper drafted" },
-        { "label": "Stack", "value": "Next.js · Tailwind v4 · TypeScript" }
+        {
+          "label": "Personas",
+          "value": "5 (worker \u00b7 grad \u00b7 OFW \u00b7 employer \u00b7 gov)"
+        },
+        {
+          "label": "Phase",
+          "value": "Frontend-first, mock data"
+        },
+        {
+          "label": "Research",
+          "value": "DSR paper drafted"
+        },
+        {
+          "label": "Stack",
+          "value": "Next.js \u00b7 Tailwind v4 \u00b7 TypeScript"
+        }
       ],
       "highlightList": [
         "Persona-driven flows for job seekers, employers, and government agencies",
         "Full Figma design build alongside the coded frontend",
         "Independent Design Science Research paper drafted on the platform's design approach",
-        "Frontend demo requires no backend — runs on mock data"
+        "Frontend demo requires no backend \u2014 runs on mock data"
       ],
-      "tech": ["Next.js", "TypeScript", "Tailwind CSS", "Figma"],
-      "tags": ["HCI", "Design Research", "Frontend"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Figma"
+      ],
+      "tags": [
+        "HCI",
+        "Design Research",
+        "Frontend"
+      ],
       "links": [
-        { "label": "Source", "url": "https://github.com/lejxz/Hira-Frontend-Only" },
-        { "label": "Live Demo", "url": "https://lejxz.github.io/Hira-Frontend-Only/" }
+        {
+          "label": "Source",
+          "url": "https://github.com/lejxz/Hira-Frontend-Only"
+        },
+        {
+          "label": "Live Demo",
+          "url": "https://lejxz.github.io/Hira-Frontend-Only/"
+        }
       ],
       "featured": true,
       "accent": "violet",
       "cover": "/assets/projects/hira.png",
       "thumbnail": "/assets/projects/hira.png",
       "gallery": [
-        { "caption": "Cover", "src": "/assets/projects/hira.png" }
+        {
+          "caption": "Cover",
+          "src": "/assets/projects/hira.png"
+        }
       ],
       "galleryImages": [
         "/assets/projects/hira.png"
@@ -99,7 +159,7 @@
       "timeline": "2026",
       "summary": "A Naive Bayes classifier built for an Intelligent Systems final that flags fraudulent/phishing emails and prompt-injection attempts, backed by a custom labeled dataset.",
       "description": [
-        "Built a custom 300-row CSV dataset spanning three classes — safe, fraudulent, and prompt-injection emails — then built text-feature extraction and a Naive Bayes classifier around it.",
+        "Built a custom 300-row CSV dataset spanning three classes \u2014 safe, fraudulent, and prompt-injection emails \u2014 then built text-feature extraction and a Naive Bayes classifier around it.",
         "Wrapped the model in a Streamlit app so the classifier could be demonstrated live during the course defense."
       ],
       "highlightList": [
@@ -107,17 +167,31 @@
         "Naive Bayes classification with hand-built text-feature extraction",
         "Streamlit demo app for the finals defense"
       ],
-      "tech": ["Python", "scikit-learn", "Streamlit"],
-      "tags": ["NLP", "Naive Bayes", "Security"],
+      "tech": [
+        "Python",
+        "scikit-learn",
+        "Streamlit"
+      ],
+      "tags": [
+        "NLP",
+        "Naive Bayes",
+        "Security"
+      ],
       "links": [
-        { "label": "Source", "url": "https://github.com/lejxz/IntSys-Finals-Project" }
+        {
+          "label": "Source",
+          "url": "https://github.com/lejxz/IntSys-Finals-Project"
+        }
       ],
       "featured": false,
       "accent": "teal",
       "cover": "/assets/projects/email-security.png",
       "thumbnail": "/assets/projects/email-security.png",
       "gallery": [
-        { "caption": "Cover", "src": "/assets/projects/email-security.png" }
+        {
+          "caption": "Cover",
+          "src": "/assets/projects/email-security.png"
+        }
       ],
       "galleryImages": [
         "/assets/projects/email-security.png"
@@ -131,30 +205,45 @@
       "year": "2026",
       "status": "wip",
       "role": "Solo",
-      "duration": "2026 — Present",
-      "timeline": "2026 — Present",
-      "summary": "This site — an interactive personal portfolio with a hidden content dashboard, statically exported and deployed to GitHub Pages.",
+      "duration": "2026 \u2014 Present",
+      "timeline": "2026 \u2014 Present",
+      "summary": "This site \u2014 an interactive personal portfolio with a hidden content dashboard, statically exported and deployed to GitHub Pages.",
       "description": [
         "Built with Next.js 16, Framer Motion, and Tailwind CSS 4, with a Canvas 2D neural-network background and a command palette for searching sections, projects, experience, and links.",
         "All copy lives in versioned JSON files under src/data/, editable either by hand or through a hidden local dashboard that writes straight back to those files."
       ],
       "highlightList": [
         "Static-exported Next.js 16 site deployed to GitHub Pages",
-        "Command palette (⌘K) for searching the whole site",
+        "Command palette (\u2318K) for searching the whole site",
         "Hidden local dashboard for editing all copy without touching code",
         "Content-as-data: every section is driven by JSON under src/data/"
       ],
-      "tech": ["Next.js", "TypeScript", "Framer Motion", "Tailwind CSS"],
-      "tags": ["Next.js", "Framer Motion", "Tailwind CSS"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Framer Motion",
+        "Tailwind CSS"
+      ],
+      "tags": [
+        "Next.js",
+        "Framer Motion",
+        "Tailwind CSS"
+      ],
       "links": [
-        { "label": "Source", "url": "https://github.com/lejxz/lejxz" }
+        {
+          "label": "Source",
+          "url": "https://github.com/lejxz/lejxz"
+        }
       ],
       "featured": false,
       "accent": "violet",
       "cover": "/assets/projects/lejxz-dev.png",
       "thumbnail": "/assets/projects/lejxz-dev.png",
       "gallery": [
-        { "caption": "Cover", "src": "/assets/projects/lejxz-dev.png" }
+        {
+          "caption": "Cover",
+          "src": "/assets/projects/lejxz-dev.png"
+        }
       ],
       "galleryImages": [
         "/assets/projects/lejxz-dev.png"
@@ -172,7 +261,7 @@
       "timeline": "2026",
       "summary": "A personal, fully slash-command Discord music bot with YouTube and Spotify playback, queue management, lyrics, and local caching for 24/7 hosting.",
       "description": [
-        "Supports multi-source playback (YouTube, Spotify tracks/playlists/albums), full queue controls, lyrics lookup, and clean embeds — no legacy prefix commands.",
+        "Supports multi-source playback (YouTube, Spotify tracks/playlists/albums), full queue controls, lyrics lookup, and clean embeds \u2014 no legacy prefix commands.",
         "Built for always-on hosting: local audio caching with automatic cleanup, rotating logs with 7-day retention, and systemd/Task-Scheduler-friendly deployment."
       ],
       "highlightList": [
@@ -181,21 +270,36 @@
         "Rotating logs with 7-day retention",
         "Fully slash-command based Discord bot"
       ],
-      "tech": ["Python", "Discord.py"],
-      "tags": ["Discord Bot", "Python", "Tooling"],
+      "tech": [
+        "Python",
+        "Discord.py"
+      ],
+      "tags": [
+        "Discord Bot",
+        "Python",
+        "Tooling"
+      ],
       "links": [
-        { "label": "Source", "url": "https://github.com/lejxz/MusicBot" }
+        {
+          "label": "Source",
+          "url": "https://github.com/lejxz/MusicBot"
+        }
       ],
       "featured": false,
       "accent": "teal",
       "cover": "/assets/projects/musicbot.png",
       "thumbnail": "/assets/projects/musicbot.png",
       "gallery": [
-        { "caption": "Cover", "src": "/assets/projects/musicbot.png" }
+        {
+          "caption": "Cover",
+          "src": "/assets/projects/musicbot.png"
+        }
       ],
       "galleryImages": [
         "/assets/projects/musicbot.png"
       ]
     }
-  ]
+  ],
+  "heading": "Projects",
+  "subtitle": "A selection of projects spanning computer vision, HCI, and personal tooling."
 }
