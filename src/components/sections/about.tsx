@@ -32,15 +32,23 @@ export function About() {
   const yCode = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   // Auto-derive facts from top-level profile fields (no duplicate editing).
-  // Falls back to profile.facts if it exists (backward compat).
-  const derivedFacts = [
-    { label: "Location", value: profile.location },
-    { label: "Field", value: profile.field },
-    { label: "Status", value: profile.availability },
-    { label: "Role", value: profile.role },
-  ].filter((f) => f.value);
+  // The order is controlled by profile.factOrder (editable in the dashboard).
+  // If factOrder is not set, uses the default order below.
+  const allFacts: Record<string, () => { label: string; value: string }> = {
+    location: () => ({ label: "Location", value: profile.location ?? "" }),
+    field: () => ({ label: "Field", value: profile.field ?? "" }),
+    status: () => ({ label: "Status", value: profile.availability ?? "" }),
+    role: () => ({ label: "Role", value: profile.role ?? "" }),
+  };
 
-  const facts = (derivedFacts.length > 0 ? derivedFacts : (profile.facts ?? [])).map((f, i) => ({
+  const defaultOrder = ["location", "field", "status", "role"];
+  const order = (profile as any).factOrder ?? defaultOrder;
+
+  const derivedFacts = order
+    .map((key: string) => allFacts[key]?.())
+    .filter((f: { label: string; value: string } | undefined) => f && f.value);
+
+  const facts = derivedFacts.map((f: { label: string; value: string }, i: number) => ({
     ...f,
     icon: FACT_ICONS[i % FACT_ICONS.length],
   }));

@@ -101,26 +101,42 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
       </SectionCard>
 
       {/* Profile facts — auto-derived from top-level fields.
-          Location, Field, Status, Focus are generated from the Identity
-          fields above. No separate editing needed. */}
-      <SectionCard title="Profile facts (auto-derived from Identity fields above)">
+          The order is controlled by factOrder (re-orderable below). */}
+      <SectionCard title="Profile facts (auto-derived — reorder below)">
         <p className="font-mono text-[11px] text-dim">
-          These are auto-generated from the fields above:
+          Values are auto-generated from the Identity fields above. Use the ↑↓ buttons to reorder.
         </p>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
-            Location → {data.location ?? "—"}
-          </div>
-          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
-            Field → {data.field ?? "—"}
-          </div>
-          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
-            Status → {data.availability ?? "—"}
-          </div>
-          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
-            Role → {data.role ?? "—"}
-          </div>
-        </div>
+        <ListEditor
+          items={(data.factOrder ?? ["location", "field", "status", "role"]).map((key: string) => ({
+            key,
+            label: { location: "Location", field: "Field", status: "Status", role: "Role" }[key] ?? key,
+            value: { location: data.location, field: data.field, status: data.availability, role: data.role }[key] ?? "—",
+          }))}
+          onChange={(items: any[]) => set({ factOrder: items.map((i) => i.key) })}
+          makeNew={() => ({ key: "location", label: "Location", value: data.location ?? "—" })}
+          itemLabel={(f: any) => `${f.label}: ${f.value ?? "—"}`}
+          addLabel="Add fact slot"
+          renderItem={(item: any, up: (patch: any) => void) => (
+            <div className="grid grid-cols-2 gap-3">
+              <SelectField
+                label="Fact type"
+                value={item.key}
+                onChange={(v) => up({
+                  key: v,
+                  label: { location: "Location", field: "Field", status: "Status", role: "Role" }[v] ?? v,
+                  value: { location: data.location, field: data.field, status: data.availability, role: data.role }[v] ?? "—",
+                })}
+                options={[
+                  { value: "location", label: "Location" },
+                  { value: "field", label: "Field" },
+                  { value: "status", label: "Status (availability)" },
+                  { value: "role", label: "Role" },
+                ]}
+              />
+              <TextField label="Preview value" value={item.value ?? "—"} onChange={() => {}} hint="Auto-derived, read-only" />
+            </div>
+          )}
+        />
       </SectionCard>
 
       {/* Code block — fields are auto-derived, only interests + closing are editable */}

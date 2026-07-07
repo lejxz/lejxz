@@ -370,7 +370,7 @@ function PasswordGate({ onUnlock }: { onUnlock: (password: string) => void }) {
             lejxz<span className="text-dim">.dev</span> / dashboard
           </span>
         </Link>
-        <form onSubmit={submit} className="rounded-2xl border border-line bg-surface/40 p-6 backdrop-blur">
+        <form onSubmit={submit} className="rounded-2xl border border-dim/40 bg-surface/40 p-6 backdrop-blur">
           <div className="mb-4 flex items-center gap-2">
             <Lock className="h-4 w-4 text-teal" />
             <h1 className="font-mono text-sm font-bold uppercase tracking-wider text-foreground">
@@ -383,7 +383,7 @@ function PasswordGate({ onUnlock }: { onUnlock: (password: string) => void }) {
             onChange={(e) => setValue(e.target.value)}
             placeholder={getEnv() === "github" ? "GitHub PAT (github_pat_...)" : "Password"}
             autoFocus
-            className="border-line bg-surface/50 font-mono text-sm focus:border-teal/40"
+            className="border-dim/40 bg-surface/50 font-mono text-sm focus:border-teal/40"
           />
           <Button
             type="submit"

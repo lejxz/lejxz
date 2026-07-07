@@ -76,7 +76,7 @@ export function TextField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="border-line bg-surface/70 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-teal/40"
+        className="border-dim/40 bg-surface/70 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-teal/40"
       />
     </Field>
   );
@@ -106,7 +106,7 @@ export function TextAreaField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="resize-none border-line bg-surface/70 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-teal/40"
+        className="resize-none border-dim/40 bg-surface/70 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-teal/40"
       />
     </Field>
   );
@@ -140,7 +140,7 @@ export function NumberField({
         max={max}
         step={step}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="border-line bg-surface/70 font-mono text-sm text-foreground focus:border-teal/40"
+        className="border-dim/40 bg-surface/70 font-mono text-sm text-foreground focus:border-teal/40"
       />
     </Field>
   );
@@ -166,7 +166,7 @@ export function SelectField({
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-line bg-surface/70 px-3 py-2 font-mono text-sm text-foreground focus:border-teal/40 focus:outline-none"
+        className="w-full rounded-md border border-dim/40 bg-surface/70 px-3 py-2 font-mono text-sm text-foreground focus:border-teal/40 focus:outline-none"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value} className="bg-surface text-foreground">
@@ -267,7 +267,7 @@ export function TagInput({
         Clicking blank space now just focuses the input via the onClick below.
       */}
       <div
-        className="rounded-md border border-line bg-surface/70 p-2 focus-within:border-teal/40"
+        className="rounded-md border border-dim/40 bg-surface/70 p-2 focus-within:border-teal/40"
         onClick={() => inputRef.current?.focus()}
       >
         {/* tag chips — keyed by the tag value itself (unique) */}
@@ -399,7 +399,7 @@ export function ListEditor<T>({
             key={i}
             className={cn(
               "overflow-hidden rounded-xl border bg-surface/60 transition-colors",
-              isOpen ? "border-teal/30" : "border-line"
+              isOpen ? "border-teal/30" : "border-dim/40"
             )}
           >
             <div className="flex items-center gap-2 px-3 py-2">
@@ -479,7 +479,7 @@ export function SectionCard({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-line bg-surface/20 p-4">
+    <div className="rounded-xl border border-dim/30 bg-surface/30 p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-mono text-[11px] font-bold uppercase tracking-wider text-foreground/80">
           {title}
