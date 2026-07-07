@@ -1,16 +1,37 @@
 {
   "nav": [
-    { "label": "Home", "href": "/#top" },
-    { "label": "About", "href": "/#about" },
-    { "label": "Skills", "href": "/#skills" },
-    { "label": "Experience", "href": "/#experience" },
-    { "label": "Work", "href": "/#work" },
-    { "label": "Uses", "href": "/#uses" },
-    { "label": "Contact", "href": "/#contact" }
+    {
+      "label": "Home",
+      "href": "/#top"
+    },
+    {
+      "label": "About",
+      "href": "/#about"
+    },
+    {
+      "label": "Skills",
+      "href": "/#skills"
+    },
+    {
+      "label": "Experience",
+      "href": "/#experience"
+    },
+    {
+      "label": "Work",
+      "href": "/#work"
+    },
+    {
+      "label": "Uses",
+      "href": "/#uses"
+    },
+    {
+      "label": "Contact",
+      "href": "/#contact"
+    }
   ],
   "footer": {
     "note": "BSCS student at USJR specializing in AI/ML, building things that see and respond to the real world.",
-    "builtWith": "Built with Next.js · R3F · Framer Motion",
+    "builtWith": "Built with Next.js",
     "copyright": "Lejuene Delantar"
   }
 }
