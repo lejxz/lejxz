@@ -9,6 +9,10 @@ import { cn } from "@/lib/utils";
  * the cursor crosses, creating a gap. The two halves then slowly slide
  * back together and reconnect.
  *
+ * The divider's color follows the active accent theme. It reads the
+ * `--color-teal` CSS variable (the "primary accent" channel) and observes
+ * `<html>` class changes so it re-reads when the user switches accents.
+ *
  * Implementation:
  *  • The line is drawn on a <canvas> for precise pixel control.
  *  • We track the cursor's position relative to the divider.
@@ -26,6 +30,59 @@ interface Cut {
   maxGap: number; // peak gap size
   age: number; // seconds since creation
   healing: boolean;
+}
+
+interface RgbColor {
+  r: number;
+  g: number;
+  b: number;
+}
+
+/**
+ * Parse a CSS color string (hex like "#fbbf24" or rgb/rgba like
+ * "rgb(251, 191, 36)") into RGB components. Returns null if the format
+ * is unrecognized.
+ */
+function parseColor(raw: string): RgbColor | null {
+  const s = raw.trim();
+  // Hex: #rgb or #rrggbb
+  if (s.startsWith("#")) {
+    const hex = s.slice(1);
+    if (hex.length === 3) {
+      return {
+        r: parseInt(hex[0] + hex[0], 16),
+        g: parseInt(hex[1] + hex[1], 16),
+        b: parseInt(hex[2] + hex[2], 16),
+      };
+    }
+    if (hex.length === 6) {
+      return {
+        r: parseInt(hex.slice(0, 2), 16),
+        g: parseInt(hex.slice(2, 4), 16),
+        b: parseInt(hex.slice(4, 6), 16),
+      };
+    }
+  }
+  // rgb(r, g, b) or rgba(r, g, b, a)
+  const m = s.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+  if (m) {
+    return { r: +m[1], g: +m[2], b: +m[3] };
+  }
+  return null;
+}
+
+/**
+ * Read the current accent color from the --color-teal CSS variable on
+ * <html>. This is the "primary accent" channel whose value changes per
+ * accent (amber=#fbbf24, teal=#5eead4, violet=#a78bfa, etc.). Falls back
+ * to the amber default if the variable can't be parsed.
+ */
+function readAccentColor(): RgbColor {
+  if (typeof window === "undefined") return { r: 251, g: 191, b: 36 };
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue("--color-teal")
+    .trim();
+  return parseColor(raw) ?? { r: 251, g: 191, b: 36 };
 }
 
 export function SkewDivider({
@@ -48,7 +105,27 @@ export function SkewDivider({
   const LINE_Y = CANVAS_HEIGHT / 2;
   const SKEW_ANGLE = flip ? -1.2 : 1.2; // degrees
 
+  // The current accent color in RGB. Updated on mount and whenever the
+  // <html> class attribute changes (i.e. the user switched accents).
+  const accentRef = useRef<RgbColor>({ r: 251, g: 191, b: 36 });
+
   const drawRef = useRef<() => void>(() => {});
+
+  // Read the accent color and set up a MutationObserver to re-read it
+  // whenever the <html> element's class list changes (which is how accent
+  // switching works — adding/removing `accent-*` classes).
+  useEffect(() => {
+    accentRef.current = readAccentColor();
+
+    const observer = new MutationObserver(() => {
+      accentRef.current = readAccentColor();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     drawRef.current = () => {
@@ -65,12 +142,17 @@ export function SkewDivider({
     const skewRad = (SKEW_ANGLE * Math.PI) / 180;
     const halfWidth = w / 2;
 
+    // Current accent color — read from the ref so it updates when the
+    // user switches accents without needing to recreate the draw function.
+    const { r, g, b } = accentRef.current;
+    const rgba = (a: number) => `rgba(${r}, ${g}, ${b}, ${a})`;
+
     // Draw the line, skipping gaps where cuts exist.
     // We draw it as a series of segments.
     const lineGradient = ctx.createLinearGradient(0, 0, w, 0);
-    lineGradient.addColorStop(0, "rgba(94, 234, 212, 0)");
-    lineGradient.addColorStop(0.5, "rgba(94, 234, 212, 0.4)");
-    lineGradient.addColorStop(1, "rgba(94, 234, 212, 0)");
+    lineGradient.addColorStop(0, rgba(0));
+    lineGradient.addColorStop(0.5, rgba(0.4));
+    lineGradient.addColorStop(1, rgba(0));
 
     ctx.strokeStyle = lineGradient;
     ctx.lineWidth = 1;
@@ -95,7 +177,7 @@ export function SkewDivider({
       ctx.stroke();
 
       // Glow effect.
-      ctx.shadowColor = "rgba(94, 234, 212, 0.3)";
+      ctx.shadowColor = rgba(0.3);
       ctx.shadowBlur = 4;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
@@ -122,7 +204,7 @@ export function SkewDivider({
       const ly = LINE_Y + (leftX - halfWidth) * Math.tan(skewRad);
       const ry = LINE_Y + (rightX - halfWidth) * Math.tan(skewRad);
 
-      ctx.fillStyle = "rgba(94, 234, 212, 0.6)";
+      ctx.fillStyle = rgba(0.6);
       ctx.beginPath();
       ctx.arc(leftX, ly, 1.5, 0, Math.PI * 2);
       ctx.fill();
@@ -135,8 +217,8 @@ export function SkewDivider({
     if (cuts.length === 0) {
       const cx = halfWidth;
       const cy = LINE_Y;
-      ctx.fillStyle = "rgba(94, 234, 212, 0.8)";
-      ctx.shadowColor = "rgba(94, 234, 212, 0.5)";
+      ctx.fillStyle = rgba(0.8);
+      ctx.shadowColor = rgba(0.5);
       ctx.shadowBlur = 8;
       ctx.beginPath();
       ctx.arc(cx, cy, 2, 0, Math.PI * 2);
