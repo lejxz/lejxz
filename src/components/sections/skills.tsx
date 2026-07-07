@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence, useAnimationFrame } from "framer-motion";
-import { Search, X } from "lucide-react";
 import { skills } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/motion/section-heading";
@@ -27,13 +26,8 @@ const LAYER_X = skills.groups.map((_, i) =>
 );
 
 export function Skills() {
-  const [activeGroup, setActiveGroup] = useState<number | null>(null); // null = all layers
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
-
-  const q = query.trim().toLowerCase();
-  const isSearching = q.length > 0;
 
   // Build the flattened node list with computed SVG positions.
   const nodes = useMemo(
@@ -77,30 +71,16 @@ export function Skills() {
     return conns;
   }, [nodes]);
 
-  // Match function for search.
-  const matchesNode = (n: (typeof nodes)[0]) =>
-    !q ||
-    n.name.toLowerCase().includes(q) ||
-    (n.description ?? "").toLowerCase().includes(q) ||
-    n.groupTitle.toLowerCase().includes(q);
-
-  // A node is "lit" (visible) if it passes the group filter AND search.
-  const isNodeLit = (n: (typeof nodes)[0]) => {
-    if (isSearching) return matchesNode(n);
-    if (activeGroup !== null) return n.groupIdx === activeGroup;
-    return true;
-  };
+  // All nodes are always lit — no filtering. The network shows the
+  // complete skill graph at all times.
+  const isNodeLit = (_n: (typeof nodes)[0]) => true;
 
   const selected = nodes.find((n) => n.name === activeSkill) ?? null;
   const focused = hoveredSkill ?? activeSkill;
 
-  // A connection is "active" (pulsing) if both endpoints are lit AND
-  // either (a) a node is focused and is one of the endpoints, or
-  // (b) no node is focused — ambient pulse on all lit connections.
-  const isConnAmbient = (c: (typeof connections)[0]) =>
-    isNodeLit(c.from) && isNodeLit(c.to);
+  // A connection is "active" (pulsing) if either a node is focused and
+  // is one of the endpoints, or no node is focused (ambient pulse).
   const isConnFocused = (c: (typeof connections)[0]) =>
-    isConnAmbient(c) &&
     focused !== null &&
     (c.from.name === focused || c.to.name === focused);
 
@@ -118,81 +98,18 @@ export function Skills() {
           </Reveal>
         )}
 
-        {/* Group tabs + search */}
+        {/* Layer legend — static labels showing the 3 groups as network layers */}
         <Reveal>
-          <div className="mt-10 flex flex-wrap items-center gap-2">
-            {/* "All layers" tab */}
-            <button
-              type="button"
-              onClick={() => {
-                setActiveGroup(null);
-                setActiveSkill(null);
-                setQuery("");
-              }}
-              className={cn(
-                "relative flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
-                activeGroup === null && !isSearching
-                  ? "border-teal/40 text-teal"
-                  : "border-line text-dim hover:border-teal/30 hover:text-foreground"
-              )}
-            >
-              {activeGroup === null && !isSearching && (
-                <motion.span
-                  layoutId="skill-group-active"
-                  className="absolute inset-0 -z-10 rounded-full bg-teal/10"
-                  transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                />
-              )}
-              <Icon name="network" className="h-3.5 w-3.5" />
-              All layers
-            </button>
+          <div className="mt-10 flex flex-wrap items-center gap-4 font-mono text-xs text-dim">
             {skills.groups.map((g, i) => (
-              <button
-                key={g.key}
-                type="button"
-                onClick={() => {
-                  setActiveGroup(i);
-                  setActiveSkill(null);
-                  setQuery("");
-                }}
-                className={cn(
-                  "relative flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
-                  activeGroup === i && !isSearching
-                    ? "border-teal/40 text-teal"
-                    : "border-line text-dim hover:border-teal/30 hover:text-foreground"
+              <span key={g.key} className="flex items-center gap-1.5">
+                <Icon name={g.icon} className="h-3.5 w-3.5 text-teal/60" />
+                <span className="text-foreground/70">{g.title}</span>
+                {i < skills.groups.length - 1 && (
+                  <span className="ml-2 text-dim/40">→</span>
                 )}
-              >
-                {activeGroup === i && !isSearching && (
-                  <motion.span
-                    layoutId="skill-group-active"
-                    className="absolute inset-0 -z-10 rounded-full bg-teal/10"
-                    transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                  />
-                )}
-                <Icon name={g.icon} className="h-3.5 w-3.5" />
-                {g.title}
-              </button>
+              </span>
             ))}
-            {/* Search */}
-            <div className="relative ml-auto w-full sm:w-44">
-              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-dim" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="search skills…"
-                className="w-full rounded-full border border-line bg-surface/40 py-1.5 pl-8 pr-7 font-mono text-xs text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none"
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  aria-label="Clear search"
-                  className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center rounded text-dim hover:text-teal"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              )}
-            </div>
           </div>
         </Reveal>
 
@@ -248,7 +165,6 @@ export function Skills() {
 
               {/* Connection lines (synapses) */}
               {connections.map((c) => {
-                const ambient = isConnAmbient(c);
                 const focusedConn = isConnFocused(c);
                 return (
                   <line
@@ -260,17 +176,11 @@ export function Skills() {
                     stroke="var(--color-teal)"
                     strokeWidth={focusedConn ? 1.5 : 1}
                     strokeDasharray="4 6"
-                    opacity={
-                      focusedConn
-                        ? 0.45
-                        : ambient
-                        ? 0.12
-                        : 0.04
-                    }
+                    opacity={focusedConn ? 0.5 : 0.1}
                     className={
                       focusedConn
                         ? "synapse-flow"
-                        : ambient && !focused
+                        : !focused
                         ? "synapse-flow-slow"
                         : undefined
                     }
@@ -282,7 +192,6 @@ export function Skills() {
               {/* Nodes (neurons) */}
               {nodes.map((node, i) => {
                 const r = 18 + (node.level / 100) * 8;
-                const lit = isNodeLit(node);
                 const isSelected = activeSkill === node.name;
                 const isHovered = hoveredSkill === node.name;
                 const isFocused = isSelected || isHovered;
@@ -306,10 +215,10 @@ export function Skills() {
                       stiffness: 200,
                       damping: 16,
                     }}
-                    style={{ cursor: "pointer", transition: "opacity 0.3s", opacity: lit ? 1 : 0.15 }}
+                    style={{ cursor: "pointer", transition: "opacity 0.3s" }}
                   >
                     {/* Glow halo on focused nodes */}
-                    {isFocused && lit && (
+                    {isFocused && (
                       <circle
                         cx={node.x}
                         cy={node.y}
@@ -329,18 +238,19 @@ export function Skills() {
                           : "var(--color-surface)"
                       }
                       stroke="var(--color-teal)"
-                      strokeWidth={isSelected ? 0 : 2}
-                      opacity={lit ? 1 : 0.3}
-                      style={{ transition: "fill 0.2s, opacity 0.3s" }}
+                      strokeWidth={isSelected ? 0 : 1.5}
+                      opacity={1}
+                      style={{ transition: "fill 0.2s" }}
                     />
-                    {/* Inner fill — opacity scales with proficiency */}
+                    {/* Inner fill — subtle fill that scales with proficiency.
+                        Kept low-opacity so the network doesn't look cluttered. */}
                     {!isSelected && (
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={r - 4}
+                        r={r - 5}
                         fill="var(--color-teal)"
-                        opacity={(0.12 + (node.level / 100) * 0.28) * (lit ? 1 : 0.15)}
+                        opacity={0.06 + (node.level / 100) * 0.1}
                         style={{ transition: "opacity 0.3s" }}
                       />
                     )}
@@ -358,9 +268,9 @@ export function Skills() {
                       fontSize={11}
                       fontFamily="var(--font-space-mono), monospace"
                       fontWeight={700}
-                      opacity={lit ? 0.95 : 0.2}
+                      opacity={0.9}
                       style={{
-                        transition: "opacity 0.3s, fill 0.2s",
+                        transition: "fill 0.2s",
                         pointerEvents: "none",
                       }}
                     >
@@ -379,9 +289,9 @@ export function Skills() {
                       fontSize={11}
                       fontFamily="var(--font-space-mono), monospace"
                       fontWeight={500}
-                      opacity={lit ? 0.85 : 0.15}
+                      opacity={0.8}
                       style={{
-                        transition: "opacity 0.3s, fill 0.2s",
+                        transition: "fill 0.2s",
                         pointerEvents: "none",
                       }}
                     >
@@ -503,10 +413,29 @@ function useCountUp(target: number, active: boolean, duration = 1100) {
 function SkillGauge({ level, name }: { level: number; name?: string }) {
   const [hovered, setHovered] = useState(false);
   const [animate, setAnimate] = useState(false);
+  const [accentColor, setAccentColor] = useState<string>("#fbbf24");
   useEffect(() => {
     const raf = requestAnimationFrame(() => setAnimate(true));
     return () => cancelAnimationFrame(raf);
   }, []);
+
+  // Read the current accent color from --color-teal (the primary accent
+  // channel) and observe <html> class changes so the gauge recolors when
+  // the user switches accents. Falls back to amber (#fbbf24).
+  useEffect(() => {
+    const read = () =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-teal")
+        .trim() || "#fbbf24";
+    setAccentColor(read());
+    const observer = new MutationObserver(() => setAccentColor(read()));
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const r = 52;
   const circ = 2 * Math.PI * r;
 
@@ -535,8 +464,8 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
       >
         <defs>
           <linearGradient id="skill-gauge-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#5eead4" />
-            <stop offset="100%" stopColor="#a78bfa" />
+            <stop offset="0%" stopColor="var(--color-teal)" />
+            <stop offset="100%" stopColor="var(--color-violet)" />
           </linearGradient>
         </defs>
         <circle cx="64" cy="64" r={r} fill="none" stroke="var(--color-line)" strokeWidth="8" />
@@ -558,8 +487,8 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
           style={{
             filter: hovered
-              ? "drop-shadow(0 0 12px rgba(94,234,212,0.7))"
-              : "drop-shadow(0 0 6px rgba(94,234,212,0.45))",
+              ? `drop-shadow(0 0 12px ${accentColor}b3)`
+              : `drop-shadow(0 0 6px ${accentColor}73)`,
           }}
         />
       </motion.svg>
