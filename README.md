@@ -13,7 +13,7 @@
 
 | Name | Description |
 | :---: | --- |
-| [LoadSense](https://github.com/lejxz/LoadSense) | A lightweight edge‑vision and GPS‑driven platform that fuses deep learning occupancy monitoring with AI route prediction. It delivers real‑time feedback to drivers, commuters, and operators, advancing SDGs 9 (Industry, Innovation, Infrastructure) and 11 (Sustainable Cities). |
+| [LoadSense](https://github.com/lejxz/LoadSense) |Integrated AI occupancy and transit intelligence for public utility vehicles (PUVs). Real information. Safer rides. Smarter cities. — Top 6 Smart Cities, ASEAN AI Hackathon 2026. |
 
 
 ## Stats
