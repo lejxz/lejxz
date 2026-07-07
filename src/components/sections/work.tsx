@@ -32,8 +32,7 @@ export function Work() {
 
         <Reveal delay={0.06}>
           <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            A selection of projects spanning computer vision, HCI, and personal tooling.
           </p>
         </Reveal>
 

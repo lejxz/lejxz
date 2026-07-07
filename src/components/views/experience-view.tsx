@@ -75,8 +75,7 @@ export function ExperienceFull() {
 
         <Reveal delay={0.06}>
           <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            The complete timeline — filter by work, education, research, or awards.
           </p>
         </Reveal>
 
@@ -137,7 +136,7 @@ export function ExperienceFull() {
 
         {items.length === 0 && (
           <div className="mt-10 rounded-2xl border border-dashed border-line p-10 text-center text-sm text-dim">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            No entries match this filter.
           </div>
         )}
       </div>

@@ -51,8 +51,7 @@ export function Uses() {
         <SectionHeading index="05" kicker="Setup" title="Uses" />
         <Reveal delay={0.06}>
           <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            The hardware, editor, and stack behind my day-to-day work.
           </p>
         </Reveal>
 

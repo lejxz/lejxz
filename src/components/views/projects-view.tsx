@@ -152,8 +152,7 @@ export function ProjectsFull() {
 
         <Reveal delay={0.06}>
           <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            The complete list of projects — searchable and filterable by category.
           </p>
         </Reveal>
 
@@ -301,7 +300,7 @@ export function ProjectsFull() {
                 exit={{ opacity: 0 }}
                 className="rounded-2xl border border-dashed border-line p-12 text-center"
               >
-                <p className="text-sm text-dim">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className="text-sm text-dim">No projects match your search or filters.</p>
                 <button
                   type="button"
                   onClick={resetAll}

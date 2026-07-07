@@ -9,7 +9,7 @@
     { "label": "Contact", "href": "/#contact" }
   ],
   "footer": {
-    "note": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "note": "BSCS student at USJR specializing in AI/ML, building things that see and respond to the real world.",
     "builtWith": "Built with Next.js · R3F · Framer Motion",
     "copyright": "Lejuene Delantar"
   }

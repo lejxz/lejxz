@@ -90,9 +90,8 @@ export function Contact() {
               <SectionHeading index="06" kicker="Get in touch" title="Contact" />
               <Reveal delay={0.08}>
                 <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-dim sm:text-lg">
-                  {profile.availabilityNote ?? profile.availability}. Lorem ipsum dolor sit amet,
-                  consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua.
+                  {profile.availabilityNote ?? profile.availability}. Feel free to reach out about
+                  collaborations, opportunities, or just to talk about computer vision and AI.
                 </p>
               </Reveal>
 
