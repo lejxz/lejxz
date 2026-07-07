@@ -94,7 +94,7 @@ export function ProjectModal({
         <DialogDescription className="sr-only">
           Detailed view of {project?.title}.
         </DialogDescription>
-        <DialogContent showCloseButton={false} className="max-h-[92svh] max-w-5xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
+        <DialogContent showCloseButton={false} className="sm:max-w-7xl max-h-[92svh] gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
           <AnimatePresence mode="wait">
             {project && (
               <motion.div
@@ -181,101 +181,118 @@ export function ProjectModal({
                       <p className="text-sm leading-relaxed text-foreground/90">{project.summary}</p>
                     </div>
 
-                    {/* description */}
-                    {project.description.length > 0 && (
-                      <div className="mt-5">
-                        <h3 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-dim">
-                          Overview
-                        </h3>
-                        <div className="space-y-2.5">
-                          {project.description.map((p, i) => (
-                            <p key={i} className="text-sm leading-relaxed text-foreground/80">
-                              {p}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* highlights */}
-                    {project.highlights && project.highlights.length > 0 && (
-                      <div className="mt-5">
-                        <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
-                          Highlights
-                        </h3>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          {project.highlights.map((h) => (
-                            <div
-                              key={h.label}
-                              className="rounded-xl border border-line bg-surface/40 p-3"
-                            >
-                              <p className="font-mono text-[10px] uppercase tracking-wider text-dim">
-                                {h.label}
-                              </p>
-                              <p className={cn("mt-0.5 font-mono text-sm font-bold", accentText)}>
-                                {h.value}
-                              </p>
+                    {/* Two-column layout on large screens for the detailed content.
+                        Left: overview + key outcomes; Right: highlights + tech + links.
+                        This uses the extra width from max-w-7xl without making text
+                        lines uncomfortably long. */}
+                    <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-5 lg:grid-cols-2">
+                      {/* Left column — narrative content */}
+                      <div className="space-y-5">
+                        {/* description */}
+                        {project.description.length > 0 && (
+                          <div>
+                            <h3 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-dim">
+                              Overview
+                            </h3>
+                            <div className="space-y-2.5">
+                              {project.description.map((p, i) => (
+                                <p key={i} className="text-sm leading-relaxed text-foreground/80">
+                                  {p}
+                                </p>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                          </div>
+                        )}
 
-                    {/* highlight list (bullet style) */}
-                    {project.highlightList && project.highlightList.length > 0 && (
-                      <div className="mt-5">
-                        <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
-                          Key outcomes
-                        </h3>
-                        <ul className="space-y-1.5">
-                          {project.highlightList.map((h, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-                              <CheckCircle2 className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", accentText)} />
-                              <span>{h}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        {/* highlight list (bullet style) */}
+                        {project.highlightList && project.highlightList.length > 0 && (
+                          <div>
+                            <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
+                              Key outcomes
+                            </h3>
+                            <ul className="space-y-1.5">
+                              {project.highlightList.map((h, i) => (
+                                <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
+                                  <CheckCircle2 className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", accentText)} />
+                                  <span>{h}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
-                    )}
 
-                    {/* tech stack */}
-                    {((project.tech?.length ?? 0) > 0 || project.tags.length > 0) && (
-                      <div className="mt-5">
-                        <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
-                          Tech stack
-                        </h3>
-                        <div className="flex flex-wrap gap-1.5">
-                          {(project.tech ?? project.tags).map((t) => (
-                            <span
-                              key={t}
-                              className="rounded-md border border-line bg-surface-2/60 px-2.5 py-1 font-mono text-[11px] text-foreground/80"
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
+                      {/* Right column — structured metadata */}
+                      <div className="space-y-5">
+                        {/* highlights */}
+                        {project.highlights && project.highlights.length > 0 && (
+                          <div>
+                            <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
+                              Highlights
+                            </h3>
+                            <div className="grid grid-cols-2 gap-2">
+                              {project.highlights.map((h) => (
+                                <div
+                                  key={h.label}
+                                  className="rounded-xl border border-line bg-surface/40 p-3"
+                                >
+                                  <p className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                                    {h.label}
+                                  </p>
+                                  <p className={cn("mt-0.5 font-mono text-sm font-bold", accentText)}>
+                                    {h.value}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* tech stack */}
+                        {((project.tech?.length ?? 0) > 0 || project.tags.length > 0) && (
+                          <div>
+                            <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
+                              Tech stack
+                            </h3>
+                            <div className="flex flex-wrap gap-1.5">
+                              {(project.tech ?? project.tags).map((t) => (
+                                <span
+                                  key={t}
+                                  className="rounded-md border border-line bg-surface-2/60 px-2.5 py-1 font-mono text-[11px] text-foreground/80"
+                                >
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* links */}
+                        {project.links.length > 0 && (
+                          <div>
+                            <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
+                              Links
+                            </h3>
+                            <div className="flex flex-wrap gap-2.5">
+                              {project.links.map((l) => (
+                                <a
+                                  key={l.label}
+                                  href={l.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="group inline-flex items-center gap-1.5 rounded-full border border-teal/40 bg-teal/10 px-4 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
+                                >
+                                  {l.label}
+                                  <ExternalLink className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
 
-                    {/* links */}
-                    {project.links.length > 0 && (
-                      <div className="mt-5 flex flex-wrap gap-2.5">
-                        {project.links.map((l) => (
-                          <a
-                            key={l.label}
-                            href={l.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="group inline-flex items-center gap-1.5 rounded-full border border-teal/40 bg-teal/10 px-4 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
-                          >
-                            {l.label}
-                            <ExternalLink className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                          </a>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* related projects */}
+                    {/* related projects — full width below the 2-col grid */}
                     <RelatedProjects project={project} />
 
                     {/* keyboard hint footer */}

@@ -64,7 +64,7 @@ export function ExperienceModal({
       <DialogDescription className="sr-only">
         Detailed view of {experience.role} experience.
       </DialogDescription>
-      <DialogContent showCloseButton={false} className="max-h-[92svh] max-w-4xl gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
+      <DialogContent showCloseButton={false} className="sm:max-w-7xl max-h-[92svh] gap-0 overflow-hidden border-line bg-popover/95 p-0 backdrop-blur-xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={experience.id}
@@ -152,57 +152,69 @@ export function ExperienceModal({
                   <p className="text-sm leading-relaxed text-foreground/90">{experience.summary}</p>
                 </div>
 
-                {/* description */}
-                {experience.description && experience.description.length > 0 && (
-                  <div className="mt-5">
-                    <h3 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-dim">
-                      Overview
-                    </h3>
-                    <div className="space-y-2.5">
-                      {experience.description.map((p, i) => (
-                        <p key={i} className="text-sm leading-relaxed text-foreground/80">
-                          {p}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {/* Two-column layout on large screens for the detailed content.
+                    Left: overview + achievements; Right: tech + (future sidebar).
+                    This uses the extra width from max-w-7xl without making text
+                    lines uncomfortably long. */}
+                <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-5 lg:grid-cols-2">
+                  {/* Left column — narrative content */}
+                  <div className="space-y-5">
+                    {/* description */}
+                    {experience.description && experience.description.length > 0 && (
+                      <div>
+                        <h3 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-dim">
+                          Overview
+                        </h3>
+                        <div className="space-y-2.5">
+                          {experience.description.map((p, i) => (
+                            <p key={i} className="text-sm leading-relaxed text-foreground/80">
+                              {p}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                {/* achievements */}
-                {achievements.length > 0 && (
-                  <div className="mt-5">
-                    <h3 className="mb-2.5 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-dim">
-                      <Briefcase className="h-3 w-3" /> Key achievements
-                    </h3>
-                    <ul className="space-y-2">
-                      {achievements.map((a, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-                          <CheckCircle2 className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", TYPE_TEXT[type])} />
-                          <span>{a}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {/* achievements */}
+                    {achievements.length > 0 && (
+                      <div>
+                        <h3 className="mb-2.5 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-dim">
+                          <Briefcase className="h-3 w-3" /> Key achievements
+                        </h3>
+                        <ul className="space-y-2">
+                          {achievements.map((a, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
+                              <CheckCircle2 className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", TYPE_TEXT[type])} />
+                              <span>{a}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
-                )}
 
-                {/* tech */}
-                {tech.length > 0 && (
-                  <div className="mt-5">
-                    <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
-                      Stack &amp; focus
-                    </h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {tech.map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-md border border-line bg-surface-2/60 px-2.5 py-1 font-mono text-[11px] text-foreground/80"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
+                  {/* Right column — structured metadata */}
+                  <div className="space-y-5">
+                    {/* tech */}
+                    {tech.length > 0 && (
+                      <div>
+                        <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-wider text-dim">
+                          Stack &amp; focus
+                        </h3>
+                        <div className="flex flex-wrap gap-1.5">
+                          {tech.map((t) => (
+                            <span
+                              key={t}
+                              className="rounded-md border border-line bg-surface-2/60 px-2.5 py-1 font-mono text-[11px] text-foreground/80"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
 
                 {/* Back-to-top button */}
                 <div className="mt-6 flex justify-center border-t border-line pt-4">
