@@ -172,19 +172,6 @@ export interface ProjectsData {
   projects: Project[];
 }
 
-export interface NowItem {
-  label: string;
-  value: string;
-  detail?: string;
-  href?: string;
-  icon?: IconName;
-}
-
-export interface NowData {
-  updated: string;
-  items: NowItem[];
-}
-
 export interface FooterLink {
   label: string;
   href: string;
@@ -215,19 +202,4 @@ export interface SiteData {
     builtWith?: string;
     copyright?: string;
   };
-}
-
-export interface UsesItem {
-  name: string;
-  detail?: string;
-}
-
-export interface UsesCategory {
-  title: string;
-  key: string;
-  items: UsesItem[];
-}
-
-export interface UsesData {
-  categories: UsesCategory[];
 }

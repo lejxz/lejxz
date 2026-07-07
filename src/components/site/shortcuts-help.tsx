@@ -20,11 +20,9 @@ const SHORTCUTS: Shortcut[] = [
   { keys: "T", label: "Cycle accent color" },
   { keys: "G H", label: "Go home" },
   { keys: "G P", label: "Jump to projects (work)" },
-  { keys: "G A", label: "Jump to about" },
   { keys: "G S", label: "Jump to skills" },
   { keys: "G E", label: "Jump to experience" },
   { keys: "G W", label: "Jump to work" },
-  { keys: "G U", label: "Jump to uses" },
   { keys: "G C", label: "Jump to contact" },
   { keys: "?", label: "Show this help" },
   { keys: "Esc", label: "Close dialogs" },
@@ -43,7 +41,7 @@ export function ShortcutsHelp() {
         setOpen((o) => !o);
         return;
       }
-      // 'T' cycles through accent colors
+      // 'T' cycles through accent colors (amber is the default — no class)
       if (
         (e.key === "t" || e.key === "T") &&
         !e.metaKey &&
@@ -52,18 +50,19 @@ export function ShortcutsHelp() {
       ) {
         if (document.querySelector("[role=dialog]")) return;
         e.preventDefault();
-        const accents = ["teal", "violet", "emerald", "amber", "rose", "cyan"];
+        const accents = ["amber", "teal", "violet", "emerald", "rose", "cyan"];
         const root = document.documentElement;
-        // Find current accent
+        // Find current accent (amber = no class, others have accent-* class)
         let currentIdx = 0;
         accents.forEach((a, i) => {
-          if (a !== "teal" && root.classList.contains("accent-" + a)) currentIdx = i;
+          if (a !== "amber" && root.classList.contains("accent-" + a)) currentIdx = i;
         });
         const nextIdx = (currentIdx + 1) % accents.length;
         const next = accents[nextIdx];
         // Remove all accent classes
         accents.forEach((a) => root.classList.remove("accent-" + a));
-        if (next !== "teal") root.classList.add("accent-" + next);
+        // Amber is the default (no class needed)
+        if (next !== "amber") root.classList.add("accent-" + next);
         try {
           localStorage.setItem("lejxz-accent", next);
         } catch {
@@ -97,11 +96,9 @@ export function ShortcutsHelp() {
         const map: Record<string, string> = {
           h: "/#top",
           p: "/#work",
-          a: "/#about",
           s: "/#skills",
           e: "/#experience",
           w: "/#work",
-          u: "/#uses",
           c: "/#contact",
         };
         const href = map[e.key.toLowerCase()];

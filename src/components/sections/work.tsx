@@ -31,7 +31,7 @@ export function Work() {
       <div className="pointer-events-none absolute -left-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-violet/8 blur-[150px]" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="04" kicker="Selected work" title={projects.heading ?? "Projects"} />
+        <SectionHeading index="03" kicker="Selected work" title={projects.heading ?? "Projects"} />
 
         {(projects.subtitle ?? "") && (
           <Reveal delay={0.06}>

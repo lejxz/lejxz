@@ -475,52 +475,6 @@ export function ProjectsEditor({ data, onChange }: EditorProps<any>) {
 }
 
 // ===========================================================================
-// NOW
-// ===========================================================================
-
-export function NowEditor({ data, onChange }: EditorProps<any>) {
-  const set = (patch: Record<string, any>) => onChange({ ...data, ...patch });
-  return (
-    <div className="space-y-4">
-      <SectionCard title="Meta">
-        <TextField label="Updated (YYYY-MM)" value={data.updated ?? ""} onChange={(v) => set({ updated: v })} />
-      </SectionCard>
-      <SectionCard title="Now items (About status widget)">
-        <ListEditor
-          items={data.items ?? []}
-          onChange={(items) => set({ items })}
-          makeNew={() => ({ label: "New", value: "", detail: "", icon: "sparkles" })}
-          itemLabel={(n) => `${n.label}: ${n.value}`}
-          addLabel="Add now item"
-          renderItem={(item, up) => (
-            <div className="space-y-2">
-              <div className="grid grid-cols-2 gap-3">
-                <TextField label="Label" value={item.label} onChange={(v) => up({ label: v })} />
-                <SelectField
-                  label="Icon"
-                  value={item.icon ?? "sparkles"}
-                  onChange={(v) => up({ icon: v })}
-                  options={[
-                    { value: "cpu", label: "CPU" },
-                    { value: "book", label: "Book" },
-                    { value: "sparkles", label: "Sparkles" },
-                    { value: "graduation-cap", label: "Graduation" },
-                    { value: "brain", label: "Brain" },
-                    { value: "code", label: "Code" },
-                  ]}
-                />
-              </div>
-              <TextField label="Value" value={item.value} onChange={(v) => up({ value: v })} />
-              <TextAreaField label="Detail" value={item.detail ?? ""} onChange={(v) => up({ detail: v })} rows={2} />
-            </div>
-          )}
-        />
-      </SectionCard>
-    </div>
-  );
-}
-
-// ===========================================================================
 // FOOTER
 // ===========================================================================
 
@@ -595,55 +549,6 @@ export function SiteEditor({ data, onChange }: EditorProps<any>) {
         <TextAreaField label="Note" value={data.footer?.note ?? ""} onChange={(v) => set({ footer: { ...data.footer, note: v } })} rows={2} />
         <TextField label="Built with" value={data.footer?.builtWith ?? ""} onChange={(v) => set({ footer: { ...data.footer, builtWith: v } })} />
         <TextField label="Copyright" value={data.footer?.copyright ?? ""} onChange={(v) => set({ footer: { ...data.footer, copyright: v } })} />
-      </SectionCard>
-    </div>
-  );
-}
-
-// ===========================================================================
-// USES
-// ===========================================================================
-
-export function UsesEditor({ data, onChange }: EditorProps<any>) {
-  const set = (patch: Record<string, any>) => onChange({ ...data, ...patch });
-  return (
-    <div className="space-y-4">
-      <SectionCard title="Heading">
-        <TextField label="Heading" value={data.heading ?? ""} onChange={(v) => set({ heading: v })} />
-        <TextAreaField label="Subtitle" value={data.subtitle ?? ""} onChange={(v) => set({ subtitle: v })} rows={2} />
-      </SectionCard>
-      <SectionCard title="Categories">
-      <ListEditor
-        items={data.categories ?? []}
-        onChange={(categories) => set({ categories })}
-        makeNew={() => ({ title: "New", key: "new", items: [] })}
-        itemLabel={(c) => c.title}
-        addLabel="Add category"
-        renderItem={(cat, up) => (
-          <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-3">
-              <TextField label="Title" value={cat.title} onChange={(v) => up({ title: v })} />
-              <TextField label="Key" value={cat.key} onChange={(v) => up({ key: v })} />
-            </div>
-            <div className="rounded-lg border border-line p-2">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-dim">Items</p>
-              <ListEditor
-                items={cat.items ?? []}
-                onChange={(v) => up({ items: v })}
-                makeNew={() => ({ name: "New", detail: "" })}
-                itemLabel={(i) => i.name}
-                addLabel="Add item"
-                renderItem={(item, iup) => (
-                  <div className="space-y-2">
-                    <TextField label="Name" value={item.name} onChange={(v) => iup({ name: v })} />
-                    <TextAreaField label="Detail" value={item.detail ?? ""} onChange={(v) => iup({ detail: v })} rows={2} />
-                  </div>
-                )}
-              />
-            </div>
-          </div>
-        )}
-      />
       </SectionCard>
     </div>
   );

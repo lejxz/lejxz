@@ -87,12 +87,12 @@ export default function NotFound() {
 
           {/* quick links */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-xs text-dim">
-            <Link href="/#about" className="transition-colors hover:text-teal">
-              ~/about
-            </Link>
-            <span className="text-dim/40">·</span>
             <Link href="/#skills" className="transition-colors hover:text-teal">
               ~/skills
+            </Link>
+            <span className="text-dim/40">·</span>
+            <Link href="/#experience" className="transition-colors hover:text-teal">
+              ~/experience
             </Link>
             <span className="text-dim/40">·</span>
             <Link href="/#work" className="transition-colors hover:text-teal">

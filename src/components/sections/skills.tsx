@@ -63,7 +63,7 @@ export function Skills() {
       <div className="pointer-events-none absolute -left-40 top-1/3 h-[30rem] w-[30rem] rounded-full bg-violet/8 blur-[150px]" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="02" kicker="Capabilities" title={skills.heading ?? "Skills"} />
+        <SectionHeading index="01" kicker="Capabilities" title={skills.heading ?? "Skills"} />
         {skills.subtitle && (
           <Reveal delay={0.06}>
             <p className="mt-3 max-w-2xl text-pretty text-base text-dim sm:text-lg">

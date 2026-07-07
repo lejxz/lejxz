@@ -29,10 +29,8 @@ import {
   SkillsEditor,
   ExperienceEditor,
   ProjectsEditor,
-  NowEditor,
   FooterEditor,
   SiteEditor,
-  UsesEditor,
 } from "@/components/dashboard/editors";
 
 // Fallback data baked into the static bundle (read-only on GitHub Pages).
@@ -41,10 +39,8 @@ import marqueeFallback from "@/data/marquee.json";
 import skillsFallback from "@/data/skills.json";
 import experienceFallback from "@/data/experience.json";
 import projectsFallback from "@/data/projects.json";
-import nowFallback from "@/data/now.json";
 import footerFallback from "@/data/footer.json";
 import siteFallback from "@/data/site.json";
-import usesFallback from "@/data/uses.json";
 
 const PW_STORAGE_KEY = "lejxz_dashboard_pw";
 const PORT = 3030;
@@ -66,10 +62,8 @@ type FileName =
   | "skills"
   | "experience"
   | "projects"
-  | "now"
   | "footer"
-  | "site"
-  | "uses";
+  | "site";
 
 const FILES: { name: FileName; label: string; desc: string }[] = [
   { name: "profile", label: "Profile", desc: "Identity, bio, stats, socials" },
@@ -77,10 +71,8 @@ const FILES: { name: FileName; label: string; desc: string }[] = [
   { name: "skills", label: "Skills", desc: "Groups, bars, gauge, tech marquee" },
   { name: "experience", label: "Experience", desc: "Timeline items" },
   { name: "projects", label: "Projects", desc: "Work grid entries" },
-  { name: "now", label: "Now", desc: "Current focus cards" },
   { name: "footer", label: "Footer", desc: "Footer note + link columns" },
   { name: "site", label: "Site", desc: "Site-wide metadata" },
-  { name: "uses", label: "Uses", desc: "Gear / uses page" },
 ];
 
 const FALLBACKS: Record<FileName, unknown> = {
@@ -89,10 +81,8 @@ const FALLBACKS: Record<FileName, unknown> = {
   skills: skillsFallback,
   experience: experienceFallback,
   projects: projectsFallback,
-  now: nowFallback,
   footer: footerFallback,
   site: siteFallback,
-  uses: usesFallback,
 };
 
 /**
@@ -240,10 +230,8 @@ const EDITORS: Record<FileName, React.ComponentType<{ data: any; onChange: (n: a
   skills: SkillsEditor,
   experience: ExperienceEditor,
   projects: ProjectsEditor,
-  now: NowEditor,
   footer: FooterEditor,
   site: SiteEditor,
-  uses: UsesEditor,
 };
 
 // ---------------------------------------------------------------------------
@@ -815,10 +803,8 @@ function GuideModal({ open, onClose }: { open: boolean; onClose: () => void }) {
               <p>• <span className="text-foreground/80">skills.json</span> — Skill groups, levels, descriptions</p>
               <p>• <span className="text-foreground/80">experience.json</span> — Timeline entries (work, education, research, awards)</p>
               <p>• <span className="text-foreground/80">projects.json</span> — Project cards (cover, tech, links, highlights)</p>
-              <p>• <span className="text-foreground/80">now.json</span> — "Currently" status widget</p>
               <p>• <span className="text-foreground/80">footer.json</span> — Footer note + link columns</p>
               <p>• <span className="text-foreground/80">site.json</span> — Navigation items + footer meta</p>
-              <p>• <span className="text-foreground/80">uses.json</span> — Gear/setup categories</p>
             </div>
           </section>
 

@@ -32,7 +32,7 @@ export function Experience() {
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/8 blur-[150px]" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <SectionHeading index="03" kicker="Timeline" title={experience.heading ?? "Experience"} />
+        <SectionHeading index="02" kicker="Timeline" title={experience.heading ?? "Experience"} />
 
         {(experience.subtitle ?? "") && (
           <Reveal delay={0.06}>

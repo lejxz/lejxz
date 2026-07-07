@@ -37,11 +37,9 @@ export function SectionProgress() {
     if (!mounted) return;
     const SECTION_IDS = [
       "top",
-      "about",
       "skills",
       "experience",
       "work",
-      "uses",
       "contact",
     ];
     const observer = new IntersectionObserver(

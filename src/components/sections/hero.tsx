@@ -271,7 +271,7 @@ function ScrollHint({ opacity }: { opacity: ReturnType<typeof useTransform> }) {
     <motion.button
       style={{ opacity }}
       onClick={() =>
-        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })
+        document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })
       }
       className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-dim transition-colors hover:text-teal"
       aria-label="Scroll down to explore"

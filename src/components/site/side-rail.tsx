@@ -5,11 +5,9 @@ import { cn } from "@/lib/utils";
 
 const SECTIONS = [
   { id: "top", label: "Home" },
-  { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
   { id: "experience", label: "Experience" },
   { id: "work", label: "Work" },
-  { id: "uses", label: "Uses" },
   { id: "contact", label: "Contact" },
 ];
 
