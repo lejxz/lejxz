@@ -21,7 +21,7 @@ I am a Computer Science student majoring in **Artificial Intelligence**. My pass
 
 <div align="center">
 
-[![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB&hide_title=false&hide=prs&include_all_commits=true&count_private=true)](https://github.com/lejxz)
+[![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB&hide_title=false&hide=prs&include_all_commits=true&count_private=true&year=current)](https://github.com/lejxz)
 [![Top Languages](https://github-readme-stats-nine-lovat-17.vercel.app/api/top-langs/?username=lejxz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff)](https://github.com/lejxz)
 
 [![Website](https://img.shields.io/badge/Website-🔗-B660EB?style=flat&logo=html5&logoColor=white)](https://lejxz.github.io/lejxz/)
