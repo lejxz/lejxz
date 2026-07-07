@@ -493,11 +493,6 @@ export function SiteEditor({ data, onChange }: EditorProps<any>) {
           )}
         />
       </SectionCard>
-      <SectionCard title="Footer meta (site-level)">
-        <TextAreaField label="Note" value={data.footer?.note ?? ""} onChange={(v) => set({ footer: { ...data.footer, note: v } })} rows={2} />
-        <TextField label="Built with" value={data.footer?.builtWith ?? ""} onChange={(v) => set({ footer: { ...data.footer, builtWith: v } })} />
-        <TextField label="Copyright" value={data.footer?.copyright ?? ""} onChange={(v) => set({ footer: { ...data.footer, copyright: v } })} />
-      </SectionCard>
     </div>
   );
 }

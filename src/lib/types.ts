@@ -167,9 +167,4 @@ export interface NavItem {
 
 export interface SiteData {
   nav: NavItem[];
-  footer: {
-    note?: string;
-    builtWith?: string;
-    copyright?: string;
-  };
 }

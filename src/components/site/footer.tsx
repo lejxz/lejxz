@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUp, Printer } from "lucide-react";
-import { profile, footerLinks, site, nav } from "@/lib/data";
+import { profile, footerLinks, nav } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { asset } from "@/lib/asset";
 
@@ -129,13 +129,13 @@ export function Footer() {
             >
               © {year}
             </Link>{" "}
-            {footerLinks.copyright ?? site.footer.copyright ?? profile.name}. All rights reserved.
+            {footerLinks.copyright ?? profile.name}. All rights reserved.
           </p>
 
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5 font-mono text-[11px] text-dim">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal" />
-              {footerLinks.builtWith ?? site.footer.builtWith ?? "Built with Next.js"}
+              {footerLinks.builtWith ?? "Built with Next.js"}
             </span>
             <span className="h-3 w-px bg-line" />
             <button

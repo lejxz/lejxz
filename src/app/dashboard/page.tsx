@@ -804,7 +804,7 @@ function GuideModal({ open, onClose }: { open: boolean; onClose: () => void }) {
               <p>• <span className="text-foreground/80">experience.json</span> — Timeline entries (work, education, research, awards)</p>
               <p>• <span className="text-foreground/80">projects.json</span> — Project cards (cover, tech, links, highlights)</p>
               <p>• <span className="text-foreground/80">footer.json</span> — Footer note + link columns</p>
-              <p>• <span className="text-foreground/80">site.json</span> — Navigation items + footer meta</p>
+              <p>• <span className="text-foreground/80">site.json</span> — Navigation items</p>
             </div>
           </section>
 
