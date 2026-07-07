@@ -9,10 +9,10 @@ type Accent = "teal" | "violet" | "emerald" | "amber" | "rose" | "cyan";
 const STORAGE_KEY = "lejxz-accent";
 
 const ACCENTS: { key: Accent; label: string; color: string }[] = [
+  { key: "amber", label: "Amber", color: "#fbbf24" },
   { key: "teal", label: "Teal", color: "#5eead4" },
   { key: "violet", label: "Violet", color: "#a78bfa" },
   { key: "emerald", label: "Emerald", color: "#34d399" },
-  { key: "amber", label: "Amber", color: "#fbbf24" },
   { key: "rose", label: "Rose", color: "#fb7185" },
   { key: "cyan", label: "Cyan", color: "#22d3ee" },
 ];
@@ -21,11 +21,13 @@ const ALL_CLASSES = ACCENTS.map((a) => `accent-${a.key}`);
 
 /**
  * applyAccent — set the accent color by toggling the accent-* class on <html>.
+ * Amber is the default (no class needed — :root already defines amber values),
+ * so we only add a class for non-amber accents.
  */
 function applyAccent(accent: Accent) {
   const root = document.documentElement;
   ALL_CLASSES.forEach((cls) => root.classList.remove(cls));
-  if (accent !== "teal") root.classList.add(`accent-${accent}`);
+  if (accent !== "amber") root.classList.add(`accent-${accent}`);
 }
 
 /**
@@ -35,7 +37,7 @@ function applyAccent(accent: Accent) {
  * network colors, selection color, ring color, etc.
  */
 export function ThemeToggle({ className }: { className?: string }) {
-  const [accent, setAccent] = useState<Accent>("teal");
+  const [accent, setAccent] = useState<Accent>("amber");
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -50,7 +52,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         return;
       }
     }
-    setAccent("teal");
+    setAccent("amber");
   }, []);
 
   const selectAccent = useCallback((next: Accent) => {

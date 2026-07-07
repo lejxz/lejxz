@@ -56,19 +56,19 @@ export const viewport: Viewport = {
 
 // Blocking inline script — runs before paint to apply the saved accent
 // color. The site is always dark; the user picks an accent color.
-// Valid values: "teal" (default), "violet", "emerald", "amber", "rose", "cyan".
+// Valid values: "amber" (default), "teal", "violet", "emerald", "rose", "cyan".
 const themeInitScript = `
 (function() {
   try {
     var key = 'lejxz-accent';
     var saved = localStorage.getItem(key);
     var validAccents = ['teal', 'violet', 'emerald', 'amber', 'rose', 'cyan'];
-    var accent = validAccents.indexOf(saved) >= 0 ? saved : 'teal';
+    var accent = validAccents.indexOf(saved) >= 0 ? saved : 'amber';
     var root = document.documentElement;
     // Remove any existing accent classes.
     validAccents.forEach(function(a) { root.classList.remove('accent-' + a); });
-    // Add the saved accent (teal is default — no class needed, but add for consistency).
-    if (accent !== 'teal') root.classList.add('accent-' + accent);
+    // Add the saved accent (amber is default — no class needed).
+    if (accent !== 'amber') root.classList.add('accent-' + accent);
     // Defer the transition class until after first paint.
     requestAnimationFrame(function() {
       requestAnimationFrame(function() { root.classList.add('theme-anim'); });

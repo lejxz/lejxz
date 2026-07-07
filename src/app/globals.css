@@ -51,13 +51,14 @@
 /*
  * Theme tokens.
  *
- * `:root` is the DARK theme (the portfolio's default). A `.light` class on the
- * <html> element overrides every token for the light theme. There is no longer
- * a separate "soft" overlay — the toggle performs a real dark/light switch.
+ * `:root` is the DARK theme (the portfolio's default) with the AMBER accent
+ * as the default. An `accent-*` class on <html> overrides the accent color
+ * (teal, violet, emerald, rose, cyan). The user picks the accent via the
+ * theme toggle in the navbar; the choice is persisted in localStorage.
  *
- * The accent identity (teal + violet) is preserved in both themes, but the
- * light theme uses deeper shades so text/strokes stay legible on bright
- * surfaces.
+ * The `--color-teal` variable serves as the "primary accent" channel — its
+ * value changes per accent but the Tailwind utility name stays `text-teal` /
+ * `bg-teal` so components don't need to know which accent is active.
  */
 :root {
   --radius: 0.5rem;
@@ -67,7 +68,7 @@
   --card-foreground: #d8dee6;
   --popover: #12151a;
   --popover-foreground: #d8dee6;
-  --primary: #5eead4;
+  --primary: #fbbf24;
   --primary-foreground: #0b0d10;
   --secondary: #161a20;
   --secondary-foreground: #d8dee6;
@@ -78,40 +79,56 @@
   --destructive: #f87171;
   --border: rgba(216, 222, 230, 0.08);
   --input: rgba(216, 222, 230, 0.1);
-  --ring: #5eead4;
+  --ring: #fbbf24;
   --sidebar: #12151a;
   --sidebar-foreground: #d8dee6;
-  --sidebar-primary: #5eead4;
+  --sidebar-primary: #fbbf24;
   --sidebar-primary-foreground: #0b0d10;
   --sidebar-accent: #1b2027;
   --sidebar-accent-foreground: #d8dee6;
   --sidebar-border: rgba(216, 222, 230, 0.08);
-  --sidebar-ring: #5eead4;
+  --sidebar-ring: #fbbf24;
 
-  /* theme-aware custom tokens (overridden in .light) */
-  --nn-node: #5eead4;
+  /* Default accent = amber. --color-teal overrides @theme's teal so the
+     "primary accent" channel (text-teal, bg-teal, etc.) renders amber. */
+  --color-teal: #fbbf24;
+  --nn-node: #fbbf24;
   --nn-node-alt: #a78bfa;
-  --nn-line: rgba(94, 234, 212, 0.18);
+  --nn-line: rgba(251, 191, 36, 0.18);
   --grid-color: rgba(216, 222, 230, 0.04);
   --scrollbar-track: #0b0d10;
   --scrollbar-thumb: #1b2027;
   --scrollbar-thumb-hover: #2a313a;
-  --selection-bg: rgba(94, 234, 212, 0.25);
+  --selection-bg: rgba(251, 191, 36, 0.25);
   --selection-fg: #ffffff;
   --shadow-color: 0 0% 0%;
 }
 
 /*
- * Accent themes — the site is always dark. Instead of a light/dark switch,
- * the user can pick an accent color. The accent class on <html> overrides
- * the --color-teal, --color-violet, --nn-node, --nn-node-alt, --nn-line,
+ * Accent themes — the site is always dark. The user can pick an accent
+ * color via the theme toggle. The accent class on <html> overrides the
+ * --color-teal, --color-violet, --nn-node, --nn-node-alt, --nn-line,
  * --primary, --ring, --selection-bg, and related variables.
  *
- * Available accents: teal (default), violet, emerald, amber, rose, cyan.
- * Set via <html class="accent-teal">, <html class="accent-violet">, etc.
+ * Available accents: amber (default, no class needed), teal, violet,
+ * emerald, rose, cyan. Set via <html class="accent-teal">, etc.
  */
 
-/* Default (no class needed) = teal accent. Already set in :root above. */
+/* Default (no class needed) = amber accent. Already set in :root above. */
+
+/* Teal accent — the original default. Selectable via the theme toggle. */
+:root.accent-teal {
+  --color-teal: #5eead4;
+  --color-violet: #a78bfa;
+  --primary: #5eead4;
+  --ring: #5eead4;
+  --sidebar-primary: #5eead4;
+  --sidebar-ring: #5eead4;
+  --nn-node: #5eead4;
+  --nn-node-alt: #a78bfa;
+  --nn-line: rgba(94, 234, 212, 0.18);
+  --selection-bg: rgba(94, 234, 212, 0.25);
+}
 
 /* Violet accent */
 :root.accent-violet {
@@ -192,7 +209,7 @@
   --card-foreground: #d8dee6;
   --popover: #12151a;
   --popover-foreground: #d8dee6;
-  --primary: #5eead4;
+  --primary: #fbbf24;
   --primary-foreground: #0b0d10;
   --secondary: #161a20;
   --secondary-foreground: #d8dee6;
@@ -203,7 +220,8 @@
   --destructive: #f87171;
   --border: rgba(216, 222, 230, 0.08);
   --input: rgba(216, 222, 230, 0.1);
-  --ring: #5eead4;
+  --ring: #fbbf24;
+  --color-teal: #fbbf24;
 }
 
 @layer base {
@@ -328,7 +346,7 @@ html.theme-anim * {
       0 0 24px -6px color-mix(in oklab, var(--color-teal) 45%, transparent);
   }
   .text-gradient {
-    background: linear-gradient(100deg, #d8dee6 0%, #5eead4 55%, #a78bfa 100%);
+    background: linear-gradient(100deg, #d8dee6 0%, var(--color-teal) 55%, var(--color-violet) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -337,9 +355,9 @@ html.theme-anim * {
     background: linear-gradient(
       100deg,
       #d8dee6 0%,
-      #5eead4 30%,
-      #a78bfa 50%,
-      #5eead4 70%,
+      var(--color-teal) 30%,
+      var(--color-violet) 50%,
+      var(--color-teal) 70%,
       #d8dee6 100%
     );
     background-size: 200% auto;
@@ -364,15 +382,15 @@ html.theme-anim * {
   }
   .glitch:hover::before {
     opacity: 0.8;
-    color: #5eead4;
-    -webkit-text-fill-color: #5eead4;
+    color: var(--color-teal);
+    -webkit-text-fill-color: var(--color-teal);
     animation: glitch-x 0.4s steps(2) infinite;
     transform: translateX(-2px);
   }
   .glitch:hover::after {
     opacity: 0.8;
-    color: #a78bfa;
-    -webkit-text-fill-color: #a78bfa;
+    color: var(--color-violet);
+    -webkit-text-fill-color: var(--color-violet);
     animation: glitch-x 0.4s steps(2) infinite reverse;
     transform: translateX(2px);
   }
@@ -422,12 +440,14 @@ html.theme-anim * {
   .card-hover-glow:hover::before {
     opacity: 1;
   }
-  /* Section divider — gradient line with a glowing center node */
+  /* Section divider — gradient line with a glowing center node.
+     Uses the active accent color (--color-teal channel) so the divider
+     adapts when the user switches accents. */
   .section-divider {
     position: relative;
     height: 1px;
     width: 100%;
-    background: linear-gradient(to right, transparent, var(--color-line), transparent);
+    background: linear-gradient(to right, transparent, color-mix(in oklab, var(--color-teal) 35%, transparent), transparent);
   }
   .section-divider::after {
     content: "";
