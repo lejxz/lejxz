@@ -4,7 +4,7 @@
   "alias": "lejxz",
   "heroLine1": "lejxz",
   "heroLine2": ".dev",
-  "role": "Computer Science",
+  "role": "Computer Science Student",
   "field": "Artificial Intelligence",
   "location": "Philippines",
   "availability": "Open for Dating",
@@ -75,7 +75,7 @@
     },
     {
       "label": "Status",
-      "value": "Student"
+      "value": "Single"
     },
     {
       "label": "Stack",
@@ -106,5 +106,11 @@
       "value": 20
     }
   ],
-  "avatar": "/assets/avatar.svg"
+  "avatar": "/assets/avatar.svg",
+  "factOrder": [
+    "status",
+    "role",
+    "field",
+    "location"
+  ]
 }
