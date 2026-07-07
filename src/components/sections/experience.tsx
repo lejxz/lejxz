@@ -12,7 +12,7 @@ import { useModals } from "@/lib/modals";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
-const PREVIEW_LIMIT = 3;
+const PREVIEW_LIMIT = 5;
 
 const TYPE_LABEL: Record<ExperienceType, string> = {
   work: "Work",

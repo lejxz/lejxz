@@ -8,48 +8,96 @@ import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
+/**
+ * useMediaQuery — returns true if the given media query matches.
+ * Used to switch the neural network layout between desktop (horizontal
+ * layers) and mobile (vertical layers / rows).
+ */
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = () => setMatches(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
+}
+
 // ---------------------------------------------------------------------------
 // Neural network diagram layout (SVG viewBox units).
 // Each skill group becomes a "layer" (column). Nodes within a layer are
 // stacked vertically. Every node in layer N connects to every node in
 // layer N+1 — a fully-connected feedforward network.
 // ---------------------------------------------------------------------------
-const VIEW_W = 900;
-const VIEW_H = 380;
-const NODE_TOP = 72;
-const NODE_BOTTOM = 348;
+const DESKTOP_W = 900;
+const DESKTOP_H = 380;
+const DESKTOP_NODE_TOP = 72;
+const DESKTOP_NODE_BOTTOM = 348;
+
+// Mobile layout (vertical layers / rows) — taller and narrower
+const MOBILE_W = 360;
+const MOBILE_H = 760;
+const MOBILE_ROW_SPACING = 220; // vertical distance between layer rows
+const MOBILE_ROW_TOP = 80; // y of the first layer's center
+const MOBILE_NODE_LEFT = 50;
+const MOBILE_NODE_RIGHT = 310;
+
 const numLayers = skills.groups.length;
-const LAYER_X = skills.groups.map((_, i) =>
+
+// Desktop X positions for each layer (columns)
+const DESKTOP_LAYER_X = skills.groups.map((_, i) =>
   numLayers === 1
-    ? VIEW_W / 2
-    : 130 + ((VIEW_W - 260) * i) / (numLayers - 1)
+    ? DESKTOP_W / 2
+    : 130 + ((DESKTOP_W - 260) * i) / (numLayers - 1)
+);
+
+// Mobile Y positions for each layer (rows)
+const MOBILE_LAYER_Y = skills.groups.map(
+  (_, i) => MOBILE_ROW_TOP + i * MOBILE_ROW_SPACING
 );
 
 export function Skills() {
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Build the flattened node list with computed SVG positions.
+  // Positions are recomputed when isMobile changes so the layout swaps.
   const nodes = useMemo(
     () =>
       skills.groups.flatMap((g, gi) =>
         g.items.map((item, ii) => {
           const count = g.items.length;
-          const y =
-            NODE_TOP + ((ii + 0.5) / count) * (NODE_BOTTOM - NODE_TOP);
+          let x: number;
+          let y: number;
+          if (isMobile) {
+            // Mobile: nodes go left → right within a row
+            x =
+              MOBILE_NODE_LEFT +
+              ((ii + 0.5) / count) * (MOBILE_NODE_RIGHT - MOBILE_NODE_LEFT);
+            y = MOBILE_LAYER_Y[gi];
+          } else {
+            // Desktop: nodes go top → bottom within a column
+            x = DESKTOP_LAYER_X[gi];
+            y =
+              DESKTOP_NODE_TOP +
+              ((ii + 0.5) / count) * (DESKTOP_NODE_BOTTOM - DESKTOP_NODE_TOP);
+          }
           return {
             ...item,
             groupIdx: gi,
             groupKey: g.key,
             groupTitle: g.title,
             groupIcon: g.icon,
-            x: LAYER_X[gi],
+            x,
             y,
             nodeIndex: ii,
           };
         })
       ),
-    []
+    [isMobile]
   );
 
   // Build connections: every node in layer N → every node in layer N+1.
@@ -115,10 +163,10 @@ export function Skills() {
 
         {/* Neural network diagram */}
         <Reveal delay={0.1}>
-          <div className="mt-6 overflow-x-auto">
+          <div className="mt-6">
             <svg
-              viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-              className="w-full min-w-[640px]"
+              viewBox={`0 0 ${isMobile ? MOBILE_W : DESKTOP_W} ${isMobile ? MOBILE_H : DESKTOP_H}`}
+              className="w-full"
               style={{ height: "auto" }}
               preserveAspectRatio="xMidYMid meet"
               role="img"
@@ -128,8 +176,8 @@ export function Skills() {
               {skills.groups.map((g, gi) => (
                 <g key={`label-${g.key}`}>
                   <text
-                    x={LAYER_X[gi]}
-                    y={26}
+                    x={isMobile ? MOBILE_W / 2 : DESKTOP_LAYER_X[gi]}
+                    y={isMobile ? MOBILE_LAYER_Y[gi] - 32 : 26}
                     textAnchor="middle"
                     fill="var(--color-dim)"
                     fontSize={13}
@@ -141,8 +189,8 @@ export function Skills() {
                     {g.title.toUpperCase()}
                   </text>
                   <text
-                    x={LAYER_X[gi]}
-                    y={44}
+                    x={isMobile ? MOBILE_W / 2 : DESKTOP_LAYER_X[gi]}
+                    y={isMobile ? MOBILE_LAYER_Y[gi] - 16 : 44}
                     textAnchor="middle"
                     fill="var(--color-dim)"
                     fontSize={9}
