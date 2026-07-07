@@ -7,10 +7,10 @@
       "category": "Computer Vision / Edge AI",
       "year": "2026",
       "status": "shipped",
-      "role": "AI/ML Lead",
-      "duration": "Apr 2026 \u2014 Jun 2026",
-      "timeline": "Apr 2026 \u2014 Jun 2026",
-      "summary": "Edge-AI + cloud occupancy platform for Philippine jeepneys, built with Team FlowerBoys for the ASEAN AI Hackathon 2026 Smart Cities track \u2014 Top 6 in track, Top 40 overall.",
+      "role": "Team Lead",
+      "duration": "April 2026 — Jun 2026",
+      "timeline": "Apr 2026 — Jun 2026",
+      "summary": "Edge-AI + cloud occupancy platform for Philippine jeepneys, built with Team FlowerBoys for the ASEAN AI Hackathon 2026 Smart Cities track — Top 6 in track, Top 40 overall.",
       "description": [
         "Commuters, operators, and regulators all operate blind on one variable that matters most: how full is the next jeepney. LoadSense turns every public utility vehicle into a real-time occupancy sensor, closing a gap that Google Maps and existing transit apps don't cover.",
         "A YOLOv8-nano model runs fully offline on an overhead camera, performing bidirectional passenger counting and mapping the live count to a four-tier occupancy state shown on a windshield LED strip. A FastAPI + SQLite cloud layer ingests GPS and occupancy telemetry to predict ETA, forecast demand, detect route deviations and driving anomalies, and power an operator console with a live fleet map and an alert verification workflow."
@@ -30,14 +30,14 @@
         },
         {
           "label": "Stack",
-          "value": "FastAPI \u00b7 SQLite \u00b7 Leaflet"
+          "value": "FastAPI · SQLite · Leaflet"
         }
       ],
       "highlightList": [
         "Bidirectional passenger counting with an offline YOLOv8-nano model",
         "Four-tier occupancy state reflected on a windshield LED strip and live map",
         "ETA prediction, demand forecasting, and route-deviation/anomaly alerts on the cloud layer",
-        "Operator console with an ack \u2192 verify \u2192 escalate alert workflow, not black-box auto-escalation"
+        "Operator console with an ack → verify → escalate alert workflow, not black-box auto-escalation"
       ],
       "tech": [
         "Python",
@@ -51,7 +51,8 @@
       "tags": [
         "Computer Vision",
         "Edge AI",
-        "FastAPI"
+        "FastAPI",
+        "NLP"
       ],
       "links": [
         {
@@ -61,37 +62,37 @@
       ],
       "featured": true,
       "accent": "teal",
-      "cover": "/assets/projects/loadsense.png",
-      "thumbnail": "/assets/projects/loadsense.png",
+      "cover": "/assets/projects/edge-vision.png",
+      "thumbnail": "/assets/projects/edge-vision.png",
       "gallery": [
         {
-          "caption": "Cover",
-          "src": "/assets/projects/loadsense.png"
+          "caption": "Image1",
+          "src": "/assets/projects/edge-vision.png"
         }
       ],
       "galleryImages": [
-        "/assets/projects/loadsense.png"
+        "/assets/projects/edge-vision.png"
       ]
     },
     {
       "id": "hira",
       "title": "Hira",
       "subtitle": "Persona-aware labor platform for the Philippines",
-      "category": "HCI / Full-stack",
+      "category": "Full-stack",
       "year": "2026",
       "status": "wip",
       "role": "Architecture & Research Lead",
-      "duration": "2026 \u2014 Present",
-      "timeline": "2026 \u2014 Present",
-      "summary": "A persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs \u2014 built as HCI coursework and drafted into an independent Design Science Research paper.",
+      "duration": "2026 — Present",
+      "timeline": "2026 — Present",
+      "summary": "A persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs — built as HCI coursework and drafted into an independent Design Science Research paper.",
       "description": [
-        "Hira matches distinct personas \u2014 blue-collar workers, fresh graduates, returning OFWs, employers, and government agencies \u2014 against tailored flows rather than a one-size-fits-all job board.",
-        "The current build is a frontend-only demo running entirely on mock data, styled with a forest-green design system and built in Next.js 16 + Tailwind v4 + TypeScript. Government API integrations (TESDA, SSS, Pag-IBIG, DMW) are deferred to a later phase."
+        "Hira matches distinct personas — blue-collar workers, fresh graduates, returning OFWs, employers, and government agencies — against tailored flows.",
+        "The current build is a frontend-only demo running entirely on mock data, styled with a forest-green design system and built in Next.js 16 + Tailwind v4 + TypeScript."
       ],
       "highlights": [
         {
           "label": "Personas",
-          "value": "5 (worker \u00b7 grad \u00b7 OFW \u00b7 employer \u00b7 gov)"
+          "value": "5 (worker · grad · OFW · employer · gov)"
         },
         {
           "label": "Phase",
@@ -99,18 +100,18 @@
         },
         {
           "label": "Research",
-          "value": "DSR paper drafted"
+          "value": "DSR paper"
         },
         {
           "label": "Stack",
-          "value": "Next.js \u00b7 Tailwind v4 \u00b7 TypeScript"
+          "value": "Next.js · Tailwind v4 · TypeScript"
         }
       ],
       "highlightList": [
         "Persona-driven flows for job seekers, employers, and government agencies",
         "Full Figma design build alongside the coded frontend",
         "Independent Design Science Research paper drafted on the platform's design approach",
-        "Frontend demo requires no backend \u2014 runs on mock data"
+        "Frontend demo requires no backend — runs on mock data"
       ],
       "tech": [
         "Next.js",
@@ -119,7 +120,6 @@
         "Figma"
       ],
       "tags": [
-        "HCI",
         "Design Research",
         "Frontend"
       ],
@@ -135,23 +135,23 @@
       ],
       "featured": true,
       "accent": "violet",
-      "cover": "/assets/projects/hira.png",
-      "thumbnail": "/assets/projects/hira.png",
+      "cover": "/assets/projects/edge-vision.png",
+      "thumbnail": "/assets/projects/edge-vision.png",
       "gallery": [
         {
           "caption": "Cover",
-          "src": "/assets/projects/hira.png"
+          "src": "/assets/projects/edge-vision.png"
         }
       ],
       "galleryImages": [
-        "/assets/projects/hira.png"
+        "/assets/projects/edge-vision.png"
       ]
     },
     {
       "id": "email-security",
       "title": "Email Security Classifier",
       "subtitle": "Naive Bayes fraud & prompt-injection detection",
-      "category": "NLP / Security",
+      "category": "NLP",
       "year": "2026",
       "status": "shipped",
       "role": "Solo",
@@ -159,7 +159,7 @@
       "timeline": "2026",
       "summary": "A Naive Bayes classifier built for an Intelligent Systems final that flags fraudulent/phishing emails and prompt-injection attempts, backed by a custom labeled dataset.",
       "description": [
-        "Built a custom 300-row CSV dataset spanning three classes \u2014 safe, fraudulent, and prompt-injection emails \u2014 then built text-feature extraction and a Naive Bayes classifier around it.",
+        "Built a custom 300-row CSV dataset spanning three classes — safe, fraudulent, and prompt-injection emails — then built text-feature extraction and a Naive Bayes classifier around it.",
         "Wrapped the model in a Streamlit app so the classifier could be demonstrated live during the course defense."
       ],
       "highlightList": [
@@ -198,58 +198,6 @@
       ]
     },
     {
-      "id": "lejxz-dev",
-      "title": "lejxz.dev",
-      "subtitle": "This portfolio",
-      "category": "Frontend",
-      "year": "2026",
-      "status": "wip",
-      "role": "Solo",
-      "duration": "2026 \u2014 Present",
-      "timeline": "2026 \u2014 Present",
-      "summary": "This site \u2014 an interactive personal portfolio with a hidden content dashboard, statically exported and deployed to GitHub Pages.",
-      "description": [
-        "Built with Next.js 16, Framer Motion, and Tailwind CSS 4, with a Canvas 2D neural-network background and a command palette for searching sections, projects, experience, and links.",
-        "All copy lives in versioned JSON files under src/data/, editable either by hand or through a hidden local dashboard that writes straight back to those files."
-      ],
-      "highlightList": [
-        "Static-exported Next.js 16 site deployed to GitHub Pages",
-        "Command palette (\u2318K) for searching the whole site",
-        "Hidden local dashboard for editing all copy without touching code",
-        "Content-as-data: every section is driven by JSON under src/data/"
-      ],
-      "tech": [
-        "Next.js",
-        "TypeScript",
-        "Framer Motion",
-        "Tailwind CSS"
-      ],
-      "tags": [
-        "Next.js",
-        "Framer Motion",
-        "Tailwind CSS"
-      ],
-      "links": [
-        {
-          "label": "Source",
-          "url": "https://github.com/lejxz/lejxz"
-        }
-      ],
-      "featured": false,
-      "accent": "violet",
-      "cover": "/assets/projects/lejxz-dev.png",
-      "thumbnail": "/assets/projects/lejxz-dev.png",
-      "gallery": [
-        {
-          "caption": "Cover",
-          "src": "/assets/projects/lejxz-dev.png"
-        }
-      ],
-      "galleryImages": [
-        "/assets/projects/lejxz-dev.png"
-      ]
-    },
-    {
       "id": "musicbot",
       "title": "Discord Music Bot",
       "subtitle": "Slash-command music bot for YouTube & Spotify",
@@ -261,7 +209,7 @@
       "timeline": "2026",
       "summary": "A personal, fully slash-command Discord music bot with YouTube and Spotify playback, queue management, lyrics, and local caching for 24/7 hosting.",
       "description": [
-        "Supports multi-source playback (YouTube, Spotify tracks/playlists/albums), full queue controls, lyrics lookup, and clean embeds \u2014 no legacy prefix commands.",
+        "Supports multi-source playback (YouTube, Spotify tracks/playlists/albums), full queue controls, lyrics lookup, and clean embeds — no legacy prefix commands.",
         "Built for always-on hosting: local audio caching with automatic cleanup, rotating logs with 7-day retention, and systemd/Task-Scheduler-friendly deployment."
       ],
       "highlightList": [
@@ -301,5 +249,5 @@
     }
   ],
   "heading": "Projects",
-  "subtitle": "A selection of projects spanning computer vision, HCI, and personal tooling."
+  "subtitle": "A showcase of my work and creations. Selecting projects that highlight my skills and experiences. \"Turning concepts into impactful projects.\""
 }
