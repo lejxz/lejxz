@@ -44,7 +44,7 @@
         {
           "name": "YOLOv8",
           "level": 80,
-          "description": "Used for real-time object detection over an IP webcam and for the occupancy-counting model behind LoadSense."
+          "description": "Used for building real-time detection systems within my projects."
         },
         {
           "name": "OpenCV",
@@ -53,13 +53,8 @@
         },
         {
           "name": "TensorFlow",
-          "level": 65,
-          "description": "Studied through structured coursework and notes; PyTorch and YOLOv8 are the primary tools for shipped CV work."
-        },
-        {
-          "name": "scikit-learn",
-          "level": 78,
-          "description": "Used to build a Naive Bayes classifier for fraud and prompt-injection detection in emails."
+          "level": 72,
+          "description": "Studied through structured coursework and notes; used for Machine Learning and Artificial Intelligence."
         }
       ]
     },
