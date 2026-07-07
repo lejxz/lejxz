@@ -18,10 +18,13 @@ const PREVIEW_LIMIT = 3;
 export function Work() {
   const { openProject } = useModals();
   const spotlight = featuredProjects[0] ?? projects.projects[0];
-  // Show 3 most recent projects — no filters on the home preview.
-  // Filtering lives on the /projects/ full page.
-  const items = projects.projects.slice(0, PREVIEW_LIMIT);
-  const hasMore = projects.projects.length > PREVIEW_LIMIT;
+  // Show 3 most recent projects, EXCLUDING the spotlight card so the
+  // featured project isn't duplicated in the grid below. The spotlight
+  // already gets its own prominent placement above the grid.
+  const items = projects.projects
+    .filter((p) => p.id !== spotlight?.id)
+    .slice(0, PREVIEW_LIMIT);
+  const hasMore = projects.projects.length > PREVIEW_LIMIT + 1;
 
   return (
     <section id="work" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
