@@ -1,110 +1,143 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-type Theme = "light" | "dark";
+type Accent = "teal" | "violet" | "emerald" | "amber" | "rose" | "cyan";
 
-const STORAGE_KEY = "lejxz-theme";
+const STORAGE_KEY = "lejxz-accent";
+
+const ACCENTS: { key: Accent; label: string; color: string }[] = [
+  { key: "teal", label: "Teal", color: "#5eead4" },
+  { key: "violet", label: "Violet", color: "#a78bfa" },
+  { key: "emerald", label: "Emerald", color: "#34d399" },
+  { key: "amber", label: "Amber", color: "#fbbf24" },
+  { key: "rose", label: "Rose", color: "#fb7185" },
+  { key: "cyan", label: "Cyan", color: "#22d3ee" },
+];
+
+const ALL_CLASSES = ACCENTS.map((a) => `accent-${a.key}`);
 
 /**
- * Apply a theme to the document root by toggling the `light` class.
- * Dark is the default (`:root` palette); `light` overrides via `.light`.
+ * applyAccent — set the accent color by toggling the accent-* class on <html>.
  */
-function applyTheme(theme: Theme) {
+function applyAccent(accent: Accent) {
   const root = document.documentElement;
-  if (theme === "light") {
-    root.classList.add("light");
-  } else {
-    root.classList.remove("light");
-  }
+  ALL_CLASSES.forEach((cls) => root.classList.remove(cls));
+  if (accent !== "teal") root.classList.add(`accent-${accent}`);
 }
 
 /**
- * ThemeToggle — a real dark/light switch.
- *
- * Previously this only toggled a `data-theme="soft"` attribute which lifted a
- * handful of CSS variables — effectively a subtle contrast overlay, not a
- * theme change. It now toggles the `light` class on `<html>`, which swaps the
- * entire palette (background, surfaces, text, borders, accents, grid, neural
- * network colors) via the `:root.light` block in globals.css.
- *
- * The initial theme is applied by a blocking inline script in layout.tsx to
- * prevent a flash of the wrong theme. This component reads the *current* DOM
- * state on mount (rather than its own state) so it stays in sync with whatever
- * the script applied.
+ * ThemeToggle — an accent color picker. The site is always dark; instead of
+ * switching between light/dark, the user picks an accent color (teal, violet,
+ * emerald, amber, rose, cyan). The accent changes the primary color, neural
+ * network colors, selection color, ring color, etc.
  */
 export function ThemeToggle({ className }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [accent, setAccent] = useState<Accent>("teal");
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // Read the actual applied theme from the DOM — the layout's blocking
-    // script has already set it before React hydrates.
-    const current: Theme = document.documentElement.classList.contains("light")
-      ? "light"
-      : "dark";
-    setTheme(current);
+    // Read the current accent from the DOM.
+    const root = document.documentElement;
+    for (const a of ACCENTS) {
+      if (root.classList.contains(`accent-${a.key}`)) {
+        setAccent(a.key);
+        return;
+      }
+    }
+    setAccent("teal");
   }, []);
 
-  const toggle = useCallback(() => {
-    setTheme((prev) => {
-      const next: Theme = prev === "dark" ? "light" : "dark";
-      applyTheme(next);
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        // ignore (private mode / quota)
-      }
-      return next;
-    });
+  const selectAccent = useCallback((next: Accent) => {
+    setAccent(next);
+    applyAccent(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   if (!mounted) {
     return <span className={cn("h-9 w-9", className)} aria-hidden />;
   }
 
-  const isLight = theme === "light";
+  const current = ACCENTS.find((a) => a.key === accent) ?? ACCENTS[0];
+
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-label={`Switch to ${isLight ? "dark" : "light"} theme`}
-      title={`Switch to ${isLight ? "dark" : "light"} theme`}
-      className={cn(
-        "group relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-md border border-line text-dim transition-colors hover:border-teal/50 hover:text-teal",
-        className
-      )}
-    >
-      <AnimatePresence mode="wait" initial={false}>
-        {isLight ? (
-          <motion.span
-            key="moon"
-            initial={{ y: 12, opacity: 0, rotate: -30 }}
-            animate={{ y: 0, opacity: 1, rotate: 0 }}
-            exit={{ y: -12, opacity: 0, rotate: 30 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <Moon className="h-4 w-4" />
-          </motion.span>
-        ) : (
-          <motion.span
-            key="sun"
-            initial={{ y: 12, opacity: 0, rotate: 30 }}
-            animate={{ y: 0, opacity: 1, rotate: 0 }}
-            exit={{ y: -12, opacity: 0, rotate: -30 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <Sun className="h-4 w-4" />
-          </motion.span>
+    <div className={cn("relative", className)}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label={`Accent color: ${current.label}. Click to change.`}
+        title={`Accent: ${current.label}`}
+        className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-dim transition-colors hover:border-teal/50 hover:text-teal"
+      >
+        <span
+          className="h-4 w-4 rounded-full transition-colors"
+          style={{
+            backgroundColor: current.color,
+            boxShadow: `0 0 8px ${current.color}80`,
+          }}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <>
+            {/* Backdrop to close on outside click */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setOpen(false)}
+            />
+            {/* Dropdown */}
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="absolute right-0 top-11 z-50 flex flex-col gap-1 rounded-xl border border-dim/40 bg-surface/95 p-2 backdrop-blur-xl shadow-2xl"
+            >
+              <p className="mb-1 px-2 font-mono text-[9px] uppercase tracking-wider text-dim">
+                Accent color
+              </p>
+              {ACCENTS.map((a) => (
+                <button
+                  key={a.key}
+                  type="button"
+                  onClick={() => {
+                    selectAccent(a.key);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-lg px-2.5 py-2 font-mono text-xs transition-colors",
+                    accent === a.key
+                      ? "bg-surface/60 text-foreground"
+                      : "text-dim hover:bg-surface/40 hover:text-foreground"
+                  )}
+                >
+                  <span
+                    className="h-3.5 w-3.5 rounded-full"
+                    style={{
+                      backgroundColor: a.color,
+                      boxShadow: a.key === accent ? `0 0 8px ${a.color}80` : "none",
+                    }}
+                  />
+                  {a.label}
+                  {accent === a.key && (
+                    <span className="ml-auto text-[9px] text-teal">●</span>
+                  )}
+                </button>
+              ))}
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </button>
+    </div>
   );
 }

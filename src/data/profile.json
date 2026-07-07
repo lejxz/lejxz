@@ -37,7 +37,7 @@
     },
     {
       "label": "Focus",
-      "value": "Research · ML systems"
+      "value": "Research \u00b7 ML systems"
     }
   ],
   "codeBlock": {
@@ -53,7 +53,7 @@
       },
       {
         "key": "role",
-        "value": "CS · AI"
+        "value": "CS \u00b7 AI"
       },
       {
         "key": "location",
@@ -112,5 +112,6 @@
     "role",
     "field",
     "location"
-  ]
+  ],
+  "contactNote": "Feel free to reach out about collaborations, opportunities, or just to talk about computer vision and AI."
 }

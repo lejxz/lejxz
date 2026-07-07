@@ -49,6 +49,10 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
         <TextAreaField label="Quote" value={data.quote ?? ""} onChange={(v) => set({ quote: v })} rows={2} />
       </SectionCard>
 
+      <SectionCard title="Contact">
+        <TextAreaField label="Contact note (shown in Contact section)" value={data.contactNote ?? ""} onChange={(v) => set({ contactNote: v })} rows={2} />
+      </SectionCard>
+
       <SectionCard title="Availability">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <TextField label="Availability" value={data.availability ?? ""} onChange={(v) => set({ availability: v })} />

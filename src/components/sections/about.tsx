@@ -7,7 +7,6 @@ import {
   Activity,
   Coffee,
   Quote,
-  Code2,
   Cpu,
   BookOpen,
   Copy,
@@ -150,18 +149,6 @@ export function About() {
                       </div>
                     </div>
                   ))}
-                </div>
-
-                <div className="mt-4 flex items-center justify-between rounded-lg border border-teal/20 bg-teal/8 px-3 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <Code2 className="h-3.5 w-3.5 text-teal" />
-                    <span className="font-mono text-xs text-dim">
-                      now_building
-                    </span>
-                  </div>
-                  <span className="font-mono text-xs font-medium text-teal">
-                    {now.items[0]?.value ?? "—"}
-                  </span>
                 </div>
                 </div>
               </TiltCard>

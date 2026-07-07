@@ -166,18 +166,22 @@ export function CommandPalette() {
       group: "Links",
     },
     {
-      id: "toggle-theme",
-      label: "Toggle theme",
-      hint: "Dark / Light",
+      id: "cycle-accent",
+      label: "Cycle accent color",
+      hint: "Teal → Violet → Emerald → Amber → Rose → Cyan",
       icon: SunMoon,
       run: () => {
+        const accents = ["teal", "violet", "emerald", "amber", "rose", "cyan"];
         const root = document.documentElement;
-        const isLight = root.classList.contains("light");
-        const next = isLight ? "dark" : "light";
-        if (next === "light") root.classList.add("light");
-        else root.classList.remove("light");
+        let currentIdx = 0;
+        accents.forEach((a, i) => {
+          if (a !== "teal" && root.classList.contains("accent-" + a)) currentIdx = i;
+        });
+        const next = accents[(currentIdx + 1) % accents.length];
+        accents.forEach((a) => root.classList.remove("accent-" + a));
+        if (next !== "teal") root.classList.add("accent-" + next);
         try {
-          localStorage.setItem("lejxz-theme", next);
+          localStorage.setItem("lejxz-accent", next);
         } catch {
           /* ignore */
         }

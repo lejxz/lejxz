@@ -17,7 +17,7 @@ interface Shortcut {
 
 const SHORTCUTS: Shortcut[] = [
   { keys: "⌘ K", label: "Open command palette" },
-  { keys: "T", label: "Toggle dark / light theme" },
+  { keys: "T", label: "Cycle accent color" },
   { keys: "G H", label: "Go home" },
   { keys: "G P", label: "Jump to projects (work)" },
   { keys: "G A", label: "Jump to about" },
@@ -43,23 +43,29 @@ export function ShortcutsHelp() {
         setOpen((o) => !o);
         return;
       }
-      // 'T' toggles theme (lower or upper, no modifiers)
+      // 'T' cycles through accent colors
       if (
         (e.key === "t" || e.key === "T") &&
         !e.metaKey &&
         !e.ctrlKey &&
         !e.altKey
       ) {
-        // Don't interfere if a dialog is open
         if (document.querySelector("[role=dialog]")) return;
         e.preventDefault();
+        const accents = ["teal", "violet", "emerald", "amber", "rose", "cyan"];
         const root = document.documentElement;
-        const isLight = root.classList.contains("light");
-        const next = isLight ? "dark" : "light";
-        if (next === "light") root.classList.add("light");
-        else root.classList.remove("light");
+        // Find current accent
+        let currentIdx = 0;
+        accents.forEach((a, i) => {
+          if (a !== "teal" && root.classList.contains("accent-" + a)) currentIdx = i;
+        });
+        const nextIdx = (currentIdx + 1) % accents.length;
+        const next = accents[nextIdx];
+        // Remove all accent classes
+        accents.forEach((a) => root.classList.remove("accent-" + a));
+        if (next !== "teal") root.classList.add("accent-" + next);
         try {
-          localStorage.setItem("lejxz-theme", next);
+          localStorage.setItem("lejxz-accent", next);
         } catch {
           /* ignore */
         }

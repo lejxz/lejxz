@@ -101,59 +101,90 @@
   --shadow-color: 0 0% 0%;
 }
 
-/* Light theme — activated by `<html class="light">`. */
-:root.light {
-  --background: #f4f6f9;
-  --foreground: #11151b;
-  --card: #ffffff;
-  --card-foreground: #11151b;
-  --popover: #ffffff;
-  --popover-foreground: #11151b;
-  --primary: #0d9488;
-  --primary-foreground: #ffffff;
-  --secondary: #eef1f5;
-  --secondary-foreground: #11151b;
-  --muted: #eef1f5;
-  --muted-foreground: #5b6675;
-  --accent: #e3e8ef;
-  --accent-foreground: #11151b;
-  --destructive: #dc2626;
-  --border: rgba(17, 21, 27, 0.10);
-  --input: rgba(17, 21, 27, 0.12);
-  --ring: #0d9488;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #11151b;
-  --sidebar-primary: #0d9488;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e3e8ef;
-  --sidebar-accent-foreground: #11151b;
-  --sidebar-border: rgba(17, 21, 27, 0.10);
-  --sidebar-ring: #0d9488;
+/*
+ * Accent themes — the site is always dark. Instead of a light/dark switch,
+ * the user can pick an accent color. The accent class on <html> overrides
+ * the --color-teal, --color-violet, --nn-node, --nn-node-alt, --nn-line,
+ * --primary, --ring, --selection-bg, and related variables.
+ *
+ * Available accents: teal (default), violet, emerald, amber, rose, cyan.
+ * Set via <html class="accent-teal">, <html class="accent-violet">, etc.
+ */
 
-  /* custom tokens — deeper accents for contrast on light surfaces */
-  --color-surface: #ffffff;
-  --color-surface-2: #f1f4f8;
-  --color-surface-3: #e7ebf1;
-  --color-dim: #5b6675;
-  --color-teal: #0d9488;
-  --color-violet: #7c3aed;
-  --color-line: rgba(17, 21, 27, 0.10);
+/* Default (no class needed) = teal accent. Already set in :root above. */
 
-  --nn-node: #0d9488;
-  --nn-node-alt: #7c3aed;
-  --nn-line: rgba(13, 148, 136, 0.18);
-  --grid-color: rgba(17, 21, 27, 0.045);
-  --scrollbar-track: #eef1f5;
-  --scrollbar-thumb: #cbd3dd;
-  --scrollbar-thumb-hover: #aab4c2;
-  --selection-bg: rgba(13, 148, 136, 0.22);
-  --selection-fg: #0b0d10;
-  --shadow-color: 220 30% 20%;
+/* Violet accent */
+:root.accent-violet {
+  --color-teal: #a78bfa;
+  --color-violet: #5eead4;
+  --primary: #a78bfa;
+  --ring: #a78bfa;
+  --sidebar-primary: #a78bfa;
+  --sidebar-ring: #a78bfa;
+  --nn-node: #a78bfa;
+  --nn-node-alt: #5eead4;
+  --nn-line: rgba(167, 139, 250, 0.18);
+  --selection-bg: rgba(167, 139, 250, 0.25);
+}
+
+/* Emerald accent */
+:root.accent-emerald {
+  --color-teal: #34d399;
+  --color-violet: #a78bfa;
+  --primary: #34d399;
+  --ring: #34d399;
+  --sidebar-primary: #34d399;
+  --sidebar-ring: #34d399;
+  --nn-node: #34d399;
+  --nn-node-alt: #a78bfa;
+  --nn-line: rgba(52, 211, 153, 0.18);
+  --selection-bg: rgba(52, 211, 153, 0.25);
+}
+
+/* Amber accent */
+:root.accent-amber {
+  --color-teal: #fbbf24;
+  --color-violet: #a78bfa;
+  --primary: #fbbf24;
+  --ring: #fbbf24;
+  --sidebar-primary: #fbbf24;
+  --sidebar-ring: #fbbf24;
+  --nn-node: #fbbf24;
+  --nn-node-alt: #a78bfa;
+  --nn-line: rgba(251, 191, 36, 0.18);
+  --selection-bg: rgba(251, 191, 36, 0.25);
+}
+
+/* Rose accent */
+:root.accent-rose {
+  --color-teal: #fb7185;
+  --color-violet: #a78bfa;
+  --primary: #fb7185;
+  --ring: #fb7185;
+  --sidebar-primary: #fb7185;
+  --sidebar-ring: #fb7185;
+  --nn-node: #fb7185;
+  --nn-node-alt: #a78bfa;
+  --nn-line: rgba(251, 113, 133, 0.18);
+  --selection-bg: rgba(251, 113, 133, 0.25);
+}
+
+/* Cyan accent */
+:root.accent-cyan {
+  --color-teal: #22d3ee;
+  --color-violet: #a78bfa;
+  --primary: #22d3ee;
+  --ring: #22d3ee;
+  --sidebar-primary: #22d3ee;
+  --sidebar-ring: #22d3ee;
+  --nn-node: #22d3ee;
+  --nn-node-alt: #a78bfa;
+  --nn-line: rgba(34, 211, 238, 0.18);
+  --selection-bg: rgba(34, 211, 238, 0.25);
 }
 
 /* Keep the shadcn `.dark` variant working for any component that uses dark:
-   prefixes — it simply re-asserts the dark tokens. Components in this app
-   mostly use CSS variables directly, so this is a safety net. */
+   prefixes — it simply re-asserts the dark tokens. */
 .dark {
   --background: #0b0d10;
   --foreground: #d8dee6;
