@@ -135,11 +135,7 @@ export function Skills() {
                     fontSize={13}
                     fontFamily="var(--font-space-mono), monospace"
                     fontWeight={700}
-                    opacity={
-                      activeGroup === null || activeGroup === gi || isSearching
-                        ? 0.8
-                        : 0.3
-                    }
+                    opacity={0.8}
                     style={{ transition: "opacity 0.3s" }}
                   >
                     {g.title.toUpperCase()}
@@ -151,11 +147,7 @@ export function Skills() {
                     fill="var(--color-dim)"
                     fontSize={9}
                     fontFamily="var(--font-space-mono), monospace"
-                    opacity={
-                      activeGroup === null || activeGroup === gi || isSearching
-                        ? 0.5
-                        : 0.2
-                    }
+                    opacity={0.5}
                     style={{ transition: "opacity 0.3s" }}
                   >
                     layer {gi + 1}
@@ -224,10 +216,11 @@ export function Skills() {
                         cy={node.y}
                         r={r + 10}
                         fill="var(--color-teal)"
-                        opacity={0.12}
+                        opacity={0.1}
                       />
                     )}
-                    {/* Outer ring */}
+                    {/* Outer ring — thin, dim stroke so the network
+                        doesn't look cluttered or overly bright. */}
                     <circle
                       cx={node.x}
                       cy={node.y}
@@ -238,19 +231,19 @@ export function Skills() {
                           : "var(--color-surface)"
                       }
                       stroke="var(--color-teal)"
-                      strokeWidth={isSelected ? 0 : 1.5}
-                      opacity={1}
-                      style={{ transition: "fill 0.2s" }}
+                      strokeWidth={isSelected ? 0 : 1}
+                      opacity={isSelected ? 1 : 0.45}
+                      style={{ transition: "fill 0.2s, opacity 0.3s" }}
                     />
-                    {/* Inner fill — subtle fill that scales with proficiency.
-                        Kept low-opacity so the network doesn't look cluttered. */}
+                    {/* Inner fill — very subtle, scales with proficiency.
+                        Low opacity keeps the network calm and readable. */}
                     {!isSelected && (
                       <circle
                         cx={node.x}
                         cy={node.y}
                         r={r - 5}
                         fill="var(--color-teal)"
-                        opacity={0.06 + (node.level / 100) * 0.1}
+                        opacity={0.04 + (node.level / 100) * 0.08}
                         style={{ transition: "opacity 0.3s" }}
                       />
                     )}
@@ -413,7 +406,6 @@ function useCountUp(target: number, active: boolean, duration = 1100) {
 function SkillGauge({ level, name }: { level: number; name?: string }) {
   const [hovered, setHovered] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [accentColor, setAccentColor] = useState<string>("#fbbf24");
   useEffect(() => {
     const raf = requestAnimationFrame(() => setAnimate(true));
     return () => cancelAnimationFrame(raf);
@@ -422,18 +414,23 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
   // Read the current accent color from --color-teal (the primary accent
   // channel) and observe <html> class changes so the gauge recolors when
   // the user switches accents. Falls back to amber (#fbbf24).
+  const [accentColor, setAccentColor] = useState<string>("#fbbf24");
   useEffect(() => {
     const read = () =>
       getComputedStyle(document.documentElement)
         .getPropertyValue("--color-teal")
         .trim() || "#fbbf24";
-    setAccentColor(read());
+    // Use rAF to defer the initial read so it's not synchronous in the effect body.
+    const raf = requestAnimationFrame(() => setAccentColor(read()));
     const observer = new MutationObserver(() => setAccentColor(read()));
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
   }, []);
 
   const r = 52;
