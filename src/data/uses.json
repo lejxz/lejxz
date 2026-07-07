@@ -5,16 +5,8 @@
       "key": "hardware",
       "items": [
         {
-          "name": "Add your PC/laptop model",
-          "detail": "Fill in your actual specs here \u2014 I don't have verified details on your hardware."
-        },
-        {
-          "name": "Add your peripherals",
-          "detail": "Keyboard, mouse, monitor, etc."
-        },
-        {
-          "name": "Add anything DIY",
-          "detail": "You maintain your own hardware \u2014 worth a mention if there's a build story here."
+          "name": "Acer Aspire 7",
+          "detail": "My day-to-day workbench."
         }
       ]
     },
@@ -27,12 +19,8 @@
           "detail": "Primary editor for nearly all development work."
         },
         {
-          "name": "Cursor / Claude Code",
-          "detail": "Used for agentic development on larger builds \u2014 delegating scoped, well-specified work to AI agents."
-        },
-        {
-          "name": "Figma",
-          "detail": "Used for UI design work on Hira and other frontend projects."
+          "name": "Claude Code / Codex",
+          "detail": "Used for agentic development on larger builds — delegating scoped, well-specified work to AI agents."
         }
       ]
     },
@@ -45,12 +33,12 @@
           "detail": "Primary language for ML, computer vision, and backend work."
         },
         {
-          "name": "Next.js / TypeScript",
-          "detail": "Frontend stack for this portfolio and the Hira frontend."
+          "name": "Next.js / TypeScript / React",
+          "detail": "Frontend stack."
         },
         {
           "name": "FastAPI + SQLite",
-          "detail": "Backend stack behind LoadSense's cloud layer."
+          "detail": "Backend stack."
         }
       ]
     }
