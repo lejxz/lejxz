@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence, useAnimationFrame } from "framer-motion";
 import { Search, X, ArrowUpDown } from "lucide-react";
 import { skills } from "@/lib/data";
@@ -304,16 +304,76 @@ function SkillBar({
 }
 
 /**
- * SkillGauge — the radial proficiency gauge with a hover tooltip showing a
- * qualitative level label (Beginner / Intermediate / Advanced / Expert).
- * The gauge pulses subtly when hovered.
+ * useCountUp — animates a number from 0 to `target` over `duration` ms.
+ * Starts when `active` becomes true. Returns the current displayed value.
+ * Uses requestAnimationFrame with an ease-out curve for a satisfying fill.
+ */
+function useCountUp(target: number, active: boolean, duration = 1100) {
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startRef = useRef<number | null>(null);
+  const lastActiveRef = useRef(false);
+  const lastTargetRef = useRef(target);
+
+  useEffect(() => {
+    // Reset the animation start when the target changes or activation flips on.
+    const targetChanged = lastTargetRef.current !== target;
+    const justActivated = active && !lastActiveRef.current;
+    lastActiveRef.current = active;
+    lastTargetRef.current = target;
+
+    if (!active) {
+      startRef.current = null;
+      return;
+    }
+
+    // On a fresh activation or target change, restart from 0.
+    if (justActivated || targetChanged) {
+      startRef.current = null;
+    }
+
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+    const tick = (now: number) => {
+      if (startRef.current === null) startRef.current = now;
+      const elapsed = now - startRef.current;
+      const t = Math.min(elapsed / duration, 1);
+      setValue(Math.round(ease(t) * target));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, active, duration]);
+
+  return value;
+}
+
+/**
+ * SkillGauge — the radial proficiency gauge. The percentage is displayed
+ * prominently in the center (e.g. "90%") with a count-up animation that
+ * syncs with the arc fill. A hover tooltip shows the qualitative tier
+ * (Beginner / Intermediate / Advanced / Expert).
+ *
+ * The gauge only renders when a skill is selected (it lives in a sticky
+ * panel that's always in the viewport), so the animation starts on mount
+ * rather than waiting for an IntersectionObserver.
  */
 function SkillGauge({ level, name }: { level: number; name?: string }) {
-  const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
   const [hovered, setHovered] = useState(false);
+  // Start the animation on mount — the gauge is always visible when rendered.
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    // Defer one frame so the initial state (0% fill) paints first,
+    // then the animation triggers for a satisfying fill effect.
+    const raf = requestAnimationFrame(() => setAnimate(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
   const r = 52;
   const circ = 2 * Math.PI * r;
+
+  // Count up the displayed percentage in sync with the arc fill.
+  const displayLevel = useCountUp(level, animate, 1100);
 
   // Map the numeric level to a qualitative label + color.
   const tier =
@@ -332,7 +392,6 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
       onMouseLeave={() => setHovered(false)}
     >
       <motion.svg
-        ref={ref}
         viewBox="0 0 128 128"
         className="h-32 w-32 -rotate-90"
         animate={hovered ? { scale: 1.05 } : { scale: 1 }}
@@ -358,7 +417,7 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
           strokeDasharray={circ}
           initial={{ strokeDashoffset: circ }}
           animate={
-            inView
+            animate
               ? { strokeDashoffset: circ * (1 - level / 100) }
               : { strokeDashoffset: circ }
           }
@@ -369,36 +428,35 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
               : "drop-shadow(0 0 6px rgba(94,234,212,0.45))",
           }}
         />
-        {/* level number (rotated back to upright) */}
-        <text
-          x="64"
-          y="64"
-          textAnchor="middle"
-          dominantBaseline="central"
-          className="rotate-90"
-          transform="rotate(90 64 64)"
-          fill="var(--color-foreground)"
-          fontFamily="var(--font-space-mono), monospace"
-          fontSize="26"
-          fontWeight="700"
-        >
-          {level}
-        </text>
-        {/* small "%" label under the number */}
-        <text
-          x="64"
-          y="82"
-          textAnchor="middle"
-          className="rotate-90"
-          transform="rotate(90 64 64)"
-          fill="var(--color-dim)"
-          fontFamily="var(--font-space-mono), monospace"
-          fontSize="9"
-          fontWeight="400"
-        >
-          proficiency
-        </text>
       </motion.svg>
+
+      {/* Center percentage overlay — HTML for crisp, controllable typography.
+          The SVG is rotated -90°, so we overlay a absolutely-positioned div
+          on top (not inside the SVG) to avoid rotation counter-transforms. */}
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+        <div className="flex items-baseline gap-0.5">
+          <motion.span
+            key={level}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="font-mono text-3xl font-bold leading-none text-foreground tabular-nums"
+          >
+            {displayLevel}
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+            className="font-mono text-sm font-bold text-teal"
+          >
+            %
+          </motion.span>
+        </div>
+        <span className="mt-1 font-mono text-[9px] uppercase tracking-wider text-dim">
+          {tier.label}
+        </span>
+      </div>
 
       {/* Hover tooltip — qualitative tier label */}
       <AnimatePresence>
