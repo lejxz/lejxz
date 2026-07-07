@@ -21,19 +21,6 @@
         "Pandas",
         "Tailwind CSS"
       ]
-    },
-    {
-      "direction": "right",
-      "duration": 20,
-      "items": [
-        "Computer Vision",
-        "NLP",
-        "Edge AI",
-        "AR/VR",
-        "HCI",
-        "Data Analytics",
-        "Cybersecurity"
-      ]
     }
   ]
 }
