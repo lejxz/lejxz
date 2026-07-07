@@ -5,13 +5,13 @@
       "label": "Learning",
       "value": "AI agent workflows",
       "detail": "Refining a personal AI-agent workflow system, including a reusable /concept-init slash command and a planning-depth framework to avoid over-documenting before building.",
-      "icon": "graduation-cap"
+      "icon": "book"
     },
     {
       "label": "Building",
       "value": "Project-Hira",
       "detail": "Project-Hira a persona-aware Filipino labor-matching platform",
-      "icon": "cpu"
+      "icon": "code"
     },
     {
       "label": "Exploring",
