@@ -2,62 +2,107 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence, useAnimationFrame } from "framer-motion";
-import { Search, X, ArrowUpDown } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { skills } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
+// ---------------------------------------------------------------------------
+// Neural network diagram layout (SVG viewBox units).
+// Each skill group becomes a "layer" (column). Nodes within a layer are
+// stacked vertically. Every node in layer N connects to every node in
+// layer N+1 — a fully-connected feedforward network.
+// ---------------------------------------------------------------------------
+const VIEW_W = 900;
+const VIEW_H = 380;
+const NODE_TOP = 72;
+const NODE_BOTTOM = 348;
+const numLayers = skills.groups.length;
+const LAYER_X = skills.groups.map((_, i) =>
+  numLayers === 1
+    ? VIEW_W / 2
+    : 130 + ((VIEW_W - 260) * i) / (numLayers - 1)
+);
+
 export function Skills() {
-  const [activeGroup, setActiveGroup] = useState(0);
+  const [activeGroup, setActiveGroup] = useState<number | null>(null); // null = all layers
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [query, setQuery] = useState("");
-  const [sortDesc, setSortDesc] = useState(true); // true = highest first
 
-  const group = skills.groups[activeGroup];
   const q = query.trim().toLowerCase();
+  const isSearching = q.length > 0;
 
-  // Flatten all skills with their group index for the hex grid.
-  const allSkills = useMemo(
+  // Build the flattened node list with computed SVG positions.
+  const nodes = useMemo(
     () =>
       skills.groups.flatMap((g, gi) =>
-        g.items.map((item) => ({
-          ...item,
-          groupIdx: gi,
-          groupKey: g.key,
-          groupTitle: g.title,
-          groupIcon: g.icon,
-        }))
+        g.items.map((item, ii) => {
+          const count = g.items.length;
+          const y =
+            NODE_TOP + ((ii + 0.5) / count) * (NODE_BOTTOM - NODE_TOP);
+          return {
+            ...item,
+            groupIdx: gi,
+            groupKey: g.key,
+            groupTitle: g.title,
+            groupIcon: g.icon,
+            x: LAYER_X[gi],
+            y,
+            nodeIndex: ii,
+          };
+        })
       ),
     []
   );
 
-  // When searching, filter skills across ALL groups.
-  const searchResults = useMemo(() => {
-    if (!q) return null;
-    const results = allSkills.filter(
-      (s) =>
-        s.name.toLowerCase().includes(q) ||
-        (s.description ?? "").toLowerCase().includes(q) ||
-        s.groupTitle.toLowerCase().includes(q)
-    );
-    results.sort((a, b) =>
-      sortDesc ? b.level - a.level : a.level - b.level
-    );
-    return results;
-  }, [q, sortDesc, allSkills]);
+  // Build connections: every node in layer N → every node in layer N+1.
+  const connections = useMemo(() => {
+    const conns: {
+      from: (typeof nodes)[0];
+      to: (typeof nodes)[0];
+      key: string;
+    }[] = [];
+    for (let gi = 0; gi < numLayers - 1; gi++) {
+      const layerA = nodes.filter((n) => n.groupIdx === gi);
+      const layerB = nodes.filter((n) => n.groupIdx === gi + 1);
+      for (const a of layerA) {
+        for (const b of layerB) {
+          conns.push({ from: a, to: b, key: `${a.name}→${b.name}` });
+        }
+      }
+    }
+    return conns;
+  }, [nodes]);
 
-  const isSearching = searchResults !== null;
+  // Match function for search.
+  const matchesNode = (n: (typeof nodes)[0]) =>
+    !q ||
+    n.name.toLowerCase().includes(q) ||
+    (n.description ?? "").toLowerCase().includes(q) ||
+    n.groupTitle.toLowerCase().includes(q);
 
-  // The hexes to render: search results when searching, otherwise ALL skills
-  // (with non-active-group hexes dimmed instead of hidden).
-  const hexItems = isSearching ? searchResults! : allSkills;
+  // A node is "lit" (visible) if it passes the group filter AND search.
+  const isNodeLit = (n: (typeof nodes)[0]) => {
+    if (isSearching) return matchesNode(n);
+    if (activeGroup !== null) return n.groupIdx === activeGroup;
+    return true;
+  };
 
-  // The selected skill object (from search or the active group).
-  const selected = isSearching
-    ? searchResults!.find((s) => s.name === activeSkill) ?? null
-    : allSkills.find((s) => s.name === activeSkill && s.groupIdx === activeGroup) ?? null;
+  const selected = nodes.find((n) => n.name === activeSkill) ?? null;
+  const focused = hoveredSkill ?? activeSkill;
+
+  // A connection is "active" (pulsing) if both endpoints are lit AND
+  // either (a) a node is focused and is one of the endpoints, or
+  // (b) no node is focused — ambient pulse on all lit connections.
+  const isConnAmbient = (c: (typeof connections)[0]) =>
+    isNodeLit(c.from) && isNodeLit(c.to);
+  const isConnFocused = (c: (typeof connections)[0]) =>
+    isConnAmbient(c) &&
+    focused !== null &&
+    (c.from.name === focused || c.to.name === focused);
 
   return (
     <section id="skills" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -73,168 +118,329 @@ export function Skills() {
           </Reveal>
         )}
 
-        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_20rem] lg:gap-10">
-          {/* Left: group tabs + hex grid */}
-          <div>
-            {/* group tabs + search + sort */}
-            <Reveal>
-              <div className="flex flex-wrap items-center gap-2">
-                {skills.groups.map((g, i) => (
-                  <button
-                    key={g.key}
-                    type="button"
-                    onClick={() => {
-                      setActiveGroup(i);
-                      setActiveSkill(null);
-                      setQuery("");
-                    }}
-                    className={cn(
-                      "relative flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
-                      i === activeGroup && !isSearching
-                        ? "border-teal/40 text-teal"
-                        : "border-line text-dim hover:border-teal/30 hover:text-foreground"
-                    )}
-                  >
-                    {i === activeGroup && !isSearching && (
-                      <motion.span
-                        layoutId="skill-group-active"
-                        className="absolute inset-0 -z-10 rounded-full bg-teal/10"
-                        transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                      />
-                    )}
-                    <Icon name={g.icon} className="h-3.5 w-3.5" />
-                    {g.title}
-                  </button>
-                ))}
-                {/* Search input */}
-                <div className="relative ml-auto w-full sm:w-44">
-                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-dim" />
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="search skills…"
-                    className="w-full rounded-full border border-line bg-surface/40 py-1.5 pl-8 pr-7 font-mono text-xs text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none"
+        {/* Group tabs + search */}
+        <Reveal>
+          <div className="mt-10 flex flex-wrap items-center gap-2">
+            {/* "All layers" tab */}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveGroup(null);
+                setActiveSkill(null);
+                setQuery("");
+              }}
+              className={cn(
+                "relative flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
+                activeGroup === null && !isSearching
+                  ? "border-teal/40 text-teal"
+                  : "border-line text-dim hover:border-teal/30 hover:text-foreground"
+              )}
+            >
+              {activeGroup === null && !isSearching && (
+                <motion.span
+                  layoutId="skill-group-active"
+                  className="absolute inset-0 -z-10 rounded-full bg-teal/10"
+                  transition={{ type: "spring", stiffness: 300, damping: 26 }}
+                />
+              )}
+              <Icon name="network" className="h-3.5 w-3.5" />
+              All layers
+            </button>
+            {skills.groups.map((g, i) => (
+              <button
+                key={g.key}
+                type="button"
+                onClick={() => {
+                  setActiveGroup(i);
+                  setActiveSkill(null);
+                  setQuery("");
+                }}
+                className={cn(
+                  "relative flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors",
+                  activeGroup === i && !isSearching
+                    ? "border-teal/40 text-teal"
+                    : "border-line text-dim hover:border-teal/30 hover:text-foreground"
+                )}
+              >
+                {activeGroup === i && !isSearching && (
+                  <motion.span
+                    layoutId="skill-group-active"
+                    className="absolute inset-0 -z-10 rounded-full bg-teal/10"
+                    transition={{ type: "spring", stiffness: 300, damping: 26 }}
                   />
-                  {query && (
-                    <button
-                      type="button"
-                      onClick={() => setQuery("")}
-                      aria-label="Clear search"
-                      className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center rounded text-dim hover:text-teal"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  )}
-                </div>
-                {/* Sort-by-level toggle */}
+                )}
+                <Icon name={g.icon} className="h-3.5 w-3.5" />
+                {g.title}
+              </button>
+            ))}
+            {/* Search */}
+            <div className="relative ml-auto w-full sm:w-44">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-dim" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="search skills…"
+                className="w-full rounded-full border border-line bg-surface/40 py-1.5 pl-8 pr-7 font-mono text-xs text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none"
+              />
+              {query && (
                 <button
                   type="button"
-                  onClick={() => setSortDesc((s) => !s)}
-                  aria-label={sortDesc ? "Sort ascending (lowest first)" : "Sort descending (highest first)"}
-                  title={sortDesc ? "Highest first" : "Lowest first"}
-                  className="flex h-8 items-center gap-1 rounded-full border border-line bg-surface/40 px-2.5 font-mono text-[10px] text-dim transition-colors hover:border-teal/40 hover:text-teal"
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  className="absolute right-2 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center rounded text-dim hover:text-teal"
                 >
-                  <ArrowUpDown className={cn("h-3 w-3 transition-transform", !sortDesc && "rotate-180")} />
-                  <span className="hidden sm:inline">{sortDesc ? "high→low" : "low→high"}</span>
+                  <X className="h-3 w-3" />
                 </button>
-              </div>
-            </Reveal>
-
-            {/* Blurb / search result count */}
-            {isSearching ? (
-              <p className="mt-3 font-mono text-[11px] text-dim">
-                {searchResults!.length} match{searchResults!.length === 1 ? "" : "es"} for &ldquo;{query}&rdquo;
-              </p>
-            ) : (
-              group?.blurb && (
-                <p className="mt-3 text-sm text-dim">{group.blurb}</p>
-              )
-            )}
-
-            {/* Hex grid — honeycomb of skill chips.
-                Each hex shows a mini radial gauge + skill name.
-                Non-active-group hexes dim to 20% (instead of disappearing). */}
-            <div className="mt-8 flex flex-wrap justify-center gap-x-1 gap-y-0">
-              {hexItems.length > 0 ? (
-                hexItems.map((skill, i) => {
-                  const inActiveGroup = isSearching || skill.groupIdx === activeGroup;
-                  const isActive = activeSkill === skill.name && inActiveGroup;
-                  return (
-                    <HexChip
-                      key={skill.groupKey + "-" + skill.name}
-                      skill={skill}
-                      active={isActive}
-                      dimmed={!inActiveGroup}
-                      groupName={isSearching ? skill.groupTitle : undefined}
-                      delay={(i % 8) * 0.05}
-                      onClick={() =>
-                        setActiveSkill((cur) =>
-                          cur === skill.name && inActiveGroup ? null : skill.name
-                        )
-                      }
-                    />
-                  );
-                })
-              ) : (
-                <div className="w-full rounded-xl border border-dashed border-line p-6 text-center font-mono text-xs text-dim">
-                  No skills match &ldquo;{query}&rdquo;.
-                </div>
               )}
             </div>
-
-            {/* Legend for the dimmed hexes */}
-            {!isSearching && (
-              <p className="mt-4 text-center font-mono text-[10px] text-dim/60">
-                Other groups are dimmed — click a hex to focus it, or switch tabs above.
-              </p>
-            )}
           </div>
+        </Reveal>
 
-          {/* Right: sticky detail panel with radial gauge */}
-          <div className="lg:sticky lg:top-24 lg:h-fit">
-            <Reveal delay={0.1}>
-              <div className="card-hover-glow relative flex min-h-[20rem] flex-col items-center justify-center overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm p-8">
-                <div className="pointer-events-none absolute inset-0 bg-radial-fade opacity-60" />
-                <motion.div
-                  key={selected?.name ?? "empty"}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative flex w-full flex-col items-center"
-                >
-                  {selected ? (
-                    <>
-                      <SkillGauge level={selected.level} name={selected.name} />
-                      <h3 className="mt-5 font-mono text-xl font-bold text-foreground">
-                        {selected.name}
-                      </h3>
-                      <p className="mt-2 text-center text-sm leading-relaxed text-dim">
-                        {selected.description ?? selected.note ?? "A core part of my toolkit."}
-                      </p>
-                      <div className="mt-4 flex items-center gap-2 rounded-full border border-teal/20 bg-teal/8 px-3 py-1">
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-teal">
-                          {selected.groupTitle}
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex h-32 w-32 items-center justify-center rounded-full border border-dashed border-line">
-                        <Icon name={group?.icon ?? "sparkles"} className="h-10 w-10 text-dim/60" />
-                      </div>
-                      <h3 className="mt-5 font-mono text-lg font-bold text-foreground/80">
-                        Select a skill
-                      </h3>
-                      <p className="mt-2 text-center text-sm text-dim">
-                        Tap any hex to see a proficiency breakdown.
-                      </p>
-                    </>
-                  )}
-                </motion.div>
+        {/* Neural network diagram */}
+        <Reveal delay={0.1}>
+          <div className="mt-6 overflow-x-auto">
+            <svg
+              viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+              className="w-full min-w-[640px]"
+              style={{ height: "auto" }}
+              preserveAspectRatio="xMidYMid meet"
+              role="img"
+              aria-label="Skill proficiency neural network diagram"
+            >
+              {/* Layer labels */}
+              {skills.groups.map((g, gi) => (
+                <g key={`label-${g.key}`}>
+                  <text
+                    x={LAYER_X[gi]}
+                    y={26}
+                    textAnchor="middle"
+                    fill="var(--color-dim)"
+                    fontSize={13}
+                    fontFamily="var(--font-space-mono), monospace"
+                    fontWeight={700}
+                    opacity={
+                      activeGroup === null || activeGroup === gi || isSearching
+                        ? 0.8
+                        : 0.3
+                    }
+                    style={{ transition: "opacity 0.3s" }}
+                  >
+                    {g.title.toUpperCase()}
+                  </text>
+                  <text
+                    x={LAYER_X[gi]}
+                    y={44}
+                    textAnchor="middle"
+                    fill="var(--color-dim)"
+                    fontSize={9}
+                    fontFamily="var(--font-space-mono), monospace"
+                    opacity={
+                      activeGroup === null || activeGroup === gi || isSearching
+                        ? 0.5
+                        : 0.2
+                    }
+                    style={{ transition: "opacity 0.3s" }}
+                  >
+                    layer {gi + 1}
+                  </text>
+                </g>
+              ))}
+
+              {/* Connection lines (synapses) */}
+              {connections.map((c) => {
+                const ambient = isConnAmbient(c);
+                const focusedConn = isConnFocused(c);
+                return (
+                  <line
+                    key={c.key}
+                    x1={c.from.x}
+                    y1={c.from.y}
+                    x2={c.to.x}
+                    y2={c.to.y}
+                    stroke="var(--color-teal)"
+                    strokeWidth={focusedConn ? 1.5 : 1}
+                    strokeDasharray="4 6"
+                    opacity={
+                      focusedConn
+                        ? 0.45
+                        : ambient
+                        ? 0.12
+                        : 0.04
+                    }
+                    className={
+                      focusedConn
+                        ? "synapse-flow"
+                        : ambient && !focused
+                        ? "synapse-flow-slow"
+                        : undefined
+                    }
+                    style={{ transition: "opacity 0.3s, stroke-width 0.3s" }}
+                  />
+                );
+              })}
+
+              {/* Nodes (neurons) */}
+              {nodes.map((node, i) => {
+                const r = 18 + (node.level / 100) * 8;
+                const lit = isNodeLit(node);
+                const isSelected = activeSkill === node.name;
+                const isHovered = hoveredSkill === node.name;
+                const isFocused = isSelected || isHovered;
+                return (
+                  <motion.g
+                    key={node.groupKey + "-" + node.name}
+                    onClick={() =>
+                      setActiveSkill((cur) =>
+                        cur === node.name ? null : node.name
+                      )
+                    }
+                    onMouseEnter={() => setHoveredSkill(node.name)}
+                    onMouseLeave={() => setHoveredSkill(null)}
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{
+                      duration: 0.4,
+                      delay: node.groupIdx * 0.15 + node.nodeIndex * 0.06,
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 16,
+                    }}
+                    style={{ cursor: "pointer", transition: "opacity 0.3s", opacity: lit ? 1 : 0.15 }}
+                  >
+                    {/* Glow halo on focused nodes */}
+                    {isFocused && lit && (
+                      <circle
+                        cx={node.x}
+                        cy={node.y}
+                        r={r + 10}
+                        fill="var(--color-teal)"
+                        opacity={0.12}
+                      />
+                    )}
+                    {/* Outer ring */}
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r={r}
+                      fill={
+                        isSelected
+                          ? "var(--color-teal)"
+                          : "var(--color-surface)"
+                      }
+                      stroke="var(--color-teal)"
+                      strokeWidth={isSelected ? 0 : 2}
+                      opacity={lit ? 1 : 0.3}
+                      style={{ transition: "fill 0.2s, opacity 0.3s" }}
+                    />
+                    {/* Inner fill — opacity scales with proficiency */}
+                    {!isSelected && (
+                      <circle
+                        cx={node.x}
+                        cy={node.y}
+                        r={r - 4}
+                        fill="var(--color-teal)"
+                        opacity={(0.12 + (node.level / 100) * 0.28) * (lit ? 1 : 0.15)}
+                        style={{ transition: "opacity 0.3s" }}
+                      />
+                    )}
+                    {/* Level number */}
+                    <text
+                      x={node.x}
+                      y={node.y}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fill={
+                        isSelected
+                          ? "var(--color-background)"
+                          : "var(--color-foreground)"
+                      }
+                      fontSize={11}
+                      fontFamily="var(--font-space-mono), monospace"
+                      fontWeight={700}
+                      opacity={lit ? 0.95 : 0.2}
+                      style={{
+                        transition: "opacity 0.3s, fill 0.2s",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {node.level}
+                    </text>
+                    {/* Skill name below the node */}
+                    <text
+                      x={node.x}
+                      y={node.y + r + 15}
+                      textAnchor="middle"
+                      fill={
+                        isSelected
+                          ? "var(--color-teal)"
+                          : "var(--color-foreground)"
+                      }
+                      fontSize={11}
+                      fontFamily="var(--font-space-mono), monospace"
+                      fontWeight={500}
+                      opacity={lit ? 0.85 : 0.15}
+                      style={{
+                        transition: "opacity 0.3s, fill 0.2s",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {node.name}
+                    </text>
+                  </motion.g>
+                );
+              })}
+            </svg>
+          </div>
+        </Reveal>
+
+        {/* Detail panel — slides in below the network when a node is selected */}
+        <AnimatePresence mode="wait">
+          {selected ? (
+            <motion.div
+              key={selected.name}
+              initial={{ opacity: 0, y: 16, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: -16, height: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="card-hover-glow mt-2 flex flex-col items-center gap-6 rounded-2xl border border-line bg-surface/75 p-6 backdrop-blur-sm sm:flex-row sm:items-center">
+                <SkillGauge level={selected.level} name={selected.name} />
+                <div className="flex-1 text-center sm:text-left">
+                  <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                    <h3 className="font-mono text-xl font-bold text-foreground">
+                      {selected.name}
+                    </h3>
+                    <span className="rounded-full border border-teal/20 bg-teal/8 px-3 py-0.5 font-mono text-[10px] uppercase tracking-wider text-teal">
+                      {selected.groupTitle} · layer {selected.groupIdx + 1}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-dim">
+                    {selected.description ??
+                      selected.note ??
+                      "A core part of my toolkit."}
+                  </p>
+                </div>
               </div>
-            </Reveal>
-          </div>
-        </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="mt-2 flex items-center justify-center gap-3 rounded-2xl border border-dashed border-line p-5 text-center"
+            >
+              <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                ◇
+              </span>
+              <p className="font-mono text-xs text-dim">
+                Click any neuron to inspect proficiency · hover to trace connections
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Tech marquee */}
         {skills.marquee && skills.marquee.length > 0 && (
@@ -249,177 +455,9 @@ export function Skills() {
   );
 }
 
-/**
- * HexChip — a hexagonal skill chip with a mini radial gauge.
- * The hex shape is created via CSS clip-path. Each chip shows the skill
- * name at the bottom and a tiny circular progress gauge (with the level
- * number) at the top. Hovering reveals a description tooltip.
- *
- * Layout: hexes stagger in a flex-wrap — odd-indexed chips are offset
- * down by ~30px to create a honeycomb-like interlocking pattern.
- */
-function HexChip({
-  skill,
-  active,
-  dimmed,
-  delay,
-  onClick,
-  groupName,
-}: {
-  skill: { name: string; level: number; description?: string };
-  active: boolean;
-  dimmed: boolean;
-  delay: number;
-  onClick: () => void;
-  groupName?: string;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef<HTMLButtonElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-20px" });
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    if (inView) {
-      const raf = requestAnimationFrame(() => setAnimate(true));
-      return () => cancelAnimationFrame(raf);
-    }
-  }, [inView]);
-
-  // Tier color for the mini-gauge arc.
-  const tierColor =
-    skill.level >= 70 ? "var(--color-teal)" : "var(--color-violet)";
-
-  return (
-    <div
-      className="relative"
-      style={{ marginTop: "0" }}
-      // Stagger odd chips down for the honeycomb effect.
-    >
-      <motion.button
-        ref={ref}
-        type="button"
-        onClick={onClick}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        initial={{ opacity: 0, scale: 0.7 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-20px" }}
-        transition={{ duration: 0.35, delay, type: "spring", stiffness: 200, damping: 18 }}
-        whileHover={{ scale: 1.08, zIndex: 10 }}
-        whileTap={{ scale: 0.95 }}
-        className={cn(
-          "relative flex flex-col items-center justify-center transition-colors duration-300",
-          dimmed && "opacity-20 hover:opacity-60"
-        )}
-        style={{
-          width: "104px",
-          height: "120px",
-          clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-          background: active
-            ? "color-mix(in oklab, var(--color-teal) 18%, var(--color-surface))"
-            : "var(--color-surface)",
-        }}
-        aria-label={`${skill.name}: ${skill.level}%`}
-      >
-        {/* Glow ring on active/hover — drawn as a pseudo hex behind via box-shadow */}
-        {(active || hovered) && !dimmed && (
-          <span
-            className="pointer-events-none absolute inset-0"
-            style={{
-              clipPath: "inherit",
-              background: active
-                ? "color-mix(in oklab, var(--color-teal) 12%, transparent)"
-                : "transparent",
-            }}
-          />
-        )}
-
-        {/* Mini radial gauge — top half of the hex */}
-        <div className="relative mb-1 flex h-9 w-9 items-center justify-center">
-          <svg viewBox="0 0 36 36" className="h-9 w-9 -rotate-90">
-            {/* track */}
-            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--color-line)" strokeWidth="3" />
-            {/* progress arc */}
-            <motion.circle
-              cx="18"
-              cy="18"
-              r="14"
-              fill="none"
-              stroke={active ? "var(--color-teal)" : tierColor}
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray={2 * Math.PI * 14}
-              initial={{ strokeDashoffset: 2 * Math.PI * 14 }}
-              animate={
-                animate
-                  ? { strokeDashoffset: 2 * Math.PI * 14 * (1 - skill.level / 100) }
-                  : { strokeDashoffset: 2 * Math.PI * 14 }
-              }
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              style={{
-                filter: active
-                  ? "drop-shadow(0 0 4px color-mix(in oklab, var(--color-teal) 60%, transparent))"
-                  : "none",
-              }}
-            />
-          </svg>
-          {/* Level number in the center of the mini-gauge */}
-          <span
-            className={cn(
-              "absolute font-mono text-[11px] font-bold tabular-nums",
-              active ? "text-teal" : "text-foreground/80"
-            )}
-          >
-            {skill.level}
-          </span>
-        </div>
-
-        {/* Skill name — bottom half of the hex */}
-        <span
-          className={cn(
-            "px-3 text-center font-mono text-[10px] font-medium leading-tight transition-colors",
-            active ? "text-teal" : "text-foreground/85"
-          )}
-        >
-          {skill.name}
-        </span>
-
-        {/* Group badge (search mode) */}
-        {groupName && (
-          <span className="mt-0.5 font-mono text-[7px] uppercase tracking-wider text-dim">
-            {groupName}
-          </span>
-        )}
-      </motion.button>
-
-      {/* Hover tooltip — description */}
-      <AnimatePresence>
-        {hovered && skill.description && !dimmed && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
-            className="pointer-events-none absolute left-1/2 top-full z-30 mt-2 w-48 -translate-x-1/2 rounded-lg border border-line bg-surface/95 p-2.5 text-center font-mono text-[10px] leading-relaxed text-foreground/80 shadow-lg backdrop-blur-sm"
-          >
-            {skill.description}
-            <span
-              className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-l border-t"
-              style={{
-                borderColor: "var(--color-line)",
-                background: "var(--color-surface)",
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-/**
- * useCountUp — animates a number from 0 to `target` over `duration` ms.
- */
+// ---------------------------------------------------------------------------
+// useCountUp — animates a number from 0 → target over `duration` ms.
+// ---------------------------------------------------------------------------
 function useCountUp(target: number, active: boolean, duration = 1100) {
   const [value, setValue] = useState(0);
   const rafRef = useRef<number | null>(null);
@@ -459,9 +497,9 @@ function useCountUp(target: number, active: boolean, duration = 1100) {
   return value;
 }
 
-/**
- * SkillGauge — the large radial proficiency gauge in the sticky detail panel.
- */
+// ---------------------------------------------------------------------------
+// SkillGauge — the large radial gauge used in the detail panel.
+// ---------------------------------------------------------------------------
 function SkillGauge({ level, name }: { level: number; name?: string }) {
   const [hovered, setHovered] = useState(false);
   const [animate, setAnimate] = useState(false);
@@ -485,13 +523,13 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
 
   return (
     <div
-      className="relative"
+      className="relative shrink-0"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <motion.svg
         viewBox="0 0 128 128"
-        className="h-32 w-32 -rotate-90"
+        className="h-28 w-28 -rotate-90 sm:h-32 sm:w-32"
         animate={hovered ? { scale: 1.05 } : { scale: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
@@ -576,9 +614,9 @@ function SkillGauge({ level, name }: { level: number; name?: string }) {
   );
 }
 
-/**
- * SkillsMarquee — a JS-driven marquee for the tech tags.
- */
+// ---------------------------------------------------------------------------
+// SkillsMarquee — JS-driven scrolling tech tags.
+// ---------------------------------------------------------------------------
 function SkillsMarquee({ items }: { items: string[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useRef(0);

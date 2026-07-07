@@ -548,6 +548,19 @@ html.theme-anim * {
   animation: shimmer-sweep 0.7s ease;
 }
 
+/* Neural network synapse pulse — dashes flow along connection lines
+   to simulate activation propagating through the network. Two speeds:
+   fast (1s) for the selected node's edges, slow (2.5s) for ambient. */
+@keyframes synapse-flow {
+  to { stroke-dashoffset: -10; }
+}
+.synapse-flow {
+  animation: synapse-flow 1s linear infinite;
+}
+.synapse-flow-slow {
+  animation: synapse-flow 2.5s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
