@@ -1,14 +1,12 @@
 {
   "name": "Lejuene Delantar",
   "penname": "lejxz",
-  "alias": "lejxz",
   "heroLine1": "lejxz",
   "heroLine2": ".dev",
   "role": "Computer Science Student",
   "field": "Artificial Intelligence",
   "location": "Philippines",
   "availability": "Open for Dating",
-  "available": true,
   "availabilityNote": "Mails Open",
   "email": "lejxz.dev@gmail.com",
   "socials": {
@@ -18,56 +16,6 @@
     "email": "mailto:lejxz.dev@gmail.com"
   },
   "tagline": "<Change the world/>",
-  "bio": [
-    "I am a Computer Science student at the University of San Jose-Recoletos in Philippines, specializing in Artificial Intelligence and Machine Learning. My interest lies in building systems that can perceive and respond to the real world, particularly through computer vision, and I am drawn to the intersection of AI with AR/VR."
-  ],
-  "quote": "Always Learning. Stay Hungry, Stay Foolish.",
-  "facts": [
-    {
-      "label": "Location",
-      "value": "Philippines"
-    },
-    {
-      "label": "Field",
-      "value": "Artificial Intelligence"
-    },
-    {
-      "label": "Status",
-      "value": "Open to opportunities"
-    },
-    {
-      "label": "Focus",
-      "value": "Research \u00b7 ML systems"
-    }
-  ],
-  "codeBlock": {
-    "variableName": "profile",
-    "fields": [
-      {
-        "key": "name",
-        "value": "Lejuene Delantar"
-      },
-      {
-        "key": "handle",
-        "value": "lejxz"
-      },
-      {
-        "key": "role",
-        "value": "CS \u00b7 AI"
-      },
-      {
-        "key": "location",
-        "value": "Philippines"
-      }
-    ],
-    "interests": [
-      "AI",
-      "OpenCV",
-      "NLP",
-      "ML"
-    ],
-    "closing": "learning"
-  },
   "stats": [
     {
       "label": "Focus",
@@ -105,13 +53,6 @@
       "label": "Age",
       "value": 20
     }
-  ],
-  "avatar": "/assets/avatar.svg",
-  "factOrder": [
-    "status",
-    "role",
-    "field",
-    "location"
   ],
   "contactNote": "Feel free to reach out about collaborations, opportunities, or just to talk about computer vision and AI."
 }

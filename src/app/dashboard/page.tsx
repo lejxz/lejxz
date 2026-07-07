@@ -798,7 +798,7 @@ function GuideModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           <section>
             <h3 className="mb-2 font-bold text-teal">DATA FILES</h3>
             <div className="space-y-1.5 rounded-lg border border-line bg-surface/50 p-3">
-              <p>• <span className="text-foreground/80">profile.json</span> — Name, hero lines, role, bio, stats, socials</p>
+              <p>• <span className="text-foreground/80">profile.json</span> — Name, hero lines, role, stats, socials</p>
               <p>• <span className="text-foreground/80">marquee.json</span> — Scrolling ticker text (duration + direction per row)</p>
               <p>• <span className="text-foreground/80">skills.json</span> — Skill groups, levels, descriptions</p>
               <p>• <span className="text-foreground/80">experience.json</span> — Timeline entries (work, education, research, awards)</p>

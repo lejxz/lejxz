@@ -36,7 +36,7 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
       <SectionCard title="Identity">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <TextField label="Name" value={data.name ?? ""} onChange={(v) => set({ name: v })} />
-          <TextField label="Penname / Handle" value={data.penname ?? ""} onChange={(v) => set({ penname: v, alias: v })} />
+          <TextField label="Penname / Handle" value={data.penname ?? ""} onChange={(v) => set({ penname: v })} />
           <TextField label="Hero line 1 (big text)" value={data.heroLine1 ?? ""} onChange={(v) => set({ heroLine1: v })} />
           <TextField label="Hero line 2 (gradient text)" value={data.heroLine2 ?? ""} onChange={(v) => set({ heroLine2: v })} />
           <TextField label="Role" value={data.role ?? ""} onChange={(v) => set({ role: v })} />
@@ -45,8 +45,6 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
           <TextField label="Email" value={data.email ?? ""} onChange={(v) => set({ email: v })} />
         </div>
         <TextField label="Tagline" value={data.tagline ?? ""} onChange={(v) => set({ tagline: v })} />
-        <TextAreaField label="Bio (one paragraph per line)" value={(data.bio ?? []).join("\n")} onChange={(v) => set({ bio: v.split("\n") })} rows={4} />
-        <TextAreaField label="Quote" value={data.quote ?? ""} onChange={(v) => set({ quote: v })} rows={2} />
       </SectionCard>
 
       <SectionCard title="Contact">
@@ -58,7 +56,6 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
           <TextField label="Availability" value={data.availability ?? ""} onChange={(v) => set({ availability: v })} />
           <TextField label="Availability note" value={data.availabilityNote ?? ""} onChange={(v) => set({ availabilityNote: v })} />
         </div>
-        <ToggleField label="Currently available" value={data.available ?? false} onChange={(v) => set({ available: v })} />
       </SectionCard>
 
       <SectionCard title="Socials">
@@ -102,55 +99,6 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
             </div>
           )}
         />
-      </SectionCard>
-
-      {/* Profile facts — auto-derived from top-level fields.
-          The order is controlled by factOrder (re-orderable below). */}
-      <SectionCard title="Profile facts (auto-derived — reorder below)">
-        <p className="font-mono text-[11px] text-dim">
-          Values are auto-generated from the Identity fields above. Use the ↑↓ buttons to reorder.
-        </p>
-        <ListEditor
-          items={(data.factOrder ?? ["location", "field", "status", "role"]).map((key: string) => ({
-            key,
-            label: { location: "Location", field: "Field", status: "Status", role: "Role" }[key] ?? key,
-            value: { location: data.location, field: data.field, status: data.availability, role: data.role }[key] ?? "—",
-          }))}
-          onChange={(items: any[]) => set({ factOrder: items.map((i) => i.key) })}
-          makeNew={() => ({ key: "location", label: "Location", value: data.location ?? "—" })}
-          itemLabel={(f: any) => `${f.label}: ${f.value ?? "—"}`}
-          addLabel="Add fact slot"
-          renderItem={(item: any, up: (patch: any) => void) => (
-            <div className="grid grid-cols-2 gap-3">
-              <SelectField
-                label="Fact type"
-                value={item.key}
-                onChange={(v) => up({
-                  key: v,
-                  label: { location: "Location", field: "Field", status: "Status", role: "Role" }[v] ?? v,
-                  value: { location: data.location, field: data.field, status: data.availability, role: data.role }[v] ?? "—",
-                })}
-                options={[
-                  { value: "location", label: "Location" },
-                  { value: "field", label: "Field" },
-                  { value: "status", label: "Status (availability)" },
-                  { value: "role", label: "Role" },
-                ]}
-              />
-              <TextField label="Preview value" value={item.value ?? "—"} onChange={() => {}} hint="Auto-derived, read-only" />
-            </div>
-          )}
-        />
-      </SectionCard>
-
-      {/* Code block — fields are auto-derived, only interests + closing are editable */}
-      <SectionCard title="Code block (terminal in About section)">
-        <p className="font-mono text-[11px] text-dim">
-          Fields are auto-derived from Identity above (name, handle, role, location).
-        </p>
-        <TextField label="Variable name" value={data.codeBlock?.variableName ?? "profile"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, variableName: v } })} />
-        <TextField label="Closing status" value={data.codeBlock?.closing ?? "building"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, closing: v } })} />
-        <TagInput label="Interests" values={data.codeBlock?.interests ?? []} onChange={(v) => set({ codeBlock: { ...data.codeBlock, interests: v } })} />
       </SectionCard>
     </div>
   );

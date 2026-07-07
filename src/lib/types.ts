@@ -11,12 +11,6 @@ export interface Socials {
   email?: string;
 }
 
-export interface SocialLink {
-  label: string;
-  icon: IconName;
-  url: string;
-}
-
 export interface Stat {
   label: string;
   value: string;
@@ -29,44 +23,20 @@ export interface NumericStat {
   prefix?: string;
 }
 
-export interface Fact {
-  label: string;
-  value: string;
-}
-
-export interface CodeBlockField {
-  key: string;
-  value: string;
-}
-
-export interface CodeBlock {
-  variableName: string;
-  fields: CodeBlockField[];
-  interests: string[];
-  closing: string;
-}
-
 export interface Profile {
   name: string;
   penname: string;
-  alias?: string;
   role: string;
   field: string;
   location: string;
   availability: string;
-  available?: boolean;
   availabilityNote?: string;
   email: string;
   socials: Socials;
-  socialLinks?: SocialLink[];
   tagline: string;
-  bio: string[];
-  quote?: string;
-  facts?: Fact[];
-  codeBlock?: CodeBlock;
   stats: Stat[];
   numericStats?: NumericStat[];
-  avatar?: string;
+  contactNote?: string;
 }
 
 export interface MarqueeData {
