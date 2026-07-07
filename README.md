@@ -12,11 +12,11 @@ I am a Computer Science student majoring in **Artificial Intelligence**. My pass
 
 - 🔭 **Current Project:** 
 - 🎯 **Goal:** 
-<!--
+
 ## 📁 Featured Projects
 
 - 🚌 [LoadSense](https://github.com/lejxz/LoadSense) - A lightweight edge‑vision and GPS‑driven platform that fuses deep learning occupancy monitoring with AI route prediction. It delivers real‑time feedback to drivers, commuters, and operators, advancing SDGs 9 (Industry, Innovation, Infrastructure) and 11 (Sustainable Cities).
- -->
+
 ## 📊 GitHub Stats 🔗 Connect With Me
 
 <div align="center">
