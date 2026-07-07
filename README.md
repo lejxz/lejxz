@@ -17,7 +17,7 @@ I am a Computer Science student majoring in **Artificial Intelligence**. My pass
 - 🚌 [LoadSense](https://github.com/lejxz/LoadSense) - A lightweight edge‑vision and GPS‑driven platform that fuses deep learning occupancy monitoring with AI route prediction. It delivers real‑time feedback to drivers, commuters, and operators, advancing SDGs 9 (Industry, Innovation, Infrastructure) and 11 (Sustainable Cities).
 
 ### Stats
-
+---
 <div align="center">
 
 [![GitHub Stats](https://github-readme-stats-nine-lovat-17.vercel.app/api?username=lejxz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=B660EB&text_color=ffffff&icon_color=B660EB&hide_title=false&hide=prs&include_all_commits=true&count_private=true&year=current)](https://github.com/lejxz)
