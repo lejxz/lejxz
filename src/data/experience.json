@@ -1,14 +1,47 @@
 {
   "items": [
     {
+      "id": "exp-2",
+      "type": "research",
+      "role": "Team Lead — Hira",
+      "org": "Coursework · USJR",
+      "organization": "Coursework · USJR",
+      "orgUrl": "https://github.com/lejxz/Hira-Frontend-Only",
+      "period": "2026",
+      "location": "Philippines",
+      "current": true,
+      "summary": "Leading architecture and design on Hira, a persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs, built as HCI coursework and drafted into a Design Science Research paper.",
+      "description": [
+        "Hira an HCI course deliverable. The frontend is a Next.js 16 + Tailwind v4 + TypeScript scaffold with a forest-green design system.",
+        "The design work was written up as an independent paper, \"Persona-Aware Platform Design for Cross-Segment Labor Market Integration in the Philippines,\" with plans to adapt it into competition proposals."
+      ],
+      "bullets": [
+        "Completed a full DSR paper draft for independent publication"
+      ],
+      "achievements": [
+        "Completed a full DSR paper draft for independent publication"
+      ],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Figma"
+      ],
+      "tags": [
+        "HCI",
+        "Design Research"
+      ],
+      "logo": "/assets/experiences/exp-02.svg"
+    },
+    {
       "id": "exp-1",
       "type": "award",
-      "role": "AI/ML Lead \u2014 LoadSense",
+      "role": "Team Lead — LoadSense",
       "org": "ASEAN AI Hackathon 2026",
-      "organization": "ASEAN AI Hackathon 2026 \u00b7 Team FlowerBoys",
+      "organization": "ASEAN AI Hackathon 2026 · Team FlowerBoys",
       "orgUrl": "https://github.com/lejxz/LoadSense",
-      "period": "Apr 2026 \u2014 Jun 2026",
-      "location": "Cebu, Philippines (virtual finals)",
+      "period": "Apr 2026 — Jun 2026",
+      "location": "ASEAN (virtual finals)",
       "current": false,
       "summary": "Built LoadSense, an edge-AI + cloud occupancy platform for Philippine jeepneys, with Team FlowerBoys. Placed Top 6 in the Smart Cities track and Top 40 overall.",
       "description": [
@@ -21,7 +54,7 @@
         "Built the operator console, live fleet map, and alert verification workflow"
       ],
       "achievements": [
-        "Top 6, Smart Cities track \u2014 ASEAN AI Hackathon 2026",
+        "Top 6, Smart Cities track — ASEAN AI Hackathon 2026",
         "Top 40 overall, ASEAN AI Hackathon 2026",
         "Advanced to and competed in the virtual semi-finals"
       ],
@@ -29,62 +62,26 @@
         "Python",
         "YOLOv8",
         "FastAPI",
-        "SQLite",
-        "Leaflet"
+        "OpenCV",
+        "SQLite"
       ],
       "tags": [
         "Computer Vision",
         "Edge AI",
-        "FastAPI"
+        "AI",
+        "NLP"
       ],
       "logo": "/assets/experiences/exp-01.svg"
     },
     {
-      "id": "exp-2",
-      "type": "research",
-      "role": "Architecture & Research Lead \u2014 Hira",
-      "org": "HCI Coursework \u00b7 USJR",
-      "organization": "HCI Coursework \u00b7 University of San Jose-Recoletos",
-      "orgUrl": "https://github.com/lejxz/Hira-Frontend-Only",
-      "period": "2026",
-      "location": "Cebu, Philippines",
-      "current": true,
-      "summary": "Leading architecture and design on Hira, a persona-aware Filipino labor-matching platform for blue-collar workers, fresh graduates, and OFWs, built as HCI coursework and drafted into a Design Science Research paper.",
-      "description": [
-        "Hira serves dual purpose as an HCI course deliverable and a potential hackathon entry. The frontend is a Next.js 16 + Tailwind v4 + TypeScript scaffold with a forest-green design system, built frontend-first against mock data with government API integrations (TESDA, SSS, Pag-IBIG, DMW) deferred to a later phase.",
-        "The design work was written up as an independent paper, \"Persona-Aware Platform Design for Cross-Segment Labor Market Integration in the Philippines,\" with plans to adapt it into competition proposals."
-      ],
-      "bullets": [
-        "Led architecture and persona-driven design across employer, job-seeker, and government-agency views",
-        "Directed a full Figma design build alongside the coded frontend",
-        "Drafted an independent Design Science Research paper on the platform's design approach"
-      ],
-      "achievements": [
-        "Shipped a working frontend demo running entirely on mock data",
-        "Completed a full DSR paper draft for independent publication"
-      ],
-      "tech": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "Figma"
-      ],
-      "tags": [
-        "HCI",
-        "Design Research",
-        "Frontend"
-      ],
-      "logo": "/assets/experiences/exp-02.svg"
-    },
-    {
       "id": "exp-3",
       "type": "work",
-      "role": "Developer \u2014 Email Security Classifier",
+      "role": "Team Lead — Email Security Classifier",
       "org": "Intelligent Systems Finals",
-      "organization": "Intelligent Systems Coursework \u00b7 USJR",
+      "organization": "Intelligent Systems Coursework · USJR",
       "orgUrl": "https://github.com/lejxz/IntSys-Finals-Project",
       "period": "2026",
-      "location": "Cebu, Philippines",
+      "location": "Philippines",
       "current": false,
       "summary": "Built a Naive Bayes classifier that flags fraudulent/phishing emails and prompt-injection attempts, with a custom 300-row labeled dataset and a Streamlit app for the final defense.",
       "description": [
@@ -114,24 +111,22 @@
     {
       "id": "exp-4",
       "type": "education",
-      "role": "B.S. Computer Science \u2014 AI/ML Specialization",
+      "role": "B.S. Computer Science — AI/ML Specialization",
       "org": "University of San Jose-Recoletos",
       "organization": "University of San Jose-Recoletos",
-      "period": "2022 \u2014 2026 (expected)",
-      "location": "Cebu City, Philippines",
+      "period": "2024 — 2028 (expected)",
+      "location": "Philippines",
       "current": true,
-      "summary": "Studying Computer Science with a specialization in AI/ML, working across HCI, data analytics, algorithms, and IP/privacy law coursework alongside a small competition team, FlowerBoys.",
+      "summary": "Studying Computer Science with a specialization in AI/ML, working across data analytics, algorithms, coursework and many more.",
       "description": [
         "Coursework has spanned data analytics (correlation analysis, exploratory notebooks), AI surveillance and biometrics policy (PhilSys, NPC, Clearview AI, BIPA), and SIPP topics on IP rights and privacy/data rights.",
         "Outside of class requirements, has built and competed with hackathon projects (LoadSense) and independent research write-ups (Hira) alongside team FlowerBoys."
       ],
       "bullets": [
-        "Specializing in AI/ML within the BSCS program",
-        "Core member of competition team FlowerBoys",
-        "Coursework spans HCI, data analytics, algorithms, and SIPP (IP/privacy law)"
+        "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (Team FlowerBoys)"
       ],
       "achievements": [
-        "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (with FlowerBoys)"
+        "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (Team FlowerBoys)"
       ],
       "tech": [
         "Python",
@@ -146,5 +141,5 @@
     }
   ],
   "heading": "Experience",
-  "subtitle": "A running record of coursework, hackathons, and the projects that came out of them."
+  "subtitle": "A snapshot of my life journey, work I have developed and teams I have joined."
 }
