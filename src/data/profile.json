@@ -17,31 +17,9 @@
     "linkedin": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/",
     "email": "mailto:lejxz.dev@gmail.com"
   },
-  "socialLinks": [
-    {
-      "label": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/lejxz"
-    },
-    {
-      "label": "LinkedIn",
-      "icon": "linkedin",
-      "url": "https://www.linkedin.com/in/lejuene-delantar-a6bb3738b/"
-    },
-    {
-      "label": "Instagram",
-      "icon": "instagram",
-      "url": "https://www.instagram.com/lejxz.exe/"
-    },
-    {
-      "label": "Email",
-      "icon": "mail",
-      "url": "mailto:lejxz.dev@gmail.com"
-    }
-  ],
   "tagline": "<Change the world/>",
   "bio": [
-    "I am a Computer Science student majoring in Artificial Intelligence. My passion and research are dedicated to Machine Learning and Computer Vision."
+    "I am a Computer Science student at the University of San Jose-Recoletos in Philippines, specializing in Artificial Intelligence and Machine Learning. My interest lies in building systems that can perceive and respond to the real world, particularly through computer vision, and I am drawn to the intersection of AI with AR/VR."
   ],
   "quote": "Always Learning. Stay Hungry, Stay Foolish.",
   "facts": [
@@ -83,11 +61,10 @@
       }
     ],
     "interests": [
-      "ml",
-      "cv",
-      "nlp",
-      "systems",
-      "webgl"
+      "AI",
+      "OpenCV",
+      "NLP",
+      "ML"
     ],
     "closing": "building"
   },

@@ -99,6 +99,39 @@ export function ProfileEditor({ data, onChange }: EditorProps<any>) {
           )}
         />
       </SectionCard>
+
+      {/* Profile facts — auto-derived from top-level fields.
+          Location, Field, Status, Focus are generated from the Identity
+          fields above. No separate editing needed. */}
+      <SectionCard title="Profile facts (auto-derived from Identity fields above)">
+        <p className="font-mono text-[11px] text-dim">
+          These are auto-generated from the fields above:
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Location → {data.location ?? "—"}
+          </div>
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Field → {data.field ?? "—"}
+          </div>
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Status → {data.availability ?? "—"}
+          </div>
+          <div className="rounded-lg border border-line bg-surface/30 px-3 py-2 font-mono text-[10px] text-dim">
+            Role → {data.role ?? "—"}
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* Code block — fields are auto-derived, only interests + closing are editable */}
+      <SectionCard title="Code block (terminal in About section)">
+        <p className="font-mono text-[11px] text-dim">
+          Fields are auto-derived from Identity above (name, handle, role, location).
+        </p>
+        <TextField label="Variable name" value={data.codeBlock?.variableName ?? "profile"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, variableName: v } })} />
+        <TextField label="Closing status" value={data.codeBlock?.closing ?? "building"} onChange={(v) => set({ codeBlock: { ...data.codeBlock, closing: v } })} />
+        <TagInput label="Interests" values={data.codeBlock?.interests ?? []} onChange={(v) => set({ codeBlock: { ...data.codeBlock, interests: v } })} />
+      </SectionCard>
     </div>
   );
 }
