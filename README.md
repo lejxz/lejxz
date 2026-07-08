@@ -6,11 +6,8 @@
 
 I am a vibe coder
  
-[
+[Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=500&height=50&lines=Exploring+AI+in+AR%2FVR;Real-Time+Computer+Vision;Stay+Hungry%2C+Stay+Foolish.)
 
-![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=500&height=50&lines=Exploring+AI+in+AR%2FVR;Real-Time+Computer+Vision;Stay+Hungry%2C+Stay+Foolish.)
-
-](https://git.io/typing-svg)
 </div>
  
 ## Featured Projects
