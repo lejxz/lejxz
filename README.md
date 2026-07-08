@@ -1,20 +1,29 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=100&reversal=true&fontAlign=50&fontAlignY=30&fontColor=B660EB&animation=fadeIn&stroke=7800BF&fontSize=30&strokeWidth=2" style="width:100%;" /><!--&text=lejxz-->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=150&reversal=true&fontFamily=Pacifico&fontAlign=50&fontAlignY=30&text=Lejuene+Delantar&fontColor=FFFFFF&animation=fadeIn&stroke=7800BF&fontSize=30&strokeWidth=2" style="width:100%;" />
 
 <div align="center"> 
- 
- [![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=700&height=50&lines=Exploring+AR%2FVR+%26+Real-Time+Computer+Vision;Always+Learning.;Stay+Hungry%2C+Stay+Foolish.)](https://git.io/typing-svg)
- 
+
+![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=500&height=50&lines=Exploring+Artificial+Intelligence+in+AR%2FVR;Real-Time+Computer+Vision;Stay+Hungry%2C+Stay+Foolish.)
+
 </div>
+
+## About Me
+
+- 🎓 CS student, AI/ML specialization
+- 🥽 Building AI-powered AR/VR & computer vision systems
+- 🌱 Currently exploring: edge AI, real-time CV pipelines
  
 ## Featured Projects
 
 - 🔭 **Current Project:** 
 - 🎯 **Goal:** 
 
+<div align="center"> 
+ 
 | Name | Description |
 | :---: | --- |
-| [LoadSense](https://github.com/lejxz/LoadSense) |Integrated AI occupancy and transit intelligence for public utility vehicles (PUVs). Real information. Safer rides. Smarter cities. — Top 6 Smart Cities, ASEAN AI Hackathon 2026. |
+| [LoadSense](https://github.com/lejxz/LoadSense) | Edge-AI occupancy monitoring for PUVs — real-time transit intelligence for safer, smarter cities. |
 
+</div>
 
 ## Stats
 <div align="center">
@@ -26,3 +35,4 @@
 
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=100&section=footer" style="width:100%;" />
+l
