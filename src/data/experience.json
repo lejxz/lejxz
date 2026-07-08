@@ -46,17 +46,18 @@
       "summary": "Built LoadSense, an edge-AI + cloud occupancy platform for Philippine jeepneys, with Team FlowerBoys. Placed Top 6 in the Smart Cities track and Top 40 overall.",
       "description": [
         "LoadSense uses a YOLOv8-nano model to count boarding and alighting passengers on public utility vehicles, mapping the live count to a four-tier occupancy state shown on a windshield LED strip so waiting commuters can see at a glance whether a jeepney has room.",
-        "A FastAPI + SQLite cloud layer ingests GPS and occupancy telemetry to predict ETA, forecast route demand, flag route deviations and driving anomalies, and drives an operator console with a live fleet map (Leaflet) and an alert verification workflow."
+        "A FastAPI + SQLite cloud layer ingests GPS and occupancy telemetry to predict ETA, forecast route demand, flag route deviations and driving anomalies, and drives an operator console with a live fleet map (Leaflet) and an alert verification workflow.",
+        "Despite Our team not moving to finals, we are grateful to have been given the opportunity to participate in such event and we have learned a lot from this Hackathon."
       ],
       "bullets": [
-        "Placed Top 6 in the Smart Cities track and Top 40 overall at ASEAN AI Hackathon 2026",
-        "Designed the edge (YOLOv8-nano occupancy counting) and cloud (FastAPI/SQLite) architecture",
-        "Built the operator console, live fleet map, and alert verification workflow"
+        "Top 6, Smart Cities track — ASEAN AI Hackathon 2026",
+        "Top 40 overall, ASEAN AI Hackathon 2026",
+        "Advanced to and competed up to the virtual semi-finals"
       ],
       "achievements": [
         "Top 6, Smart Cities track — ASEAN AI Hackathon 2026",
         "Top 40 overall, ASEAN AI Hackathon 2026",
-        "Advanced to and competed in the virtual semi-finals"
+        "Advanced to and competed up to the virtual semi-finals"
       ],
       "tech": [
         "Python",
@@ -122,10 +123,10 @@
         "To be filled."
       ],
       "bullets": [
-        "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (Team FlowerBoys)"
+        "Top 40 overall, ASEAN AI Hackathon 2026 (Team FlowerBoys)"
       ],
       "achievements": [
-        "Top 6, Smart Cities track, ASEAN AI Hackathon 2026 (Team FlowerBoys)"
+        "Top 40 overall, ASEAN AI Hackathon 2026 (Team FlowerBoys)"
       ],
       "tech": [
         "Python",
@@ -136,7 +137,8 @@
         "Education",
         "AI/ML"
       ],
-      "logo": "/assets/experiences/exp-04.svg"
+      "logo": "/assets/experiences/exp-04.svg",
+      "orgUrl": "https://www.facebook.com/usjr.official"
     }
   ],
   "heading": "Experience",

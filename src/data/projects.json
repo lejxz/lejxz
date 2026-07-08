@@ -56,8 +56,12 @@
       ],
       "links": [
         {
-          "label": "Source",
+          "label": "Repository",
           "url": "https://github.com/lejxz/LoadSense"
+        },
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/share/18wTCzZckD/"
         }
       ],
       "featured": true,
@@ -125,7 +129,7 @@
       ],
       "links": [
         {
-          "label": "Source",
+          "label": "Repository",
           "url": "https://github.com/lejxz/Hira-Frontend-Only"
         },
         {
@@ -179,7 +183,7 @@
       ],
       "links": [
         {
-          "label": "Source",
+          "label": "Repository",
           "url": "https://github.com/lejxz/IntSys-Finals-Project"
         }
       ],
@@ -229,7 +233,7 @@
       ],
       "links": [
         {
-          "label": "Source",
+          "label": "Repository",
           "url": "https://github.com/lejxz/MusicBot"
         }
       ],
