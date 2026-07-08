@@ -416,7 +416,7 @@ export function Skills() {
                   ◇
                 </span>
                 <p className="font-mono text-xs text-dim">
-                  Click any neuron to inspect proficiency · hover to trace connections
+                  Click any neuron to inspect proficiency
                 </p>
               </div>
             </motion.div>
