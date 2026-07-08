@@ -3,9 +3,8 @@
 <div align="center"> 
 
 <p>
-  <b style="font-size: 5em;">Lejuene Delantar</b>
+  <b><font size="10">Lejuene Delantar</font></b>
 </p>
-
  
 ![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=500&height=50&lines=Exploring+AI+in+AR%2FVR;Real-Time+Computer+Vision;Stay+Hungry%2C+Stay+Foolish.)
 
