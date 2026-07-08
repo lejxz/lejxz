@@ -370,18 +370,20 @@ export function Skills() {
           </div>
         </Reveal>
 
-        {/* Detail panel — slides in below the network when a node is selected */}
+        {/* Detail panel — fixed-height container so selecting/deselecting
+            neurons doesn't cause layout shift (page getting longer/shorter).
+            Both the selected and empty states fill the same min-height. */}
         <AnimatePresence mode="wait">
           {selected ? (
             <motion.div
               key={selected.name}
-              initial={{ opacity: 0, y: 16, height: 0 }}
-              animate={{ opacity: 1, y: 0, height: "auto" }}
-              exit={{ opacity: 0, y: -16, height: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="mt-2"
             >
-              <div className="card-hover-glow mt-2 flex flex-col items-center gap-6 rounded-2xl border border-line bg-surface/75 p-6 backdrop-blur-sm sm:flex-row sm:items-center">
+              <div className="card-hover-glow flex min-h-[11rem] flex-col items-center justify-center gap-6 rounded-2xl border border-line bg-surface/75 p-6 backdrop-blur-sm sm:flex-row sm:items-center">
                 <SkillGauge level={selected.level} name={selected.name} />
                 <div className="flex-1 text-center sm:text-left">
                   <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
@@ -406,14 +408,17 @@ export function Skills() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="mt-2 flex items-center justify-center gap-3 rounded-2xl border border-dashed border-line p-5 text-center"
+              transition={{ duration: 0.2 }}
+              className="mt-2"
             >
-              <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
-                ◇
-              </span>
-              <p className="font-mono text-xs text-dim">
-                Click any neuron to inspect proficiency · hover to trace connections
-              </p>
+              <div className="flex min-h-[11rem] items-center justify-center gap-3 rounded-2xl border border-dashed border-line p-6 text-center">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
+                  ◇
+                </span>
+                <p className="font-mono text-xs text-dim">
+                  Click any neuron to inspect proficiency · hover to trace connections
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
