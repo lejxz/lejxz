@@ -3,7 +3,7 @@
 <div align="center"> 
 
 <p>
-  <b style="font-size: 2em;">Lejuene Delantar</b>
+  <b style="font-size: 5em;">Lejuene Delantar</b>
 </p>
 
  
