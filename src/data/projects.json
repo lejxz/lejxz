@@ -56,8 +56,12 @@
       ],
       "links": [
         {
-          "label": "Source",
+          "label": "Repository",
           "url": "https://github.com/lejxz/LoadSense"
+        },
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/share/18wTCzZckD/"
         }
       ],
       "featured": true,
