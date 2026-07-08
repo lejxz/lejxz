@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { Menu, Terminal } from "lucide-react";
+import { Menu } from "lucide-react";
 import { nav, profile } from "@/lib/data";
 import { asset } from "@/lib/asset";
 import { Button } from "@/components/ui/button";
@@ -135,16 +135,6 @@ export function Navbar() {
               ⌘K
             </kbd>
           </button>
-
-          <Link href="/#contact" className="hidden sm:block">
-            <Button
-              size="sm"
-              className="gap-1.5 rounded-full bg-teal px-4 font-mono text-xs text-primary-foreground hover:bg-teal/90"
-            >
-              <Terminal className="h-3.5 w-3.5" />
-              get_in_touch
-            </Button>
-          </Link>
 
           <ThemeToggle className="flex" />
 
