@@ -2,7 +2,7 @@
 
 <div align="center"> 
 
-<h1>Lejuene Delantar</h1>
+<h1><b>Lejuene Delantar</b></h1>
 
 I am a vibe coder
  
