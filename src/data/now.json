@@ -1,0 +1,23 @@
+{
+  "updated": "2026-07",
+  "items": [
+    {
+      "label": "Learning",
+      "value": "AI agent workflows",
+      "detail": "Refining a personal AI-agent workflow system, including a reusable /concept-init slash command and a planning-depth framework to avoid over-documenting before building.",
+      "icon": "book"
+    },
+    {
+      "label": "Building",
+      "value": "Project-Hira",
+      "detail": "Project-Hira a persona-aware Filipino labor-matching platform",
+      "icon": "code"
+    },
+    {
+      "label": "Exploring",
+      "value": "AR/VR & computer vision",
+      "detail": "Digging into vision-language model integration, sign language recognition, and AI systems that perceive the real world through a camera.",
+      "icon": "sparkles"
+    }
+  ]
+}
