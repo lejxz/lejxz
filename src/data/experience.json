@@ -31,7 +31,7 @@
         "HCI",
         "Design Research"
       ],
-      "logo": "assets/experiences/exp-01.svg"
+      "logo": "/assets/experiences/exp-01.svg"
     },
     {
       "id": "exp-1",
@@ -71,7 +71,7 @@
         "AI",
         "NLP"
       ],
-      "logo": "assets/experiences/exp-02.svg"
+      "logo": "/assets/experiences/exp-02.svg"
     },
     {
       "id": "exp-3",
@@ -106,7 +106,7 @@
         "Naive Bayes",
         "Security"
       ],
-      "logo": "assets/experiences/exp-03.svg"
+      "logo": "/assets/experiences/exp-03.svg"
     },
     {
       "id": "exp-4",
@@ -136,7 +136,7 @@
         "Education",
         "AI/ML"
       ],
-      "logo": "assets/experiences/exp-04.svg"
+      "logo": "/assets/experiences/exp-04.svg"
     }
   ],
   "heading": "Experience",

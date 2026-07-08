@@ -32,19 +32,42 @@ function useMediaQuery(query: string): boolean {
 // layer N+1 — a fully-connected feedforward network.
 // ---------------------------------------------------------------------------
 const DESKTOP_W = 900;
-const DESKTOP_H = 380;
 const DESKTOP_NODE_TOP = 72;
-const DESKTOP_NODE_BOTTOM = 348;
+const DESKTOP_NODE_SPACING = 70; // min vertical px between node centers
+const DESKTOP_MIN_H = 380; // min SVG height
 
 // Mobile layout (vertical layers / rows) — taller and narrower
 const MOBILE_W = 360;
-const MOBILE_H = 760;
 const MOBILE_ROW_SPACING = 220; // vertical distance between layer rows
 const MOBILE_ROW_TOP = 80; // y of the first layer's center
 const MOBILE_NODE_LEFT = 50;
 const MOBILE_NODE_RIGHT = 310;
+const MOBILE_NODE_SPACING = 70; // min horizontal px between node centers
 
 const numLayers = skills.groups.length;
+// Max items across all groups — used to size the SVG so nodes never overlap
+const maxItemsPerLayer = Math.max(...skills.groups.map((g) => g.items.length), 1);
+
+// Desktop: SVG height grows if any layer has many items
+const DESKTOP_H = Math.max(
+  DESKTOP_MIN_H,
+  DESKTOP_NODE_TOP + maxItemsPerLayer * DESKTOP_NODE_SPACING + 40
+);
+const DESKTOP_NODE_BOTTOM = DESKTOP_NODE_TOP + maxItemsPerLayer * DESKTOP_NODE_SPACING;
+
+// Mobile: SVG height grows with layers (rows)
+const MOBILE_H = Math.max(
+  760,
+  MOBILE_ROW_TOP + numLayers * MOBILE_ROW_SPACING
+);
+
+// Mobile: node horizontal span grows if a row has many items
+const MOBILE_NODE_SPAN = Math.max(
+  MOBILE_NODE_RIGHT - MOBILE_NODE_LEFT,
+  maxItemsPerLayer * MOBILE_NODE_SPACING
+);
+// Mobile SVG width grows to fit the widest row
+const MOBILE_W_DYNAMIC = Math.max(MOBILE_W, MOBILE_NODE_LEFT + MOBILE_NODE_SPAN + MOBILE_NODE_LEFT);
 
 // Desktop X positions for each layer (columns)
 const DESKTOP_LAYER_X = skills.groups.map((_, i) =>
@@ -73,17 +96,19 @@ export function Skills() {
           let x: number;
           let y: number;
           if (isMobile) {
-            // Mobile: nodes go left → right within a row
-            x =
-              MOBILE_NODE_LEFT +
-              ((ii + 0.5) / count) * (MOBILE_NODE_RIGHT - MOBILE_NODE_LEFT);
+            // Mobile: nodes go left → right within a row.
+            // The span grows if the row has many items so nodes never overlap.
+            const span = Math.max(
+              MOBILE_NODE_RIGHT - MOBILE_NODE_LEFT,
+              count * MOBILE_NODE_SPACING
+            );
+            x = MOBILE_NODE_LEFT + ((ii + 0.5) / count) * span;
             y = MOBILE_LAYER_Y[gi];
           } else {
-            // Desktop: nodes go top → bottom within a column
+            // Desktop: nodes go top → bottom within a column.
+            // The vertical span grows with the max items per layer.
             x = DESKTOP_LAYER_X[gi];
-            y =
-              DESKTOP_NODE_TOP +
-              ((ii + 0.5) / count) * (DESKTOP_NODE_BOTTOM - DESKTOP_NODE_TOP);
+            y = DESKTOP_NODE_TOP + ((ii + 0.5) / count) * (DESKTOP_NODE_BOTTOM - DESKTOP_NODE_TOP);
           }
           return {
             ...item,
@@ -165,7 +190,7 @@ export function Skills() {
         <Reveal delay={0.1}>
           <div className="mt-6">
             <svg
-              viewBox={`0 0 ${isMobile ? MOBILE_W : DESKTOP_W} ${isMobile ? MOBILE_H : DESKTOP_H}`}
+              viewBox={`0 0 ${isMobile ? MOBILE_W_DYNAMIC : DESKTOP_W} ${isMobile ? MOBILE_H : DESKTOP_H}`}
               className="w-full"
               style={{ height: "auto" }}
               preserveAspectRatio="xMidYMid meet"
@@ -176,7 +201,7 @@ export function Skills() {
               {skills.groups.map((g, gi) => (
                 <g key={`label-${g.key}`}>
                   <text
-                    x={isMobile ? MOBILE_W / 2 : DESKTOP_LAYER_X[gi]}
+                    x={isMobile ? MOBILE_W_DYNAMIC / 2 : DESKTOP_LAYER_X[gi]}
                     y={isMobile ? MOBILE_LAYER_Y[gi] - 32 : 26}
                     textAnchor="middle"
                     fill="var(--color-dim)"
@@ -189,7 +214,7 @@ export function Skills() {
                     {g.title.toUpperCase()}
                   </text>
                   <text
-                    x={isMobile ? MOBILE_W / 2 : DESKTOP_LAYER_X[gi]}
+                    x={isMobile ? MOBILE_W_DYNAMIC / 2 : DESKTOP_LAYER_X[gi]}
                     y={isMobile ? MOBILE_LAYER_Y[gi] - 16 : 44}
                     textAnchor="middle"
                     fill="var(--color-dim)"
