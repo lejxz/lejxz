@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { experience } from "@/lib/data";
-import type { ExperienceType } from "@/lib/types";
+import type { ExperienceType, ExperienceItem } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { useModals } from "@/lib/modals";
@@ -45,7 +44,6 @@ const TYPE_RING: Record<ExperienceType, string> = {
 export function Experience() {
   const { openExperience } = useModals();
   const items = experience.items.slice(0, PREVIEW_LIMIT);
-  const hasMore = experience.items.length > PREVIEW_LIMIT;
 
   return (
     <section id="experience" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -62,24 +60,30 @@ export function Experience() {
           </Reveal>
         )}
 
-        {/* Flow timeline — vertical stack of cards, each with its own
-            left rail (node + connector). The connector line is scoped
-            to each card's row, so it never overlaps the next card. */}
-        <div className="mt-10 space-y-4">
-          {items.map((item, i) => {
-            const type = (item.type ?? "work") as ExperienceType;
-            return (
-              <Reveal key={item.id} delay={i * 0.08}>
-                <FlowCard
-                  item={item}
-                  index={i}
-                  isLast={i === items.length - 1}
-                  type={type}
-                  onOpen={() => openExperience(item)}
-                />
-              </Reveal>
-            );
-          })}
+        {/* Flow timeline — a continuous vertical line on the left with
+            nodes at each entry. The line is a single absolute element
+            behind the cards, so it never overlaps or animates per-card.
+            Cards sit to the right of the rail with consistent spacing. */}
+        <div className="relative mt-10">
+          {/* Continuous vertical line — sits behind the nodes, spans the
+              full timeline height. No per-card connectors, no overlap. */}
+          <div className="absolute left-[15px] top-5 bottom-5 w-px bg-line sm:left-[19px]" />
+
+          <div className="space-y-4">
+            {items.map((item, i) => {
+              const type = (item.type ?? "work") as ExperienceType;
+              return (
+                <Reveal key={item.id} delay={i * 0.08}>
+                  <FlowCard
+                    item={item}
+                    index={i}
+                    type={type}
+                    onOpen={() => openExperience(item)}
+                  />
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
 
         {items.length === 0 && (
@@ -88,47 +92,39 @@ export function Experience() {
           </div>
         )}
 
-        {/* View all link */}
-        {hasMore && (
-          <Reveal delay={0.1}>
-            <div className="mt-8 flex justify-center">
-              <Link
-                href="/experience/"
-                className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
-              >
-                View all {experience.items.length} entries
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </Reveal>
-        )}
+        {/* View all link — always shown */}
+        <Reveal delay={0.1}>
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/experience/"
+              className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
+            >
+              View all {experience.items.length} entries
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
 /**
- * FlowCard — a single timeline entry with a left rail.
+ * FlowCard — a single timeline entry.
  *
- * The rail has:
- *  - A node (colored dot) at the top, aligned with the card's first line
- *  - A connector line below the node that extends to the next card.
- *    The connector is clipped to THIS card's height (not absolute), so
- *    it never overlaps the next card awkwardly. The line fills via a
- *    scroll-triggered animation (whileInView), drawing downward.
- *
- * Layout: [rail (48px)] [card content (flex-1)]
+ * Layout: [node (32px)] [card content (flex-1)]
+ * The node is a colored dot aligned with the card's title. The vertical
+ * connector line is a single absolute element in the parent (not per-card),
+ * so there's no overlap or animation jank.
  */
 function FlowCard({
   item,
   index,
-  isLast,
   type,
   onOpen,
 }: {
   item: ExperienceItem;
   index: number;
-  isLast: boolean;
   type: ExperienceType;
   onOpen: () => void;
 }) {
@@ -142,47 +138,28 @@ function FlowCard({
       transition={{ duration: 0.5, delay: index * 0.08 }}
       className="group flex gap-3 sm:gap-4"
     >
-      {/* Left rail — node + connector. Fixed width so all cards align. */}
-      <div className="relative flex w-8 shrink-0 flex-col items-center sm:w-10">
-        {/* Node — a colored dot with a ring, aligned to the card's title line */}
-        <div className="relative flex h-10 items-center justify-center">
-          <span
+      {/* Node — a colored dot sitting on the continuous line.
+          No per-card connector — the parent's absolute line handles it. */}
+      <div className="relative flex w-8 shrink-0 justify-center pt-4 sm:w-10">
+        <span
+          className={cn(
+            "relative z-10 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 bg-surface",
+            TYPE_RING[type]
+          )}
+        >
+          <span className={cn("h-1.5 w-1.5 rounded-full", TYPE_DOT[type])} />
+        </span>
+        {/* Pulse on current entries */}
+        {item.current && (
+          <motion.span
             className={cn(
-              "flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 bg-surface",
+              "absolute top-4 z-10 h-3.5 w-3.5 rounded-full border-2",
               TYPE_RING[type]
             )}
-          >
-            <span className={cn("h-1.5 w-1.5 rounded-full", TYPE_DOT[type])} />
-          </span>
-          {/* Pulse on current entries */}
-          {item.current && (
-            <motion.span
-              className={cn("absolute h-3.5 w-3.5 rounded-full border-2", TYPE_RING[type])}
-              initial={{ scale: 1, opacity: 0.6 }}
-              animate={{ scale: 2.2, opacity: 0 }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-            />
-          )}
-        </div>
-        {/* Connector — fills downward from the node. Scoped to this card,
-            not overlapping the next. The line is a flex-1 column element
-            that sits between the node and the card's bottom. We animate
-            its scaleY via whileInView for a draw-on-scroll effect. */}
-        {!isLast && (
-          <div className="relative mt-1 w-px flex-1 bg-line">
-            <motion.div
-              className={cn(
-                "absolute inset-0 origin-top",
-                type === "award" || type === "education"
-                  ? "bg-violet/40"
-                  : "bg-teal/40"
-              )}
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            />
-          </div>
+            initial={{ scale: 1, opacity: 0.6 }}
+            animate={{ scale: 2.2, opacity: 0 }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+          />
         )}
       </div>
 

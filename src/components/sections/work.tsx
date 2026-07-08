@@ -16,7 +16,6 @@ const GRID_LIMIT = 6;
 
 export function Work() {
   const { openProject } = useModals();
-  const hasMore = projects.projects.length > GRID_LIMIT + 1;
 
   // The topmost featured project gets the big spotlight card.
   // ALL remaining projects (including other featured ones) go in the
@@ -73,20 +72,18 @@ export function Work() {
           </div>
         )}
 
-        {/* View all link */}
-        {hasMore && (
-          <Reveal delay={0.1}>
-            <div className="mt-8 flex justify-center">
-              <Link
-                href="/projects/"
-                className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
-              >
-                View all {projects.projects.length} projects
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </Reveal>
-        )}
+        {/* View all link — always shown */}
+        <Reveal delay={0.1}>
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/projects/"
+              className="group inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 px-5 py-2 font-mono text-xs text-teal transition-colors hover:bg-teal/20"
+            >
+              View all {projects.projects.length} projects
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
