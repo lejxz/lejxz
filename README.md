@@ -2,12 +2,15 @@
 
 <div align="center"> 
 
-<h1><b>Lejuene Delantar</b></h1>
+<p>
+  <b style="font-size: 2em;">Lejuene Delantar</b>
+</p>
 
  
 ![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=6000&pause=2000&color=B660EB&center=true&vCenter=true&width=500&height=50&lines=Exploring+AI+in+AR%2FVR;Real-Time+Computer+Vision;Stay+Hungry%2C+Stay+Foolish.)
 
 </div>
+
 ## About Me
 
 - 🎓 CS student, AI/ML specialization
@@ -21,7 +24,7 @@
 
 | Name | Description |
 | :---: | --- |
-| [LoadSense](https://github.com/lejxz/LoadSense) Edge-AI occupancy monitoring for PUVs — real-time transit intelligence for safer, smarter cities. |
+| [LoadSense](https://github.com/lejxz/LoadSense) | Edge-AI occupancy monitoring for PUVs — real-time transit intelligence for safer, smarter cities. |
 
 
 ## Stats
