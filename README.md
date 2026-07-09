@@ -14,8 +14,7 @@
  
 ## Featured Projects
 
-- 🔭 **Current Project:** 
-- 🎯 **Goal:** 
+- 🔭 **Current Project:** Ideating
 
 <div align="center"> 
  
