@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { experience } from "@/lib/data";
-import type { ExperienceType } from "@/lib/types";
+import type { ExperienceType, ExperienceItem } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
-import { ExperienceCard } from "@/components/cards/experience-card";
+import { useModals } from "@/lib/modals";
+import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
 const FILTERS: { key: ExperienceType | "all"; label: string }[] = [
@@ -19,18 +20,37 @@ const FILTERS: { key: ExperienceType | "all"; label: string }[] = [
   { key: "award", label: "Awards" },
 ];
 
-export function ExperienceFull() {
-  const [filter, setFilter] = useState<ExperienceType | "all">("all");
-  const timelineRef = useRef<HTMLDivElement>(null);
+const TYPE_LABEL: Record<ExperienceType, string> = {
+  work: "Work",
+  education: "Education",
+  research: "Research",
+  award: "Award",
+};
 
-  // Scroll-linked progress for the vertical timeline line. The line fills
-  // from the top as the user scrolls through the timeline section.
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ["start 80%", "end 80%"],
-  });
-  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const headTop = useTransform(lineScale, [0, 1], ["0%", "100%"]);
+const TYPE_ACCENT: Record<ExperienceType, string> = {
+  work: "text-teal",
+  education: "text-violet",
+  research: "text-teal",
+  award: "text-violet",
+};
+
+const TYPE_DOT: Record<ExperienceType, string> = {
+  work: "bg-teal",
+  education: "bg-violet",
+  research: "bg-teal",
+  award: "bg-violet",
+};
+
+const TYPE_RING: Record<ExperienceType, string> = {
+  work: "border-teal/30",
+  education: "border-violet/30",
+  research: "border-teal/30",
+  award: "border-violet/30",
+};
+
+export function ExperienceFull() {
+  const { openExperience } = useModals();
+  const [filter, setFilter] = useState<ExperienceType | "all">("all");
 
   const items = experience.items.filter(
     (e) => filter === "all" || (e.type ?? "work") === filter
@@ -41,7 +61,7 @@ export function ExperienceFull() {
       <div className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-teal/8 blur-[150px]" />
 
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        {/* Breadcrumb — back to home + section quick-links */}
+        {/* Breadcrumb */}
         <Reveal>
           <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-dim">
             <Link
@@ -70,7 +90,7 @@ export function ExperienceFull() {
         </Reveal>
 
         <div className="mt-6">
-          <SectionHeading index="03" kicker="Full timeline" title="All Experience" />
+          <SectionHeading index="02" kicker="Full timeline" title="All Experience" />
         </div>
 
         <Reveal delay={0.06}>
@@ -79,6 +99,7 @@ export function ExperienceFull() {
           </p>
         </Reveal>
 
+        {/* Filters */}
         <Reveal delay={0.1}>
           <div className="mt-8 flex flex-wrap gap-2">
             {FILTERS.map((f) => (
@@ -111,27 +132,26 @@ export function ExperienceFull() {
           </div>
         </Reveal>
 
-        {/* Timeline — the vertical line fills as the user scrolls through it */}
-        <div ref={timelineRef} className="mt-10 relative">
-          {/* Track (full-height faint line) */}
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-line sm:left-[9px]" />
-          {/* Progress fill (teal→violet gradient, scaled by scroll) */}
-          <motion.div
-            style={{ scaleY: lineScale, transformOrigin: "top" }}
-            className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-teal via-teal/80 to-violet sm:left-[9px]"
-          />
-          {/* Glowing head node — sits at the current fill position */}
-          <motion.div
-            style={{ top: headTop }}
-            className="absolute left-[7px] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal shadow-[0_0_10px_var(--color-teal)] sm:left-[9px]"
-          />
-          <motion.div layout className="relative space-y-3">
-            {items.map((item, i) => (
-              <div key={item.id} className="relative">
-                <ExperienceCard experience={item} index={i} variant="row" />
-              </div>
-            ))}
-          </motion.div>
+        {/* Flow timeline — matches the home page styling.
+            Continuous vertical line, nodes on the line, cards to the right. */}
+        <div className="relative mt-10">
+          <div className="absolute left-[15px] top-5 bottom-5 w-px bg-line sm:left-[19px]" />
+
+          <div className="space-y-4">
+            {items.map((item, i) => {
+              const type = (item.type ?? "work") as ExperienceType;
+              return (
+                <Reveal key={item.id} delay={i * 0.06}>
+                  <FlowCard
+                    item={item}
+                    index={i}
+                    type={type}
+                    onOpen={() => openExperience(item)}
+                  />
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
 
         {items.length === 0 && (
@@ -141,5 +161,158 @@ export function ExperienceFull() {
         )}
       </div>
     </section>
+  );
+}
+
+/**
+ * FlowCard — matches the home page's experience card design.
+ * Node on the left line, card content to the right.
+ */
+function FlowCard({
+  item,
+  index,
+  type,
+  onOpen,
+}: {
+  item: ExperienceItem;
+  index: number;
+  type: ExperienceType;
+  onOpen: () => void;
+}) {
+  const org = item.org ?? item.organization ?? "";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: index * 0.06 }}
+      className="group flex gap-3 sm:gap-4"
+    >
+      {/* Node */}
+      <div className="relative flex w-8 shrink-0 justify-center pt-4 sm:w-10">
+        <span
+          className={cn(
+            "relative z-10 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 bg-surface",
+            TYPE_RING[type]
+          )}
+        >
+          <span className={cn("h-1.5 w-1.5 rounded-full", TYPE_DOT[type])} />
+        </span>
+        {item.current && (
+          <motion.span
+            className={cn(
+              "absolute top-4 z-10 h-3.5 w-3.5 rounded-full border-2",
+              TYPE_RING[type]
+            )}
+            initial={{ scale: 1, opacity: 0.6 }}
+            animate={{ scale: 2.2, opacity: 0 }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+          />
+        )}
+      </div>
+
+      {/* Card */}
+      <motion.div
+        role="button"
+        tabIndex={0}
+        onClick={onOpen}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpen();
+          }
+        }}
+        className="card-hover-glow group/card relative mb-1 flex-1 cursor-pointer rounded-2xl border border-line bg-surface/75 p-4 backdrop-blur-sm transition-colors hover:border-teal/30 sm:p-5"
+      >
+        {/* Header */}
+        <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] uppercase tracking-wider">
+          <span className={TYPE_ACCENT[type]}>{TYPE_LABEL[type]}</span>
+          <span className="text-dim/50">·</span>
+          <span className="text-dim">{item.period}</span>
+          {item.current && (
+            <span className="flex items-center gap-1 rounded-full border border-teal/30 bg-teal/10 px-1.5 py-0.5 text-[9px] text-teal">
+              <span className="h-1 w-1 animate-pulse rounded-full bg-teal" />
+              Now
+            </span>
+          )}
+        </div>
+
+        {/* Title + org */}
+        <div className="flex items-start gap-3">
+          {item.logo && (
+            <img
+              src={asset(item.logo)}
+              alt=""
+              className="mt-0.5 h-10 w-10 shrink-0 rounded-lg border border-line bg-surface-2 object-contain p-1.5"
+            />
+          )}
+          <div className="min-w-0 flex-1">
+            <h3 className="font-mono text-base font-bold text-foreground transition-colors group-hover/card:text-teal sm:text-lg">
+              {item.role}
+            </h3>
+            <p className="mt-0.5 text-sm text-dim">
+              {org}
+              {item.location && (
+                <>
+                  <span className="text-dim/50"> · </span>
+                  {item.location}
+                </>
+              )}
+            </p>
+          </div>
+          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-dim transition-all group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-teal" />
+        </div>
+
+        {/* Summary */}
+        <p className="mt-2 line-clamp-2 text-xs text-dim/80 sm:text-sm">
+          {item.summary}
+        </p>
+
+        {/* Achievement callouts */}
+        {(item.achievements ?? []).length > 0 && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {(item.achievements ?? []).slice(0, 3).map((a, ci) => (
+              <span
+                key={ci}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 font-mono text-[10px] leading-tight",
+                  type === "award"
+                    ? "border-violet/30 bg-violet/8 text-violet"
+                    : "border-teal/25 bg-teal/8 text-teal"
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-1 w-1 shrink-0 rounded-full",
+                    type === "award" ? "bg-violet" : "bg-teal"
+                  )}
+                />
+                <span className="line-clamp-1">{a}</span>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Tech tags */}
+        {(item.tech ?? []).length > 0 && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {(item.tech ?? []).slice(0, 5).map((t) => (
+              <span
+                key={t}
+                className="rounded-md border border-line bg-surface-2/60 px-2 py-0.5 font-mono text-[10px] text-foreground/60"
+              >
+                {t}
+              </span>
+            ))}
+            {(item.tech ?? []).length > 5 && (
+              <span className="font-mono text-[10px] text-dim">
+                +{(item.tech ?? []).length - 5}
+              </span>
+            )}
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
   );
 }
