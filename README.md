@@ -18,7 +18,6 @@
 
 <div align="center"> 
  
- [![GitHub Stats](https://github-stats-extended.vercel.app/api/pin?username=lejxz&repo=anuraghazra/github-readme-stats&description_lines_count=2&theme=midnight-purple)](https://github.com/anuraghazra/github-readme-stats) [![GitHub Stats](https://github-stats-extended.vercel.app/api/pin?username=lejxz&repo=anuraghazra/github-readme-stats&description_lines_count=2&theme=midnight-purple)](https://github.com/anuraghazra/github-readme-stats) [![GitHub Stats](https://github-stats-extended.vercel.app/api/pin?username=lejxz&repo=anuraghazra/github-readme-stats&description_lines_count=2&theme=midnight-purple)](https://github.com/anuraghazra/github-readme-stats)
 | Name | Description |
 | :---: | --- |
 | [LoadSense](https://github.com/lejxz/LoadSense) | Edge-AI occupancy monitoring for PUVs — real-time transit intelligence for safer, smarter cities. |
