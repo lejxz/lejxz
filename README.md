@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=150&reversal=true&fontFamily=Pacifico&fontAlign=50&fontAlignY=30&text=Lejuene+Delantar&fontColor=FFFFFF&animation=fadeIn&stroke=7800BF&fontSize=30&strokeWidth=2" style="width:100%;" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=150&reversal=true&fontFamily=Pacifico&fontAlign=50&fontAlignY=30&text=lejxz&fontColor=FFFFFF&animation=fadeIn&stroke=7800BF&fontSize=30&strokeWidth=2" style="width:100%;" />
 
 <div align="center"> 
 
