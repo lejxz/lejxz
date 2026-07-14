@@ -1,10 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SyntheticEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, X, ImageOff } from "lucide-react";
 import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
+
+/**
+ * useBrokenImage — tracks whether an <img> failed to load, so the Gallery can
+ * swap to a graceful "image unavailable" placeholder instead of the browser's
+ * broken-image icon. Resilience for missing/corrupted project gallery assets.
+ */
+function useBrokenImage(resetKey: unknown) {
+  const [broken, setBroken] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setBroken(false);
+  }, [resetKey]);
+  const onError = (e: SyntheticEvent<HTMLImageElement>) => {
+    setBroken(true);
+    e.currentTarget.removeAttribute("src");
+  };
+  return { broken, onError };
+}
 
 export interface GalleryImage {
   src: string;
@@ -23,10 +41,18 @@ export function Gallery({
   const [index, setIndex] = useState(0);
   const [lightbox, setLightbox] = useState(false);
 
+  // Broken-image tracking for the main viewer, the lightbox, and each
+  // thumbnail. Resets when the image set or active index changes so a
+  // previously-failed image is retried if its src later becomes valid.
+  const main = useBrokenImage(`${images[index]?.src}-${index}`);
+  const lightboxImg = useBrokenImage(`${images[index]?.src}-${index}-lb`);
+  const [brokenThumbs, setBrokenThumbs] = useState<boolean[]>([]);
+
   // Reset to first image when the image set changes (e.g. project switch)
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIndex(0);
+    setBrokenThumbs([]);
   }, [images]);
 
   const n = images.length;
@@ -48,18 +74,26 @@ export function Gallery({
   return (
     <>
       <div className={cn("relative overflow-hidden bg-surface-2", height, className)}>
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={index}
-            src={asset(images[index].src)}
-            alt={images[index].caption ?? `Image ${index + 1}`}
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </AnimatePresence>
+        {main.broken ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-dim">
+            <ImageOff className="h-6 w-6 opacity-50" />
+            <span className="font-mono text-[10px] uppercase tracking-wider">Image unavailable</span>
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={index}
+              src={asset(images[index].src)}
+              alt={images[index].caption ?? `Image ${index + 1}`}
+              onError={main.onError}
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </AnimatePresence>
+        )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
 
         {n > 1 && (
@@ -115,11 +149,27 @@ export function Gallery({
                   : "border-line opacity-50 hover:opacity-90 hover:border-dim"
               )}
             >
-              <img
-                src={asset(img.src)}
-                alt=""
-                className="h-full w-full object-cover"
-              />
+              {brokenThumbs[i] ? (
+                <span className="flex h-full w-full items-center justify-center bg-surface-3">
+                  <ImageOff className="h-3 w-3 text-dim/60" />
+                </span>
+              ) : (
+                <img
+                  src={asset(img.src)}
+                  alt=""
+                  loading="lazy"
+                  onError={(e) => {
+                    setBrokenThumbs((prev) => {
+                      if (prev[i]) return prev;
+                      const next = [...prev];
+                      next[i] = true;
+                      return next;
+                    });
+                    e.currentTarget.removeAttribute("src");
+                  }}
+                  className="h-full w-full object-cover"
+                />
+              )}
             </button>
           ))}
         </div>
@@ -147,6 +197,7 @@ export function Gallery({
                 key={index}
                 src={asset(images[index].src)}
                 alt={images[index].caption ?? `Image ${index + 1}`}
+                onError={lightboxImg.onError}
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
@@ -155,6 +206,12 @@ export function Gallery({
                 onClick={(e) => e.stopPropagation()}
               />
             </AnimatePresence>
+            {lightboxImg.broken && (
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 text-dim">
+                <ImageOff className="h-8 w-8 opacity-50" />
+                <span className="font-mono text-xs uppercase tracking-wider">Image unavailable</span>
+              </div>
+            )}
             {n > 1 && (
               <>
                 <button

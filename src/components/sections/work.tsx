@@ -1,15 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Star, Link2, Check } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowRight, ArrowUpRight, Star, Link2, Check, SlidersHorizontal } from "lucide-react";
 import { projects, featuredProjects } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { SectionHeading } from "@/components/motion/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { useModals } from "@/lib/modals";
 import { useCopy } from "@/hooks/use-copy";
-import { asset } from "@/lib/asset";
+import { ProjectImage } from "@/components/cards/project-image";
 import { cn } from "@/lib/utils";
 
 const GRID_LIMIT = 6;
@@ -21,9 +22,40 @@ export function Work() {
   // ALL remaining projects (including other featured ones) go in the
   // 6-card grid below — no separate carousel.
   const spotlight = featuredProjects[0] ?? projects.projects[0];
-  const rest = projects.projects
-    .filter((p) => p.id !== spotlight?.id)
-    .slice(0, GRID_LIMIT);
+
+  // --- Category filter (feature, within the existing Work section) ----------
+  // Derives a stable, ordered list of categories from the project data so the
+  // filter stays in sync if projects.json changes. "All" is always first.
+  const allProjects = projects.projects;
+  const categories = useMemo(() => {
+    const seen = new Set<string>();
+    const ordered: string[] = [];
+    for (const p of allProjects) {
+      const c = (p.category ?? "Other").trim();
+      if (c && !seen.has(c)) {
+        seen.add(c);
+        ordered.push(c);
+      }
+    }
+    return ["All", ...ordered];
+  }, [allProjects]);
+
+  const [active, setActive] = useState<string>("All");
+
+  // The grid is filtered by the active category; the spotlight stays fixed so
+  // the featured project is always showcased regardless of filter.
+  const rest = useMemo(() => {
+    const base = allProjects.filter((p) => p.id !== spotlight?.id);
+    const filtered =
+      active === "All" ? base : base.filter((p) => (p.category ?? "Other").trim() === active);
+    return filtered.slice(0, GRID_LIMIT);
+  }, [allProjects, spotlight?.id, active]);
+
+  // Count per category for the filter chips (shows how many match).
+  const countFor = (cat: string) =>
+    cat === "All"
+      ? allProjects.filter((p) => p.id !== spotlight?.id).length
+      : allProjects.filter((p) => p.id !== spotlight?.id && (p.category ?? "Other").trim() === cat).length;
 
   return (
     <section id="work" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -40,7 +72,7 @@ export function Work() {
           </Reveal>
         )}
 
-        {/* Spotlight — the single topmost featured project */}
+        {/* Spotlight — the single topmost featured project (unaffected by filter) */}
         {spotlight && (
           <Reveal delay={0.1}>
             <SpotlightCard
@@ -50,27 +82,84 @@ export function Work() {
           </Reveal>
         )}
 
-        {/* Grid — up to 6 remaining projects (featured or not) */}
-        {rest.length > 0 && (
-          <div className="mt-8">
-            <Reveal delay={0.05}>
-              <div className="mb-4 flex items-center gap-3">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-dim/60">
-                  More projects
-                </span>
-                <div className="h-px flex-1 bg-line" />
-                <span className="font-mono text-[10px] text-dim/50">
-                  {rest.length} more
-                </span>
-              </div>
-            </Reveal>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Grid — filterable, up to GRID_LIMIT remaining projects */}
+        <div className="mt-8">
+          {/* Category filter bar — animated chips with live counts */}
+          <Reveal delay={0.05}>
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <span className="mr-1 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-dim/60">
+                <SlidersHorizontal className="h-3 w-3" />
+                Filter
+              </span>
+              {categories.map((cat) => {
+                const isActive = cat === active;
+                const count = countFor(cat);
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setActive(cat)}
+                    aria-pressed={isActive}
+                    aria-label={`Filter projects by ${cat}`}
+                    className={cn(
+                      "group relative inline-flex min-h-[40px] items-center gap-1.5 rounded-full border px-3.5 py-2 font-mono text-[11px] transition-all sm:min-h-0 sm:px-3 sm:py-1",
+                      isActive
+                        ? "border-teal/40 bg-teal/15 text-teal"
+                        : "border-line bg-surface/50 text-dim hover:border-teal/30 hover:text-foreground/80",
+                    )}
+                  >
+                    {cat}
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-px text-[9px] tabular-nums transition-colors",
+                        isActive ? "bg-teal/20 text-teal" : "bg-line/60 text-dim/70",
+                      )}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </Reveal>
+
+          {/* Section divider with live count */}
+          <Reveal delay={0.05}>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-dim/60">
+                {active === "All" ? "More projects" : active}
+              </span>
+              <div className="h-px flex-1 bg-line" />
+              <span className="font-mono text-[10px] text-dim/50">
+                {rest.length} {rest.length === 1 ? "project" : "projects"}
+              </span>
+            </div>
+          </Reveal>
+
+          {/* Animated grid — AnimatePresence + layout so cards smoothly
+              enter/exit when the filter changes (no jarring pop). */}
+          <motion.div layout className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <AnimatePresence mode="popLayout">
               {rest.map((p, i) => (
                 <ProjectTile key={p.id} project={p} index={i} onOpen={() => openProject(p, projects.projects)} />
               ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Empty state — when a filter has no matches */}
+          {rest.length === 0 && (
+            <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line bg-surface/30 py-16 text-center">
+              <span className="font-mono text-sm text-dim">No projects in “{active}” yet.</span>
+              <button
+                type="button"
+                onClick={() => setActive("All")}
+                className="mt-1 rounded-full border border-teal/30 bg-teal/10 px-4 py-1.5 font-mono text-[11px] text-teal transition-colors hover:bg-teal/20"
+              >
+                Show all projects
+              </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* View all link — always shown */}
         <Reveal delay={0.1}>
@@ -132,19 +221,14 @@ function SpotlightCard({
       >
         {/* Image side */}
         <div className="relative min-h-[18rem] overflow-hidden bg-surface-2 lg:min-h-[24rem]">
-          {project.cover || project.thumbnail ? (
-            <img
-              src={asset(project.cover ?? project.thumbnail!)}
-              alt={project.title}
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-teal/15 to-violet/15">
-              <span className="font-mono text-6xl font-bold text-teal">
-                {project.title.charAt(0)}
-              </span>
-            </div>
-          )}
+          <ProjectImage
+            src={project.cover ?? project.thumbnail}
+            alt={project.title}
+            title={project.title}
+            accent={project.accent === "violet" ? "violet" : "teal"}
+            size="lg"
+            imgClassName="transition-transform duration-500 group-hover:scale-105"
+          />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent lg:bg-gradient-to-r" />
 
           {/* Badges */}
@@ -261,27 +345,23 @@ function ProjectTile({
           onOpen();
         }
       }}
+      layout
       initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.45, delay: (index % 3) * 0.08 }}
-      className="card-hover-glow group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm transition-colors hover:border-teal/30"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12, scale: 0.97 }}
+      transition={{ duration: 0.35, delay: (index % 3) * 0.06 }}
+      className="card-hover-glow group relative cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface/75 backdrop-blur-sm transition-colors hover:border-teal/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {/* Thumbnail */}
       <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">
-        {project.cover || project.thumbnail ? (
-          <img
-            src={asset(project.cover ?? project.thumbnail!)}
-            alt={project.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-teal/15 to-transparent">
-            <span className="font-mono text-4xl font-bold text-teal">
-              {project.title.charAt(0)}
-            </span>
-          </div>
-        )}
+        <ProjectImage
+          src={project.cover ?? project.thumbnail}
+          alt={project.title}
+          title={project.title}
+          accent={project.accent === "violet" ? "violet" : "teal"}
+          size="md"
+          imgClassName="transition-transform duration-500 group-hover:scale-105"
+        />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
         {/* sheen sweep on hover */}
         <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />

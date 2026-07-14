@@ -6,7 +6,7 @@ import type { Project } from "@/lib/types";
 import { useModals } from "@/lib/modals";
 import { useCopy } from "@/hooks/use-copy";
 import { TiltCard } from "@/components/motion/tilt-card";
-import { asset } from "@/lib/asset";
+import { ProjectImage } from "@/components/cards/project-image";
 import { cn } from "@/lib/utils";
 
 export function ProjectCard({
@@ -24,10 +24,6 @@ export function ProjectCard({
   const { copied, copy } = useCopy();
 
   const accentText = project.accent === "violet" ? "text-violet" : "text-teal";
-  const accentBg =
-    project.accent === "violet"
-      ? "from-violet/15 to-transparent"
-      : "from-teal/15 to-transparent";
 
   const open = () => openProject(project, list);
 
@@ -54,19 +50,13 @@ export function ProjectCard({
         className="card-hover-glow group flex w-full items-center gap-4 rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-3 text-left transition-colors hover:border-teal/30"
       >
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-line bg-surface-2">
-          {project.cover || project.thumbnail ? (
-            <img
-              src={asset(project.cover ?? project.thumbnail!)}
-              alt={project.title}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className={cn("flex h-full w-full items-center justify-center bg-gradient-to-br", accentBg)}>
-              <span className={cn("font-mono text-lg font-bold", accentText)}>
-                {project.title.charAt(0)}
-              </span>
-            </div>
-          )}
+          <ProjectImage
+            src={project.cover ?? project.thumbnail}
+            alt={project.title}
+            title={project.title}
+            accent={project.accent === "violet" ? "violet" : "teal"}
+            size="sm"
+          />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -107,19 +97,14 @@ export function ProjectCard({
       >
       {/* Thumbnail */}
       <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">
-        {project.cover || project.thumbnail ? (
-          <img
-            src={asset(project.cover ?? project.thumbnail!)}
-            alt={project.title}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className={cn("flex h-full w-full items-center justify-center bg-gradient-to-br", accentBg)}>
-            <span className={cn("font-mono text-4xl font-bold", accentText)}>
-              {project.title.charAt(0)}
-            </span>
-          </div>
-        )}
+        <ProjectImage
+          src={project.cover ?? project.thumbnail}
+          alt={project.title}
+          title={project.title}
+          accent={project.accent === "violet" ? "violet" : "teal"}
+          size="md"
+          imgClassName="transition-transform duration-500 group-hover:scale-105"
+        />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
 
         {/* sheen sweep on hover */}
