@@ -121,6 +121,22 @@ export function Gallery({
           </>
         )}
 
+        {/* Image counter badge — always visible (even for single-image
+            galleries) so the gallery header reads as intentional content
+            rather than a mystery frame. For single images shows "1/1"; for
+            multi it duplicates the bottom-left counter in a subtler
+            bottom-right position. Sits bottom-right so it doesn't clash with
+            the multi-image counter at bottom-left. */}
+        <span
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute bottom-2 right-2 rounded-md border border-line bg-surface/70 px-2 py-0.5 font-mono text-[10px] backdrop-blur",
+            n > 1 ? "text-dim/70" : "text-foreground/70",
+          )}
+        >
+          {index + 1}/{n}
+        </span>
+
         <button
           type="button"
           onClick={() => setLightbox(true)}
