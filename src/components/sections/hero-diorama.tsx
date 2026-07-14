@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform, animate } from "framer-motion";
 import { Brain, Cpu, Boxes, Sparkles, Binary, Network } from "lucide-react";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 const ORBIT_CHIPS = ["PyTorch", "R3F", "TypeScript", "CUDA", "Next.js"];
 const DIORAMA_CARDS = [
@@ -13,6 +14,7 @@ const DIORAMA_CARDS = [
 const CODE_TOKENS = ["</>", "λ", "∇", "{ }", "0x1F", "ai"];
 
 export function HeroDiorama() {
+  const reduceMotion = usePrefersReducedMotion();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 18, restDelta: 0.001 });
@@ -34,8 +36,11 @@ export function HeroDiorama() {
   // Idle animation: when no pointer is interacting (idle === true), gently
   // oscillate mx/my so the diorama drifts on its own. Stop oscillating the
   // moment the user interacts (onMove sets idle=false).
+  // SKIPPED under prefers-reduced-motion — the diorama stays in its neutral
+  // centered pose so users who requested reduced motion aren't subjected to
+  // continuous JS-driven drift.
   useEffect(() => {
-    if (!idle) return;
+    if (!idle || reduceMotion) return;
     // Gentle figure-8 drift using two sine waves at different frequencies.
     const xAnim = animate(mx, [0, 0.18, 0, -0.18, 0], {
       duration: 12,
@@ -51,9 +56,13 @@ export function HeroDiorama() {
       xAnim.stop();
       yAnim.stop();
     };
-  }, [idle, mx, my]);
+  }, [idle, mx, my, reduceMotion]);
 
+  // Under reduced motion we ignore pointer-driven parallax too — the
+  // diorama is shown as a static, well-composed sculpture. The motion
+  // values stay at 0 so all layers render at their neutral position.
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduceMotion) return;
     setIdle(false);
     const rect = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - rect.left) / rect.width - 0.5);
@@ -167,8 +176,11 @@ export function HeroDiorama() {
               return (
                 <motion.div
                   key={i}
-                  animate={a}
-                  transition={{ duration: a.dur, repeat: Infinity, ease: "easeInOut", delay: a.delay }}
+                  // Under reduced motion, freeze the cards at their neutral
+                  // position (no infinite float) — pass `undefined` so the
+                  // animate prop doesn't override the static layout.
+                  animate={reduceMotion ? undefined : a}
+                  transition={reduceMotion ? undefined : { duration: a.dur, repeat: Infinity, ease: "easeInOut", delay: a.delay }}
                   className={`${positions[i % 3]} rounded-xl border border-line bg-surface/80 p-3 backdrop-blur-md`}
                 >
                   <div className="mb-1.5 flex items-center justify-between">
@@ -205,8 +217,10 @@ export function HeroDiorama() {
               return (
                 <motion.span
                   key={i}
-                  animate={{ y: [0, i % 2 === 0 ? -8 : 8, 0] }}
-                  transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                  // Under reduced motion, freeze code tokens at their base
+                  // position (no infinite float).
+                  animate={reduceMotion ? undefined : { y: [0, i % 2 === 0 ? -8 : 8, 0] }}
+                  transition={reduceMotion ? undefined : { duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
                   className={`absolute font-mono text-[11px] ${c} rounded-md border border-line bg-surface/80 px-2 py-1 backdrop-blur-md`}
                   style={{ left: `${p.x + 140}px`, top: `${p.y + 140}px` }}
                 >
@@ -220,7 +234,7 @@ export function HeroDiorama() {
 
       {/* Depth axis hint */}
       <div className="pointer-events-none absolute bottom-2 right-2 font-mono text-[9px] uppercase tracking-widest text-dim/60">
-        z-axis · 4 layers
+        z-axis · 4 layers{reduceMotion ? " · static" : ""}
       </div>
     </div>
   );

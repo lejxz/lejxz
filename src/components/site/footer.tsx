@@ -1,13 +1,30 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowUp, Printer } from "lucide-react";
 import { profile, footerLinks, nav } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { asset } from "@/lib/asset";
+import { cn } from "@/lib/utils";
 
 export function Footer() {
   const year = new Date().getFullYear();
+  // Surface a "last served" timestamp in the status line so the "all systems
+  // operational" indicator feels like real telemetry, not decoration. Computed
+  // once via a lazy useState initializer (no effect, no re-render) — shows the
+  // page-load time as a proxy for "last served". Empty on the server render
+  // (SSR), populated on the client to avoid hydration mismatch.
+  const [buildTime] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return new Date().toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  });
+
   const socials = [
     { label: "GitHub", icon: "github", url: profile.socials.github ?? "#" },
     { label: "LinkedIn", icon: "linkedin", url: profile.socials.linkedin ?? "#" },
@@ -53,12 +70,14 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={s.label}
-                  className="group inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line text-dim transition-all hover:-translate-y-0.5 hover:border-teal/40 hover:text-teal"
+                  className="group inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line text-dim transition-all hover:-translate-y-0.5 hover:border-teal/40 hover:text-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <Icon name={s.icon} className="h-[18px] w-[18px]" />
                 </a>
               ))}
             </div>
+            {/* Status line — refined: now shows a "last served" time alongside
+                the operational dot so it reads as live telemetry. */}
             <p className="mt-4 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-dim/70">
               <span className="relative flex h-1.5 w-1.5">
                 <span
@@ -68,52 +87,33 @@ export function Footer() {
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal" />
               </span>
               all systems operational
+              {buildTime && (
+                <span className="ml-1 normal-case tracking-normal text-dim/50">
+                  · served {buildTime}
+                </span>
+              )}
             </p>
           </div>
 
           {/* navigate */}
-          <div>
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
-              Navigate
-            </p>
-            <ul className="space-y-2.5">
-              {nav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="group flex w-fit items-center gap-1.5 text-sm text-foreground/80 transition-colors hover:text-teal"
-                  >
-                    <span className="h-px w-0 bg-teal transition-all duration-300 group-hover:w-4" />
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn heading="Navigate">
+            {nav.map((item) => (
+              <FooterLink key={item.href} href={item.href}>
+                {item.label}
+              </FooterLink>
+            ))}
+          </FooterColumn>
 
           {/* elsewhere */}
-          <div>
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">
-              Elsewhere
-            </p>
-            <ul className="space-y-2.5">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex w-fit items-center gap-1.5 text-sm text-foreground/80 transition-colors hover:text-teal"
-                  >
-                    <span className="h-px w-0 bg-teal transition-all duration-300 group-hover:w-4" />
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          <FooterColumn heading="Elsewhere">
+            {socials.map((s) => (
+              <FooterLink key={s.label} href={s.url} external>
+                {s.label}
+              </FooterLink>
+            ))}
             <p className="mt-3 font-mono text-[11px] text-dim/70">{profile.email}</p>
             <p className="mt-0.5 font-mono text-[11px] text-dim/60">{profile.location}</p>
-          </div>
+          </FooterColumn>
         </div>
 
         {/* bottom bar */}
@@ -141,7 +141,7 @@ export function Footer() {
             <button
               type="button"
               onClick={() => window.print()}
-              className="group flex items-center gap-1.5 font-mono text-[11px] text-dim transition-colors hover:text-teal"
+              className="group flex items-center gap-1.5 font-mono text-[11px] text-dim transition-colors hover:text-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
               aria-label="Print or save as PDF"
               title="Print / Save as PDF"
             >
@@ -154,24 +154,136 @@ export function Footer() {
               onClick={() =>
                 window.dispatchEvent(new KeyboardEvent("keydown", { key: "?" }))
               }
-              className="font-mono text-[11px] text-dim transition-colors hover:text-teal"
+              className="font-mono text-[11px] text-dim transition-colors hover:text-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
               aria-label="Show keyboard shortcuts"
             >
               shortcuts ?
             </button>
             <span className="h-3 w-px bg-line" />
-            <Link
-              href="/#top"
-              className="group flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:text-foreground"
-            >
-              Back to top
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-line transition-colors group-hover:border-teal/50 group-hover:text-teal">
-                <ArrowUp className="h-3.5 w-3.5" />
-              </span>
-            </Link>
+            <BackToTop />
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+/**
+ * FooterColumn — a labeled link column with a hover lift on the whole column.
+ * The heading gets a subtle accent on hover of any child link so the column
+ * feels responsive as a group.
+ */
+function FooterColumn({
+  heading,
+  children,
+}: {
+  heading: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="group/col">
+      <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim transition-colors group-hover/col:text-teal/70">
+        {heading}
+      </p>
+      <ul className="space-y-2.5">{children}</ul>
+    </div>
+  );
+}
+
+/**
+ * FooterLink — a single footer link with an animated leading dash that grows
+ * on hover. Now a proper focus-visible ring for keyboard a11y.
+ */
+function FooterLink({
+  href,
+  children,
+  external,
+}: {
+  href: string;
+  children: React.ReactNode;
+  external?: boolean;
+}) {
+  return (
+    <li>
+      {external ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="group flex w-fit items-center gap-1.5 text-sm text-foreground/80 transition-colors hover:text-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
+        >
+          <span className="h-px w-0 bg-teal transition-all duration-300 group-hover:w-4" />
+          {children}
+        </a>
+      ) : (
+        <Link
+          href={href}
+          className="group flex w-fit items-center gap-1.5 text-sm text-foreground/80 transition-colors hover:text-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
+        >
+          <span className="h-px w-0 bg-teal transition-all duration-300 group-hover:w-4" />
+          {children}
+        </Link>
+      )}
+    </li>
+  );
+}
+
+/**
+ * BackToTop — the "Back to top" button with a circular scroll-progress ring.
+ *
+ * The ring fills as the user scrolls down the page, reaching 100% at the
+ * bottom — so the button doubles as a scroll-position indicator. Clicking it
+ * smoothly scrolls back to the top.
+ *
+ * The ring is driven by the global scroll progress (useScroll with no target
+ * = viewport scroll), spring-smoothed for a fluid feel.
+ */
+function BackToTop() {
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001,
+  });
+  // The ring's pathLength is driven by scroll progress — 0 at top, 1 at
+  // bottom. strokeDashoffset is the inverse (circ - progress*circ).
+  const pathLength = useTransform(progress, [0, 1], [0, 1]);
+
+  const onClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Back to top"
+      className="group relative flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
+    >
+      <span className="hidden sm:inline">Back to top</span>
+      <span className="relative flex h-7 w-7 items-center justify-center rounded-full border border-line transition-colors group-hover:border-teal/50 group-hover:text-teal">
+        {/* Scroll-progress ring — an SVG circle whose pathLength tracks scroll.
+            Sits behind the arrow icon. */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full -rotate-90"
+          viewBox="0 0 32 32"
+          fill="none"
+          aria-hidden
+        >
+          <motion.circle
+            cx="16"
+            cy="16"
+            r="14"
+            fill="none"
+            stroke="var(--color-teal)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            style={{ pathLength }}
+            className="opacity-70"
+          />
+        </svg>
+        <ArrowUp className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" />
+      </span>
+    </button>
   );
 }

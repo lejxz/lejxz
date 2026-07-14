@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { HeroDiorama } from "@/components/sections/hero-diorama";
 import { Magnetic } from "@/components/motion/magnetic";
 import { ScrambleText } from "@/components/motion/scramble-text";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 /**
  * Hero — a scroll-driven, 4-act "cinematic departure" intro.
@@ -102,6 +103,7 @@ function TypingPrompt({ text, delay = 0.8 }: { text: string; delay?: number }) {
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const reduceMotion = usePrefersReducedMotion();
   // One viewport of scroll drives the whole 4-act sequence. offset "end start"
   // means progress hits 1 exactly when the hero has scrolled fully past the
   // viewport top — so the ticker arrives precisely as Act IV completes.
@@ -113,34 +115,41 @@ export function Hero() {
   // --- Act choreography -------------------------------------------------
   // Each layer owns an independent transform curve. Opacity for any layer only
   // drops near ITS exit moment, so the hero never reads as a uniform fade.
+  //
+  // UNDER prefers-reduced-motion: all MOVEMENT transforms (y, scale, rotate,
+  // blur, letterSpacing) are collapsed to a constant so nothing physically
+  // moves on scroll — only opacity fades. Opacity changes aren't vestibular
+  // motion, so they're safe to keep (and they preserve the storytelling
+  // handoff to the ticker). The diorama's own JS motion is gated separately
+  // in hero-diorama.tsx.
 
   // Background orbs — leave the stage first (clear the atmosphere).
-  const orb1Y = useTransform(scrollYProgress, [0, 1], [0, -160]);
-  const orb2Y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const orb1Y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, -160]);
+  const orb2Y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, 200]);
   const orbOpacity = useTransform(scrollYProgress, [0, 0.45, 0.6], [1, 0.4, 0]);
 
   // Diorama — scales down, drifts up-right, blurs, departs during Act III.
   const dioramaScale = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6, 1],
-    [1, 1.04, 0.86, 0.7],
+    reduceMotion ? [1, 1, 1, 1] : [1, 1.04, 0.86, 0.7],
   );
-  const dioramaX = useTransform(scrollYProgress, [0, 0.6, 1], [0, 24, 64]);
-  const dioramaY = useTransform(scrollYProgress, [0, 0.6, 1], [0, -24, -90]);
-  const dioramaRotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+  const dioramaX = useTransform(scrollYProgress, [0, 0.6, 1], reduceMotion ? [0, 0, 0] : [0, 24, 64]);
+  const dioramaY = useTransform(scrollYProgress, [0, 0.6, 1], reduceMotion ? [0, 0, 0] : [0, -24, -90]);
+  const dioramaRotate = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, -5]);
   const dioramaOpacity = useTransform(
     scrollYProgress,
     [0, 0.55, 0.8, 1],
     [1, 1, 0.35, 0],
   );
-  const dioramaBlur = useTransform(scrollYProgress, [0.45, 0.9], [0, 7]);
+  const dioramaBlur = useTransform(scrollYProgress, [0.45, 0.9], reduceMotion ? [0, 0] : [0, 7]);
   const dioramaFilter = useTransform(
     dioramaBlur,
     (b) => `blur(${b.toFixed(2)}px)`,
   );
 
   // Intro chip (availability badge + whoami prompt) — first to depart (Act II).
-  const introY = useTransform(scrollYProgress, [0, 0.4], [0, -36]);
+  const introY = useTransform(scrollYProgress, [0, 0.4], reduceMotion ? [0, 0] : [0, -36]);
   const introOpacity = useTransform(
     scrollYProgress,
     [0, 0.28, 0.42],
@@ -148,11 +157,11 @@ export function Hero() {
   );
 
   // Headline — the anchor. Stays full until Act IV, then lifts & fades fast.
-  const headlineY = useTransform(scrollYProgress, [0, 0.7, 1], [0, -16, -70]);
+  const headlineY = useTransform(scrollYProgress, [0, 0.7, 1], reduceMotion ? [0, 0, 0] : [0, -16, -70]);
   const headlineScale = useTransform(
     scrollYProgress,
     [0, 0.7, 1],
-    [1, 0.98, 0.92],
+    reduceMotion ? [1, 1, 1] : [1, 0.98, 0.92],
   );
   const headlineOpacity = useTransform(
     scrollYProgress,
@@ -162,15 +171,15 @@ export function Hero() {
   const headlineLetterSpacing = useTransform(
     scrollYProgress,
     [0, 1],
-    ["-0.02em", "0.01em"],
+    reduceMotion ? ["-0.02em", "-0.02em"] : ["-0.02em", "0.01em"],
   );
 
   // Role + field line — departs mid Act II.
-  const roleY = useTransform(scrollYProgress, [0, 0.5], [0, -28]);
+  const roleY = useTransform(scrollYProgress, [0, 0.5], reduceMotion ? [0, 0] : [0, -28]);
   const roleOpacity = useTransform(scrollYProgress, [0, 0.32, 0.5], [1, 1, 0]);
 
   // Tagline paragraph — departs slightly after role.
-  const taglineY = useTransform(scrollYProgress, [0, 0.55], [0, -30]);
+  const taglineY = useTransform(scrollYProgress, [0, 0.55], reduceMotion ? [0, 0] : [0, -30]);
   const taglineOpacity = useTransform(
     scrollYProgress,
     [0, 0.36, 0.55],
@@ -178,11 +187,11 @@ export function Hero() {
   );
 
   // CTAs — depart late Act II.
-  const ctaY = useTransform(scrollYProgress, [0, 0.6], [0, -34]);
+  const ctaY = useTransform(scrollYProgress, [0, 0.6], reduceMotion ? [0, 0] : [0, -34]);
   const ctaOpacity = useTransform(scrollYProgress, [0, 0.4, 0.6], [1, 1, 0]);
 
   // Socials — depart at the Act II/III boundary.
-  const socialsY = useTransform(scrollYProgress, [0, 0.62], [0, -32]);
+  const socialsY = useTransform(scrollYProgress, [0, 0.62], reduceMotion ? [0, 0] : [0, -32]);
   const socialsOpacity = useTransform(
     scrollYProgress,
     [0, 0.45, 0.62],
@@ -190,7 +199,7 @@ export function Hero() {
   );
 
   // Stats chips — last of the supporting text, depart early Act III.
-  const statsY = useTransform(scrollYProgress, [0, 0.66], [0, -30]);
+  const statsY = useTransform(scrollYProgress, [0, 0.66], reduceMotion ? [0, 0] : [0, -30]);
   const statsOpacity = useTransform(
     scrollYProgress,
     [0, 0.5, 0.66],
@@ -206,9 +215,9 @@ export function Hero() {
   const manifestoScale = useTransform(
     scrollYProgress,
     [0.5, 0.66, 0.82],
-    [0.92, 1, 1.04],
+    reduceMotion ? [1, 1, 1] : [0.92, 1, 1.04],
   );
-  const manifestoY = useTransform(scrollYProgress, [0.5, 0.66, 0.82], [48, 0, -24]);
+  const manifestoY = useTransform(scrollYProgress, [0.5, 0.66, 0.82], reduceMotion ? [0, 0, 0] : [48, 0, -24]);
 
   // Chapter indicator + scroll hint.
   const hintOpacity = useTransform(scrollYProgress, [0, 0.16, 0.28], [1, 1, 0]);
