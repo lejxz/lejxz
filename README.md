@@ -11,10 +11,9 @@
 - 🎓 CS student, AI/ML specialization
 - 🥽 Building AI-powered AR/VR & computer vision systems
 - 🌱 Currently exploring: edge AI, real-time CV pipelines
+- 🔭 **Current Project:** I have nothing active.
  
 ## Featured Projects
-
-- 🔭 **Current Project:** I have nothing active.
 
 <div align="center"> 
  
