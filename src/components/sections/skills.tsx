@@ -270,9 +270,22 @@ export function Skills() {
                     }
                     onMouseEnter={() => setHoveredSkill(node.name)}
                     onMouseLeave={() => setHoveredSkill(null)}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${node.name}: ${node.level}% proficiency, ${node.groupTitle}. Click to inspect.`}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setActiveSkill((cur) =>
+                          cur === node.name ? null : node.name
+                        );
+                      }
+                    }}
                     initial={{ opacity: 0, scale: 0 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-20px" }}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
                     transition={{
                       duration: 0.4,
                       delay: node.groupIdx * 0.15 + node.nodeIndex * 0.06,
@@ -280,7 +293,11 @@ export function Skills() {
                       stiffness: 200,
                       damping: 16,
                     }}
-                    style={{ cursor: "pointer", transition: "opacity 0.3s" }}
+                    style={{
+                      cursor: "pointer",
+                      transition: "opacity 0.3s",
+                      outline: "none",
+                    }}
                   >
                     {/* Glow halo on focused nodes */}
                     {isFocused && (
@@ -405,19 +422,40 @@ export function Skills() {
           ) : (
             <motion.div
               key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
               className="mt-2"
             >
-              <div className="flex min-h-[11rem] items-center justify-center gap-3 rounded-2xl border border-dashed border-line p-6 text-center">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-dim">
-                  ◇
-                </span>
-                <p className="font-mono text-xs text-dim">
-                  Click any neuron to inspect proficiency
-                </p>
+              <div className="relative flex min-h-[11rem] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-line bg-surface/30 p-6 text-center">
+                {/* Subtle ambient pulse in the background so the empty state
+                    feels "alive" and invites interaction, not dead. */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <motion.span
+                    aria-hidden
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.5, 0.25] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="h-24 w-24 rounded-full bg-teal/10 blur-2xl"
+                  />
+                </div>
+                <div className="relative flex flex-col items-center gap-3">
+                  {/* Animated diamond + cursor glyph hinting at clickability */}
+                  <motion.span
+                    aria-hidden
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="font-mono text-2xl text-teal/70"
+                  >
+                    ◇
+                  </motion.span>
+                  <p className="font-mono text-xs text-dim">
+                    Click any neuron to inspect proficiency
+                  </p>
+                  <p className="font-mono text-[10px] text-dim/60">
+                    {nodes.length} skills across {skills.groups.length} layers
+                  </p>
+                </div>
               </div>
             </motion.div>
           )}
