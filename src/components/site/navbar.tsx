@@ -94,20 +94,38 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "true" : undefined}
                 className={cn(
-                  "relative rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider transition-colors",
+                  "group relative rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider outline-none transition-colors focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                   isActive
                     ? "text-teal"
                     : "text-dim hover:text-foreground"
                 )}
               >
+                {/* Active background tint — a subtle pill behind the active
+                    link so it reads as a "you are here" marker, not just a
+                    color swap. */}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-bg"
+                    className="absolute inset-0 rounded-md bg-teal/10"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
                 {item.label}
+                {/* Active underline — the existing h-px line, now sits above
+                    the tint pill. */}
                 {isActive && (
                   <motion.span
                     layoutId="nav-active"
                     className="absolute inset-x-2 -bottom-px h-px bg-teal"
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   />
+                )}
+                {/* Hover underline — a non-active link shows an animated
+                    underline that scales in from the center on hover. */}
+                {!isActive && (
+                  <span className="absolute inset-x-2 -bottom-px h-px origin-center scale-x-0 bg-dim/50 transition-transform duration-200 group-hover:scale-x-100" />
                 )}
               </Link>
             );
@@ -165,19 +183,38 @@ export function Navbar() {
                 </Link>
                 <nav className="flex flex-col gap-1">
                   {[...nav, { label: "All Projects", href: "/#work" }].map(
-                    (item, i) => (
-                      <SheetClose asChild key={item.href}>
-                        <Link
-                          href={item.href}
-                          className="flex items-center justify-between border-b border-line py-4 font-mono text-2xl font-bold tracking-tight transition-colors hover:text-teal"
-                        >
-                          <span>{item.label}</span>
-                          <span className="font-mono text-xs text-dim">
-                            0{i + 1}
-                          </span>
-                        </Link>
-                      </SheetClose>
-                    )
+                    (item, i) => {
+                      const sectionId = item.href.replace("/#", "");
+                      const isActive = activeSection === sectionId;
+                      return (
+                        <SheetClose asChild key={item.href}>
+                          <Link
+                            href={item.href}
+                            aria-current={isActive ? "true" : undefined}
+                            className={cn(
+                              "flex items-center justify-between border-b border-line py-4 font-mono text-2xl font-bold tracking-tight transition-colors hover:text-teal",
+                              isActive ? "text-teal" : ""
+                            )}
+                          >
+                            <span className="flex items-center gap-3">
+                              {/* Active marker dot on the mobile menu so the
+                                  user sees which section they're on even in the
+                                  sheet. */}
+                              {isActive && (
+                                <span className="relative flex h-2 w-2">
+                                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-75" />
+                                  <span className="relative inline-flex h-2 w-2 rounded-full bg-teal" />
+                                </span>
+                              )}
+                              <span>{item.label}</span>
+                            </span>
+                            <span className="font-mono text-xs text-dim">
+                              0{i + 1}
+                            </span>
+                          </Link>
+                        </SheetClose>
+                      );
+                    }
                   )}
                 </nav>
                 <div className="mt-auto space-y-3 pt-8">
