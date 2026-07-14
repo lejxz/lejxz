@@ -201,7 +201,7 @@ export function Experience() {
                       item={item}
                       index={i}
                       type={type}
-                      onOpen={() => openExperience(item)}
+                      onOpen={() => openExperience(item, experience.items)}
                     />
                   );
                 })}

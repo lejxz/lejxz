@@ -561,6 +561,37 @@ html.theme-anim * {
   animation: synapse-flow 2.5s linear infinite;
 }
 
+/* Scanline overlay — a thin horizontal line that slowly drifts down the
+   viewport. Used on the 404 page (and any "terminal" surface) to sell the
+   CRT/terminal aesthetic. Respects prefers-reduced-motion (the global
+   reduced-motion block sets animation-duration to 0.001ms). */
+@keyframes scanline-drift {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+.scanline-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+.scanline-overlay::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--color-teal) 35%, transparent),
+    transparent
+  );
+  animation: scanline-drift 8s linear infinite;
+  opacity: 0.5;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;

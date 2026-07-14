@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ExternalLink, MapPin, Calendar, Briefcase, Share2, ArrowUp, X } from "lucide-react";
+import { useEffect } from "react";
+import { CheckCircle2, ExternalLink, MapPin, Calendar, Briefcase, Share2, ArrowUp, X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { ExperienceItem, ExperienceType } from "@/lib/types";
 import {
   Dialog,
@@ -38,11 +39,31 @@ export function ExperienceModal({
   experience,
   open,
   onClose,
+  onNext,
+  onPrev,
+  hasMultiple,
 }: {
   experience: ExperienceItem | null;
   open: boolean;
   onClose: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
+  hasMultiple?: boolean;
 }) {
+  // Keyboard navigation: ArrowLeft/Right and [/] for prev/next — mirrors the
+  // project-modal so both modals have the same keyboard UX.
+  useEffect(() => {
+    if (!open || !hasMultiple) return;
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if ((e.key === "ArrowRight" || e.key === "]") && onNext) onNext();
+      if ((e.key === "ArrowLeft" || e.key === "[") && onPrev) onPrev();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, hasMultiple, onNext, onPrev]);
+
   if (!experience) {
     return (
       <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -231,11 +252,63 @@ export function ExperienceModal({
                     back to top
                   </button>
                 </div>
+
+                {/* Keyboard hint footer — mirrors the project-modal so both
+                    modals have consistent keyboard UX. Only shows when there
+                    are multiple entries to navigate. */}
+                {hasMultiple && (
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-3 font-mono text-[10px] text-dim">
+                    <span className="inline-flex items-center gap-1.5">
+                      <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">
+                        <ChevronLeft className="inline h-3 w-3" />
+                      </kbd>
+                      /
+                      <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">[</kbd>
+                      prev
+                    </span>
+                    <span className="text-dim/40">·</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      next
+                      <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">
+                        <ChevronRight className="inline h-3 w-3" />
+                      </kbd>
+                      /
+                      <kbd className="rounded border border-line bg-surface-2/60 px-1.5 py-0.5 text-foreground/70">]</kbd>
+                    </span>
+                  </div>
+                )}
               </motion.div>
             </div>
           </motion.div>
         </AnimatePresence>
       </DialogContent>
+
+      {/* Floating prev/next — visible on all screens, above the dialog.
+          Mirrors the project-modal so both modals have consistent nav. */}
+      {hasMultiple && open && (
+        <>
+          {onPrev && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onPrev(); }}
+              aria-label="Previous experience"
+              className="fixed left-3 top-1/2 z-[70] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur transition-all hover:border-teal/40 hover:text-teal"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+          )}
+          {onNext && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onNext(); }}
+              aria-label="Next experience"
+              className="fixed right-3 top-1/2 z-[70] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface/80 text-foreground backdrop-blur transition-all hover:border-teal/40 hover:text-teal"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          )}
+        </>
+      )}
     </Dialog>
   );
 }
