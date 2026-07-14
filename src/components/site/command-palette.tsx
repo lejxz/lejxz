@@ -285,6 +285,28 @@ export function CommandPalette() {
           </div>
         ))}
       </CommandList>
+      {/* Footer — keyboard shortcut hints so the palette feels like a
+          proper app launcher (not a mystery box). Sticky at the bottom,
+          outside the scrollable CommandList. */}
+      <div className="flex items-center justify-between gap-3 border-t border-line bg-surface/60 px-3 py-2 font-mono text-[10px] text-dim backdrop-blur-sm">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="flex items-center gap-1">
+            <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 text-foreground/70">↑↓</kbd>
+            navigate
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 text-foreground/70">↵</kbd>
+            select
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 text-foreground/70">Esc</kbd>
+            close
+          </span>
+        </div>
+        <span className="text-dim/60">
+          <span className="text-teal/70">⌘K</span> to toggle
+        </span>
+      </div>
     </CommandDialog>
   );
 }

@@ -84,6 +84,10 @@ const MOBILE_LAYER_Y = skills.groups.map(
 export function Skills() {
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  // focusedLayer: when set, dims all nodes/connections NOT in this layer so
+  // the user can inspect one skill group at a time. Clicking a legend item
+  // toggles it; clicking again (or pressing Escape) clears it.
+  const [focusedLayer, setFocusedLayer] = useState<number | null>(null);
   const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Build the flattened node list with computed SVG positions.
@@ -145,7 +149,8 @@ export function Skills() {
   }, [nodes]);
 
   // All nodes are always lit — no filtering. The network shows the
-  // complete skill graph at all times.
+  // complete skill graph at all times. (Kept for reference; layer-focus
+  // dimming is handled via opacity in the render below.)
   const isNodeLit = (_n: (typeof nodes)[0]) => true;
 
   const selected = nodes.find((n) => n.name === activeSkill) ?? null;
@@ -156,6 +161,25 @@ export function Skills() {
   const isConnFocused = (c: (typeof connections)[0]) =>
     focused !== null &&
     (c.from.name === focused || c.to.name === focused);
+
+  // Layer-focus dimming: when a layer is focused, nodes + connections NOT
+  // in that layer drop to a low opacity so the focused layer reads clearly.
+  // Connections are kept if EITHER endpoint is in the focused layer (so the
+  // focused layer's incoming/outgoing edges stay visible).
+  const nodeOpacity = (node: (typeof nodes)[0]) =>
+    focusedLayer === null ? 1 : node.groupIdx === focusedLayer ? 1 : 0.18;
+  const connOpacity = (c: (typeof connections)[0]) =>
+    focusedLayer === null ? undefined : c.from.groupIdx === focusedLayer || c.to.groupIdx === focusedLayer ? undefined : 0.06;
+
+  // Escape clears the layer focus (keyboard a11y).
+  useEffect(() => {
+    if (focusedLayer === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFocusedLayer(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focusedLayer]);
 
   return (
     <section id="skills" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-32">
@@ -171,18 +195,45 @@ export function Skills() {
           </Reveal>
         )}
 
-        {/* Layer legend — static labels showing the 3 groups as network layers */}
+        {/* Layer legend — clickable toggles that focus a layer (dims the
+            others). The active layer gets a teal accent; a hint shows the
+            keyboard shortcut to clear (Escape). */}
         <Reveal>
-          <div className="mt-10 flex flex-wrap items-center gap-4 font-mono text-xs text-dim">
-            {skills.groups.map((g, i) => (
-              <span key={g.key} className="flex items-center gap-1.5">
-                <Icon name={g.icon} className="h-3.5 w-3.5 text-teal/60" />
-                <span className="text-foreground/70">{g.title}</span>
-                {i < skills.groups.length - 1 && (
-                  <span className="ml-2 text-dim/40">→</span>
-                )}
+          <div className="mt-10 flex flex-wrap items-center gap-2 font-mono text-xs text-dim">
+            <span className="mr-1 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-dim/60">
+              Focus layer
+            </span>
+            {skills.groups.map((g, i) => {
+              const isActive = focusedLayer === i;
+              return (
+                <span key={g.key} className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setFocusedLayer((cur) => (cur === i ? null : i))}
+                    aria-pressed={isActive}
+                    aria-label={`${isActive ? "Unfocus" : "Focus"} ${g.title} layer`}
+                    className={cn(
+                      "group inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[11px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-0 sm:py-1",
+                      isActive
+                        ? "border-teal/40 bg-teal/15 text-teal"
+                        : "border-line bg-surface/50 text-dim hover:border-teal/30 hover:text-foreground/80",
+                    )}
+                  >
+                    <Icon name={g.icon} className={cn("h-3.5 w-3.5 transition-transform", isActive ? "text-teal" : "text-teal/60 group-hover:scale-110")} />
+                    {g.title}
+                  </button>
+                  {i < skills.groups.length - 1 && (
+                    <span className="text-dim/40">→</span>
+                  )}
+                </span>
+              );
+            })}
+            {focusedLayer !== null && (
+              <span className="ml-1 inline-flex items-center gap-1.5 font-mono text-[10px] text-dim/60">
+                <kbd className="rounded border border-line px-1.5 py-0.5 text-foreground/70">Esc</kbd>
+                to clear
               </span>
-            ))}
+            )}
           </div>
         </Reveal>
 
@@ -231,6 +282,7 @@ export function Skills() {
               {/* Connection lines (synapses) */}
               {connections.map((c) => {
                 const focusedConn = isConnFocused(c);
+                const layerDim = connOpacity(c);
                 return (
                   <line
                     key={c.key}
@@ -241,7 +293,7 @@ export function Skills() {
                     stroke="var(--color-teal)"
                     strokeWidth={focusedConn ? 1.5 : 1}
                     strokeDasharray="4 6"
-                    opacity={focusedConn ? 0.5 : 0.1}
+                    opacity={layerDim !== undefined ? layerDim : (focusedConn ? 0.5 : 0.1)}
                     className={
                       focusedConn
                         ? "synapse-flow"
@@ -294,6 +346,8 @@ export function Skills() {
                       damping: 16,
                     }}
                     style={{
+                      // layer-focus dimming + cursor + a11y outline
+                      opacity: nodeOpacity(node),
                       cursor: "pointer",
                       transition: "opacity 0.3s",
                       outline: "none",
