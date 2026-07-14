@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowUp, Printer } from "lucide-react";
 import { profile, footerLinks, nav } from "@/lib/data";
@@ -249,6 +249,13 @@ function BackToTop() {
   // bottom. strokeDashoffset is the inverse (circ - progress*circ).
   const pathLength = useTransform(progress, [0, 1], [0, 1]);
 
+  // Track the integer % for the hover tooltip. Subscribing to the spring
+  // (not the raw scrollYProgress) gives a smoothed, stable readout.
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    return progress.on("change", (v) => setPct(Math.round(v * 100)));
+  }, [progress]);
+
   const onClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -260,6 +267,16 @@ function BackToTop() {
       aria-label="Back to top"
       className="group relative flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-dim transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
     >
+      {/* Hover tooltip — shows "Scroll to top" + the current scroll %.
+          Appears above the button on hover/focus. pointer-events-none so it
+          doesn't intercept the click. */}
+      <span
+        role="tooltip"
+        className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md border border-line bg-surface/90 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-foreground/80 opacity-0 backdrop-blur transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+      >
+        scroll to top
+        <span className="ml-1 text-teal/80">{pct}%</span>
+      </span>
       <span className="hidden sm:inline">Back to top</span>
       <span className="relative flex h-7 w-7 items-center justify-center rounded-full border border-line transition-colors group-hover:border-teal/50 group-hover:text-teal">
         {/* Scroll-progress ring — an SVG circle whose pathLength tracks scroll.

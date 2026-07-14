@@ -23,6 +23,7 @@ import {
   Briefcase,
   SunMoon,
   Clock,
+  Trash2,
 } from "lucide-react";
 import { nav, profile, projects, experience } from "@/lib/data";
 import { useModals } from "@/lib/modals";
@@ -213,6 +214,17 @@ export function CommandPalette() {
     });
   }, []);
 
+  // Clear the recent-history (state + localStorage). Used by the "clear"
+  // button next to the "Recently visited" heading.
+  const clearRecent = useCallback(() => {
+    setRecentIds([]);
+    try {
+      localStorage.removeItem(RECENT_KEY);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   return (
     <CommandDialog
       open={open}
@@ -224,34 +236,55 @@ export function CommandPalette() {
         <CommandEmpty>No results found.</CommandEmpty>
         {/* Recently visited — only shows when there's history AND no search
             query (cmdk filters by the input value, so this naturally hides
-            when searching because the items won't match arbitrary queries). */}
+            when searching because the items won't match arbitrary queries).
+            Rendered as a custom header row (heading + clear button) above a
+            CommandGroup with an empty heading, so the clear button sits
+            inline with the heading rather than absolutely positioned. */}
         {recentActions.length > 0 && (
-          <CommandGroup
-            heading="Recently visited"
-            className="[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.2em] [&_[cmdk-group-heading]]:text-violet"
-          >
-            {recentActions.map((a) => (
-              <CommandItem
-                key={`recent-${a.id}`}
-                value={`${a.label} ${a.hint} ${a.keywords ?? ""}`}
-                onSelect={() => {
-                  setOpen(false);
-                  recordRecent(a.id);
-                  a.run();
+          <div className="relative">
+            <div className="flex items-center justify-between px-2 pb-1 pt-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-violet">
+                Recently visited
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  clearRecent();
                 }}
-                className="group cursor-pointer rounded-md font-mono text-sm data-[selected=true]:bg-surface data-[selected=true]:text-teal"
+                aria-label="Clear recently visited history"
+                title="Clear recent history"
+                className="group/clear inline-flex h-5 items-center gap-1 rounded-full border border-line bg-surface/80 px-2 font-mono text-[9px] uppercase tracking-wider text-dim backdrop-blur transition-all hover:border-destructive/40 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/40"
               >
-                <Clock className="h-4 w-4 text-violet/70 group-data-[selected=true]:text-teal" />
-                <span className="text-foreground group-data-[selected=true]:text-teal">
-                  {a.label}
-                </span>
-                <span className="ml-2 truncate text-xs text-dim">{a.hint}</span>
-                <CommandShortcut className="font-mono text-[10px]">
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </CommandShortcut>
-              </CommandItem>
-            ))}
-          </CommandGroup>
+                <Trash2 className="h-2.5 w-2.5" />
+                clear
+              </button>
+            </div>
+            <CommandGroup className="p-1">
+              {recentActions.map((a) => (
+                <CommandItem
+                  key={`recent-${a.id}`}
+                  value={`${a.label} ${a.hint} ${a.keywords ?? ""}`}
+                  onSelect={() => {
+                    setOpen(false);
+                    recordRecent(a.id);
+                    a.run();
+                  }}
+                  className="group cursor-pointer rounded-md font-mono text-sm data-[selected=true]:bg-surface data-[selected=true]:text-teal"
+                >
+                  <Clock className="h-4 w-4 text-violet/70 group-data-[selected=true]:text-teal" />
+                  <span className="text-foreground group-data-[selected=true]:text-teal">
+                    {a.label}
+                  </span>
+                  <span className="ml-2 truncate text-xs text-dim">{a.hint}</span>
+                  <CommandShortcut className="font-mono text-[10px]">
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </CommandShortcut>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </div>
         )}
         {Object.entries(grouped).map(([group, items], i) => (
           <div key={group}>
