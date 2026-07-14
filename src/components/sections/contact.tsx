@@ -33,6 +33,14 @@ export function Contact() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Name is marked required in the UI (the * marker), so enforce it here
+    // to keep the contract truthful — the HTML `required` attribute is also
+    // set on the input, but the mailto flow intercepts submit so we validate
+    // explicitly too.
+    if (!name.trim()) {
+      toast.error("Please add your name");
+      return;
+    }
     if (!message.trim()) {
       toast.error("Please write a message first");
       return;
@@ -95,13 +103,22 @@ export function Contact() {
               </Reveal>
 
               <Reveal delay={0.14}>
-                <div className="group relative mt-6 flex items-center gap-4 rounded-2xl border border-line bg-surface/80 backdrop-blur-sm p-4 transition-colors hover:border-teal/30">
+                <div className="group relative mt-6 flex items-center gap-4 rounded-2xl border border-teal/30 bg-teal/[0.04] backdrop-blur-sm p-4 transition-colors hover:border-teal/50 focus-within:border-teal/50">
+                  {/* Preferred-channel badge — elevates email as the primary
+                      contact method so it reads above the social chips. */}
+                  <span className="absolute -top-2.5 left-4 flex items-center gap-1 rounded-full border border-teal/40 bg-surface px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-teal">
+                    <span className="relative flex h-1 w-1">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-75" />
+                      <span className="relative inline-flex h-1 w-1 rounded-full bg-teal" />
+                    </span>
+                    Fastest reply
+                  </span>
                   <a
                     href={`mailto:${profile.email}`}
-                    className="flex flex-1 items-center gap-4"
+                    className="flex flex-1 items-center gap-4 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                     aria-label={`Email ${profile.email}`}
                   >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/15 text-teal">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/15 text-teal transition-transform group-hover:scale-105">
                       <Mail className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
@@ -131,9 +148,9 @@ export function Contact() {
                         target="_blank"
                         rel="noreferrer"
                         aria-label={s.label}
-                        className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface/40 px-3.5 py-2 font-mono text-xs text-foreground/80 transition-all hover:-translate-y-0.5 hover:border-teal/40 hover:text-teal"
+                        className="group inline-flex min-h-[40px] items-center gap-2 rounded-full border border-line bg-surface/40 px-3.5 py-2 font-mono text-xs text-foreground/80 outline-none transition-all hover:-translate-y-0.5 hover:border-teal/40 hover:text-teal focus-visible:ring-2 focus-visible:ring-teal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-0 sm:py-1.5"
                       >
-                        <Icon name={s.icon} className="h-3.5 w-3.5" />
+                        <Icon name={s.icon} className="h-3.5 w-3.5 transition-transform group-hover:scale-110" />
                         {s.label}
                       </a>
                     ))}
@@ -163,6 +180,7 @@ export function Contact() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ada Lovelace"
+                    required
                     className="w-full rounded-xl border border-line bg-background/80 px-3.5 py-2.5 text-sm text-foreground placeholder:text-dim focus:border-teal/40 focus:outline-none focus:ring-2 focus:ring-teal/20"
                   />
                 </Field>
