@@ -42,6 +42,8 @@ export function ProjectModal({
   onNext,
   onPrev,
   hasMultiple,
+  index,
+  total,
 }: {
   project: Project | null;
   open: boolean;
@@ -49,6 +51,8 @@ export function ProjectModal({
   onNext?: () => void;
   onPrev?: () => void;
   hasMultiple?: boolean;
+  index?: number;
+  total?: number;
 }) {
   const { copy } = useCopy();
 
@@ -130,6 +134,21 @@ export function ProjectModal({
                     <span className="flex h-8 items-center rounded-full border border-line bg-surface/80 px-2.5 font-mono text-[10px] text-foreground/80 backdrop-blur">
                       {project.year}
                     </span>
+                    {/* Position indicator — shows which item you're on in the
+                        prev/next cycle (e.g. "2 / 4"). Only renders when
+                        there's a list + multiple items. Sits next to the year
+                        badge so it reads as metadata. tabular-nums for a
+                        stable width as the user navigates. */}
+                    {hasMultiple && total && total > 1 && index !== undefined && index > 0 && (
+                      <span
+                        aria-label={`Project ${index} of ${total}`}
+                        className="flex h-8 items-center gap-0.5 rounded-full border border-teal/30 bg-teal/10 px-2.5 font-mono text-[10px] tabular-nums text-teal backdrop-blur"
+                      >
+                        <span className="font-bold">{index}</span>
+                        <span className="text-teal/50">/</span>
+                        <span className="text-teal/70">{total}</span>
+                      </span>
+                    )}
                     <button
                       type="button"
                       onClick={onClose}

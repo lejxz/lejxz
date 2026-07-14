@@ -90,6 +90,16 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
     });
   }, [experienceList]);
 
+  // Position indicators — 1-based index of the current item within its
+  // list, plus the total. Passed to the modals so they can show "2 / 4" in
+  // the header. 0 when there's no list (single-item mode).
+  const projectIndex = project && projectList.length > 0
+    ? projectList.findIndex((p) => p.id === project.id) + 1
+    : 0;
+  const experienceIndex = experience && experienceList.length > 0
+    ? experienceList.findIndex((e) => e.id === experience.id) + 1
+    : 0;
+
   const value = useMemo<ModalsContextValue>(
     () => ({
       project,
@@ -114,6 +124,8 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
         onNext={projectList.length > 1 ? nextProject : undefined}
         onPrev={projectList.length > 1 ? prevProject : undefined}
         hasMultiple={projectList.length > 1}
+        index={projectIndex}
+        total={projectList.length}
       />
       <ExperienceModal
         experience={experience}
@@ -122,6 +134,8 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
         onNext={experienceList.length > 1 ? nextExperience : undefined}
         onPrev={experienceList.length > 1 ? prevExperience : undefined}
         hasMultiple={experienceList.length > 1}
+        index={experienceIndex}
+        total={experienceList.length}
       />
     </ModalsContext.Provider>
   );

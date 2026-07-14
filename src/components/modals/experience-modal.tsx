@@ -42,6 +42,8 @@ export function ExperienceModal({
   onNext,
   onPrev,
   hasMultiple,
+  index,
+  total,
 }: {
   experience: ExperienceItem | null;
   open: boolean;
@@ -49,6 +51,8 @@ export function ExperienceModal({
   onNext?: () => void;
   onPrev?: () => void;
   hasMultiple?: boolean;
+  index?: number;
+  total?: number;
 }) {
   // Keyboard navigation: ArrowLeft/Right and [/] for prev/next — mirrors the
   // project-modal so both modals have the same keyboard UX.
@@ -101,6 +105,19 @@ export function ExperienceModal({
               {/* Share + Close buttons, top-right */}
               <div className="absolute right-4 top-4 z-10 flex items-center gap-1.5">
                 <ShareButton experienceId={experience.id} />
+                {/* Position indicator — shows which item you're on in the
+                    prev/next cycle (e.g. "2 / 4"). Only renders when there's
+                    a list + multiple items. tabular-nums for stable width. */}
+                {hasMultiple && total && total > 1 && index !== undefined && index > 0 && (
+                  <span
+                    aria-label={`Experience ${index} of ${total}`}
+                    className="flex h-8 items-center gap-0.5 rounded-full border border-teal/30 bg-teal/10 px-2.5 font-mono text-[10px] tabular-nums text-teal backdrop-blur"
+                  >
+                    <span className="font-bold">{index}</span>
+                    <span className="text-teal/50">/</span>
+                    <span className="text-teal/70">{total}</span>
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={onClose}
